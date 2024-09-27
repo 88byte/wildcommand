@@ -1,18 +1,15 @@
-import { useState, useEffect } from "react";
-import { db } from "./firebase";
-import { collection, getDocs } from "firebase/firestore";
+// src/components/BookingList.js
+import React, { useEffect, useState } from 'react';
+import { db } from '../firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 const BookingList = () => {
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
     const fetchBookings = async () => {
-      const querySnapshot = await getDocs(collection(db, "bookings"));
-      const bookingsList = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setBookings(bookingsList);
+      const querySnapshot = await getDocs(collection(db, 'bookings'));
+      setBookings(querySnapshot.docs.map((doc) => doc.data()));
     };
 
     fetchBookings();
@@ -20,10 +17,10 @@ const BookingList = () => {
 
   return (
     <div>
-      <h2>Bookings</h2>
+      <h2>Booked Hunts</h2>
       <ul>
-        {bookings.map((booking) => (
-          <li key={booking.id}>
+        {bookings.map((booking, index) => (
+          <li key={index}>
             {booking.clientName} - {booking.huntDate} - {booking.location}
           </li>
         ))}

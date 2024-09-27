@@ -1,22 +1,27 @@
-import { useState } from "react";
-import { db } from "./firebase";
-import { collection, addDoc } from "firebase/firestore";
+// src/components/HuntLogForm.js
+import React, { useState } from 'react';
+import { db } from '../firebase';
+import { collection, addDoc } from 'firebase/firestore';
 
 const HuntLogForm = () => {
-  const [clientName, setClientName] = useState("");
-  const [outcome, setOutcome] = useState("");
-  const [location, setLocation] = useState("");
+  const [clientName, setClientName] = useState('');
+  const [outcome, setOutcome] = useState('');
+  const [location, setLocation] = useState('');
+  const [error, setError] = useState('');
 
   const handleLog = async () => {
     try {
-      const docRef = await addDoc(collection(db, "huntLogs"), {
-        clientName: clientName,
-        outcome: outcome,
-        location: location,
+      await addDoc(collection(db, 'huntLogs'), {
+        clientName,
+        outcome,
+        location,
       });
-      console.log("Hunt log added with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding log: ", e);
+      setClientName('');
+      setOutcome('');
+      setLocation('');
+      console.log('Hunt log added successfully');
+    } catch (err) {
+      setError(err.message);
     }
   };
 
@@ -31,4 +36,20 @@ const HuntLogForm = () => {
       />
       <input
         type="text"
-        placeholder="
+        placeholder="Outcome"
+        value={outcome}
+        onChange={(e) => setOutcome(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Location"
+        value={location}
+        onChange={(e) => setLocation(e.target.value)}
+      />
+      <button onClick={handleLog}>Submit Log</button>
+      {error && <p>{error}</p>}
+    </div>
+  );
+};
+
+export default HuntLogForm;

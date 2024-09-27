@@ -1,19 +1,20 @@
-import { useState } from "react";
-import { auth } from "./firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+// src/components/Login.js
+import React, { useState } from 'react';
+import { auth } from '../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleLogin = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log("Logged in:", userCredential.user);
-      })
-      .catch((error) => {
-        console.error("Error logging in:", error.message);
-      });
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      console.log('User logged in successfully');
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -32,6 +33,7 @@ const Login = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button onClick={handleLogin}>Log In</button>
+      {error && <p>{error}</p>}
     </div>
   );
 };

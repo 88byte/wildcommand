@@ -1,22 +1,27 @@
-import { useState } from "react";
-import { db } from "./firebase";
-import { collection, addDoc } from "firebase/firestore";
+// src/components/BookingForm.js
+import React, { useState } from 'react';
+import { db } from '../firebase';
+import { collection, addDoc } from 'firebase/firestore';
 
 const BookingForm = () => {
-  const [clientName, setClientName] = useState("");
-  const [huntDate, setHuntDate] = useState("");
-  const [location, setLocation] = useState("");
+  const [clientName, setClientName] = useState('');
+  const [huntDate, setHuntDate] = useState('');
+  const [location, setLocation] = useState('');
+  const [error, setError] = useState('');
 
   const handleBooking = async () => {
     try {
-      const docRef = await addDoc(collection(db, "bookings"), {
-        clientName: clientName,
-        huntDate: huntDate,
-        location: location,
+      await addDoc(collection(db, 'bookings'), {
+        clientName,
+        huntDate,
+        location,
       });
-      console.log("Booking added with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding booking: ", e);
+      setClientName('');
+      setHuntDate('');
+      setLocation('');
+      console.log('Booking added successfully');
+    } catch (err) {
+      setError(err.message);
     }
   };
 
@@ -41,6 +46,7 @@ const BookingForm = () => {
         onChange={(e) => setLocation(e.target.value)}
       />
       <button onClick={handleBooking}>Book Hunt</button>
+      {error && <p>{error}</p>}
     </div>
   );
 };
