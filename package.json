@@ -1,6 +1,6 @@
 {
   "name": "wildcommand-app",
-  "homepage": "https://github.com/88byte/wildcommand",
+  "homepage": "https://github.com/88byte/wildcommand.git",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
