@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/88byte/wildcommand.git/static/css/main.f855e6bc.css",
-    "main.js": "/88byte/wildcommand.git/static/js/main.4d282429.js",
-    "static/js/453.29bdc203.chunk.js": "/88byte/wildcommand.git/static/js/453.29bdc203.chunk.js",
-    "static/media/logo.svg": "/88byte/wildcommand.git/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
-    "index.html": "/88byte/wildcommand.git/index.html",
-    "main.f855e6bc.css.map": "/88byte/wildcommand.git/static/css/main.f855e6bc.css.map",
-    "main.4d282429.js.map": "/88byte/wildcommand.git/static/js/main.4d282429.js.map",
-    "453.29bdc203.chunk.js.map": "/88byte/wildcommand.git/static/js/453.29bdc203.chunk.js.map"
+    "main.css": "/wildcommand/static/css/main.f855e6bc.css",
+    "main.js": "/wildcommand/static/js/main.a934f025.js",
+    "static/js/453.29bdc203.chunk.js": "/wildcommand/static/js/453.29bdc203.chunk.js",
+    "static/media/logo.svg": "/wildcommand/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/wildcommand/index.html",
+    "main.f855e6bc.css.map": "/wildcommand/static/css/main.f855e6bc.css.map",
+    "main.a934f025.js.map": "/wildcommand/static/js/main.a934f025.js.map",
+    "453.29bdc203.chunk.js.map": "/wildcommand/static/js/453.29bdc203.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f855e6bc.css",
-    "static/js/main.4d282429.js"
+    "static/js/main.a934f025.js"
   ]
 }
