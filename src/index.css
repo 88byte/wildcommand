@@ -1,13 +1,220 @@
-body {
+/* Global reset to ensure consistency across browsers */
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #1d1f20; /* Dark background for modern feel */
+  color: #e5e7eb; /* Light gray text for contrast */
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Main container for page layout */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+/* Typography */
+h1, h2, h3 {
+  font-family: 'Montserrat', sans-serif;
+  color: #f5f5f5; /* Light color to stand out */
+  margin-bottom: 1.5rem;
+}
+
+h1 {
+  font-size: 3rem;
+  letter-spacing: -1px;
+}
+
+h2 {
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+a {
+  color: #ff8c00; /* Accent orange for links */
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #ffa500; /* Brighter orange on hover */
+  text-decoration: underline;
+}
+
+/* Buttons */
+button {
+  background-color: #2e8b57; /* Deep forest green */
+  color: #fff;
+  border: none;
+  padding: 14px 24px;
+  font-size: 1.1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 50px; /* Rounded pill-shaped buttons for modern feel */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #3cb371; /* Lighter green */
+  transform: translateY(-2px); /* Slight raise effect */
+}
+
+button:disabled {
+  background-color: #888888;
+  cursor: not-allowed;
+}
+
+/* Inputs */
+input, textarea {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 1rem;
+  border: 2px solid #333;
+  border-radius: 10px;
+  background-color: #2b2c2e; /* Dark background for inputs */
+  color: #fff; /* White text */
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+input:focus, textarea:focus {
+  border-color: #ff8c00; /* Orange focus color */
+  outline: none;
+}
+
+/* Forms */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}
+
+.text-muted {
+  color: #6c757d;
+}
+
+/* Section Padding and Margins */
+.mt-4 {
+  margin-top: 2rem;
+}
+
+.mb-4 {
+  margin-bottom: 2rem;
+}
+
+.pt-4 {
+  padding-top: 2rem;
+}
+
+.pb-4 {
+  padding-bottom: 2rem;
+}
+
+/* Headings */
+.heading {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #ff8c00; /* Accent color */
+  text-align: center;
+}
+
+.subheading {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #d2b48c; /* Light tan for neutral accents */
+  text-align: center;
+}
+
+/* Card Styling */
+.card {
+  background-color: #2f2f2f;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px); /* Subtle hover raise effect */
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.card h2 {
+  color: #ff8c00; /* Accent color in card headings */
+}
+
+/* Special Utility for Dark Cards */
+.dark-card {
+  background-color: #1d1f20;
+}
+
+/* Header Styling */
+.header {
+  background-color: #2e8b57; /* Dark green background */
+  padding: 20px 0;
+  text-align: center;
+}
+
+.header h1 {
+  color: #fff;
+  font-size: 3rem;
+  letter-spacing: 1px;
+}
+
+/* Footer Styling */
+.footer {
+  background-color: #2e2f30;
+  padding: 20px 0;
+  color: #888;
+  text-align: center;
+}
+
+.footer a {
+  color: #ff8c00;
+  font-weight: bold;
+}
+
+.footer a:hover {
+  color: #ffa500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+  
+  h2 {
+    font-size: 2rem;
+  }
+
+  .container {
+    padding: 20px;
+  }
+
+  button {
+    width: 100%;
+  }
 }

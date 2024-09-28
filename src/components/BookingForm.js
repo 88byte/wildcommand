@@ -26,27 +26,39 @@ const BookingForm = () => {
   };
 
   return (
-    <div>
-      <h2>Book a Hunt</h2>
-      <input
-        type="text"
-        placeholder="Client Name"
-        value={clientName}
-        onChange={(e) => setClientName(e.target.value)}
-      />
-      <input
-        type="date"
-        value={huntDate}
-        onChange={(e) => setHuntDate(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Location"
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
-      />
-      <button onClick={handleBooking}>Book Hunt</button>
-      {error && <p>{error}</p>}
+    <div className="container">
+      <div className="form-container">
+        <h2 className="form-title">Book a Hunt</h2>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="Client Name"
+            value={clientName}
+            onChange={(e) => setClientName(e.target.value)}
+            className="input-field"
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="date"
+            value={huntDate}
+            onChange={(e) => setHuntDate(e.target.value)}
+            className="input-field"
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="Location"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            className="input-field"
+          />
+        </div>
+        <button className="submit-btn" onClick={handleBooking}>
+          Book Hunt
+        </button>
+      </div>
     </div>
   );
 };

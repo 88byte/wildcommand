@@ -16,15 +16,17 @@ const BookingList = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Booked Hunts</h2>
-      <ul>
+    <div className="container">
+      <h2 className="heading">Booked Hunts</h2>
+      <div className="card-list">
         {bookings.map((booking, index) => (
-          <li key={index}>
-            {booking.clientName} - {booking.huntDate} - {booking.location}
-          </li>
+          <div className="card" key={index}>
+            <h3 className="card-title">{booking.clientName}</h3>
+            <p>Date: {booking.huntDate}</p>
+            <p>Location: {booking.location}</p>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
