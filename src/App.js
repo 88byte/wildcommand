@@ -34,6 +34,11 @@ const App = () => {
 
   const location = useLocation();
 
+  // Allow the user to access hunter-setup even if not authenticated
+  if (!user && location.pathname === '/hunter-setup') {
+    return null; // Make sure this doesn't trigger a redirect loop
+  }
+
   // Redirect if authenticated but on login/signup
   if (user && (location.pathname === '/login' || location.pathname === '/signup')) {
     return <Navigate to="/dashboard" />;
