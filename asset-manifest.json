@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/wildcommand/static/css/main.53ce3cb1.css",
-    "main.js": "/wildcommand/static/js/main.b12049d1.js",
-    "index.html": "/wildcommand/index.html",
-    "main.53ce3cb1.css.map": "/wildcommand/static/css/main.53ce3cb1.css.map",
-    "main.b12049d1.js.map": "/wildcommand/static/js/main.b12049d1.js.map"
+    "main.css": "/static/css/main.53ce3cb1.css",
+    "main.js": "/static/js/main.c30dcf96.js",
+    "index.html": "/index.html",
+    "main.53ce3cb1.css.map": "/static/css/main.53ce3cb1.css.map",
+    "main.c30dcf96.js.map": "/static/js/main.c30dcf96.js.map"
   },
   "entrypoints": [
     "static/css/main.53ce3cb1.css",
-    "static/js/main.b12049d1.js"
+    "static/js/main.c30dcf96.js"
   ]
 }
