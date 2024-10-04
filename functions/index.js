@@ -42,7 +42,8 @@ exports.sendWelcomeEmail = functions.firestore
   .onCreate((snap, context) => {
     const hunter = snap.data();
     const hunterEmail = hunter.email;
-    const inviteLink = `https://${functions.config().frontend.url}/hunter-setup?hunterId=${context.params.hunterId}`;
+    const inviteLink = `https://wildcommand.com/#/hunter-setup?hunterId=${context.params.hunterId}`;
+
 
 
 
