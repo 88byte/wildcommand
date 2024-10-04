@@ -42,10 +42,9 @@ exports.sendWelcomeEmail = functions.firestore
   .onCreate((snap, context) => {
     const hunter = snap.data();
     const hunterEmail = hunter.email;
-    const inviteLink = `https://wildcommand.com/#/hunter-setup?hunterId=${context.params.hunterId}`;
+    const token = context.params.hunterId; // Use hunterId as token
 
-
-
+    const inviteLink = `https://wildcommand.com/#/hunter-setup?token=${token}`;
 
     const mailOptions = {
       from: functions.config().gmail.email,

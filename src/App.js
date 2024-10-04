@@ -78,6 +78,7 @@ const App = () => {
         {/* Hunter Account Setup Route */}
         <Route path="/hunter-setup" element={<HunterSetup />} />
 
+
         {/* Redirect hunters to setup if not complete */}
         {userRole === 'hunter' && !accountSetupComplete && location.pathname !== '/hunter-setup' && (
           <Navigate to="/hunter-setup" />
