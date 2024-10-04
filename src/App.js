@@ -1,32 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { HashRouter as Router, Route, Routes, Link, Navigate, useLocation } from "react-router-dom";
+import { HashRouter as Router, Route, Routes, Navigate, Link, useLocation } from "react-router-dom";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Hunters from "./components/Hunters";
 import DashboardLayout from "./components/DashboardLayout";
-import HunterSetup from "./components/HunterSetup"; 
+import HunterSetup from "./components/HunterSetup";
 import wildLogo from './images/wildlogo.png';
 
 const App = () => {
   const [user, setUser] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [accountSetupComplete, setAccountSetupComplete] = useState(false);
-  
-  // Use location inside Router
-  return (
-    <div className="App">
-      <Router>
-        <AppRouter user={user} setUser={setUser} userRole={userRole} setUserRole={setUserRole} accountSetupComplete={accountSetupComplete} setAccountSetupComplete={setAccountSetupComplete} />
-      </Router>
-    </div>
-  );
-};
-
-const AppRouter = ({ user, setUser, userRole, setUserRole, accountSetupComplete, setAccountSetupComplete }) => {
-  const location = useLocation();
 
   // Handle authentication state
   useEffect(() => {
@@ -43,7 +30,9 @@ const AppRouter = ({ user, setUser, userRole, setUserRole, accountSetupComplete,
       }
     });
     return () => unsubscribe();
-  }, [setUser, setUserRole, setAccountSetupComplete]);
+  }, []);
+
+  const location = useLocation();
 
   // Redirect if authenticated but on login/signup
   if (user && (location.pathname === '/login' || location.pathname === '/signup')) {
@@ -51,63 +40,70 @@ const AppRouter = ({ user, setUser, userRole, setUserRole, accountSetupComplete,
   }
 
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/signup" element={<FadeInWrapper><Signup /></FadeInWrapper>} />
-      <Route path="/login" element={<FadeInWrapper><Login /></FadeInWrapper>} />
+    <div className="App">
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/signup" element={<FadeInWrapper><Signup /></FadeInWrapper>} />
+        <Route path="/login" element={<FadeInWrapper><Login /></FadeInWrapper>} />
 
-      {/* Home page */}
-      {!user && (
-        <Route
-          path="/"
-          element={
-            <div className="hero-section">
-              <div className="hero-content">
-                <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
-                <h1 className="hero-title">Conquer the Wild.</h1>
-                <h2 className="hero-subtitle">Command the Hunt.</h2>
-                <div className="hero-buttons">
-                  <Navigate to="/signup">
-                    <button className="signup-btn">Sign Up</button>
-                  </Navigate>
-                  <Navigate to="/login">
-                    <button className="login-btn">Log In</button>
-                  </Navigate>
+        {/* Home page '/' displays the hero section */}
+        {!user && (
+          <Route
+            path="/"
+            element={
+              <div className="hero-section">
+                <div className="hero-content">
+                  <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
+                  <h1 className="hero-title">Conquer the Wild.</h1>
+                  <h2 className="hero-subtitle">Command the Hunt.</h2>
+                  <div className="hero-buttons">
+                    <Link to="/signup">
+                      <button className="signup-btn">Sign Up</button>
+                    </Link>
+                    <Link to="/login">
+                      <button className="login-btn">Log In</button>
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
-          }
-        />
-      )}
+            }
+          />
+        )}
 
-      {/* Hunter Account Setup Route */}
-      <Route path="/hunter-setup" element={<HunterSetup />} />
+        {/* Hunter Account Setup Route */}
+        <Route path="/hunter-setup" element={<HunterSetup />} />
 
-      {/* Protected Routes */}
-      {user && userRole !== 'hunter' && (
-        <Route element={<DashboardLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/hunters" element={<Hunters />} />
-        </Route>
-      )}
+        {/* Redirect hunters to setup if not complete */}
+        {userRole === 'hunter' && !accountSetupComplete && location.pathname !== '/hunter-setup' && (
+          <Navigate to="/hunter-setup" />
+        )}
 
-      {/* Hunter Dashboard after setup */}
-      {user && userRole === 'hunter' && accountSetupComplete && (
-        <Route path="/hunter-dashboard" element={<Dashboard />} />
-      )}
+        {/* Protected Routes */}
+        {user && userRole !== 'hunter' && (
+          <Route element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/hunters" element={<Hunters />} />
+          </Route>
+        )}
 
-      {/* Redirect if no user for protected routes */}
-      {!user && (
-        <>
-          <Route path="/dashboard" element={<Navigate to="/login" />} />
-          <Route path="/hunters" element={<Navigate to="/login" />} />
-          <Route path="/hunter-dashboard" element={<Navigate to="/login" />} />
-        </>
-      )}
+        {/* Hunter Dashboard */}
+        {user && userRole === 'hunter' && accountSetupComplete && (
+          <Route path="/hunter-dashboard" element={<Dashboard />} />
+        )}
 
-      {/* Fallback */}
-      <Route path="*" element={<Navigate to={user ? "/dashboard" : "/"} />} />
-    </Routes>
+        {/* Redirect to login if trying to access protected routes */}
+        {!user && (
+          <>
+            <Route path="/dashboard" element={<Navigate to="/login" />} />
+            <Route path="/hunters" element={<Navigate to="/login" />} />
+            <Route path="/hunter-dashboard" element={<Navigate to="/login" />} />
+          </>
+        )}
+
+        {/* Default Redirect */}
+        <Route path="*" element={<Navigate to={user ? "/dashboard" : "/"} />} />
+      </Routes>
+    </div>
   );
 };
 
