@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { HashRouter as Router, Route, Routes, Navigate, useLocation } from "react-router-dom";
+import { HashRouter as Router, Route, Routes, Link, Navigate, useLocation } from "react-router-dom";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
