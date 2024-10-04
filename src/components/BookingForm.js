@@ -7,21 +7,20 @@ const BookingForm = () => {
   const [clientName, setClientName] = useState('');
   const [huntDate, setHuntDate] = useState('');
   const [location, setLocation] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState('');  // Optional, use if needed
 
   const handleBooking = async () => {
     try {
       await addDoc(collection(db, 'bookings'), {
         clientName,
         huntDate,
-        location,
+        location
       });
-      setClientName('');
+      setClientName('');  // Clear form
       setHuntDate('');
       setLocation('');
-      console.log('Booking added successfully');
     } catch (err) {
-      setError(err.message);
+      setError(err.message);  // Capture and set error message if necessary
     }
   };
 
@@ -55,6 +54,7 @@ const BookingForm = () => {
             className="input-field"
           />
         </div>
+        {error && <p className="error-message">{error}</p>} {/* Show error if exists */}
         <button className="submit-btn" onClick={handleBooking}>
           Book Hunt
         </button>

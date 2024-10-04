@@ -2,18 +2,26 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import { useAuth } from '../authContext';
 
 const BookingList = () => {
+  const { user } = useAuth(); // Ensure user is retrieved from context
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
     const fetchBookings = async () => {
-      const querySnapshot = await getDocs(collection(db, 'bookings'));
-      setBookings(querySnapshot.docs.map((doc) => doc.data()));
+      if (user && user.outfitterId) {
+        const querySnapshot = await getDocs(collection(db, `outfitters/${user.outfitterId}/bookings`));
+        setBookings(querySnapshot.docs.map((doc) => doc.data()));
+      }
     };
 
     fetchBookings();
-  }, []);
+  }, [user]);
+
+  if (!user) {
+    return <div>Loading...</div>; // Handle the case where user is not yet available
+  }
 
   return (
     <div className="container">

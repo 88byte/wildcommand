@@ -1,0 +1,60 @@
+
+
+/* Main content styles for the dashboard */
+.main-content {
+  flex-grow: 1;
+  padding: 40px;
+  background-color: #ffffff;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.main-content h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.content-section {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.hunt-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+  color: #666;
+  width: 100%;
+}
+
+.hunt-card p {
+  margin: 0;
+}
+
+/* Hover effect for cards */
+.hunt-card:hover {
+  background-color: #f9f9f9;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 20px;
+  }
+
+  .main-content h1 {
+    font-size: 2rem;
+  }
+
+  .hunt-card {
+    padding: 15px;
+  }
+}

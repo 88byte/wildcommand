@@ -1,4 +1,5 @@
 // src/components/HuntLogForm.js
+// src/components/HuntLogForm.js
 import React, { useState } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
@@ -7,7 +8,7 @@ const HuntLogForm = () => {
   const [clientName, setClientName] = useState('');
   const [outcome, setOutcome] = useState('');
   const [location, setLocation] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState('');  // Define error state here
 
   const handleLog = async () => {
     try {
@@ -16,12 +17,11 @@ const HuntLogForm = () => {
         outcome,
         location,
       });
-      setClientName('');
+      setClientName('');  // Clear form after submission
       setOutcome('');
       setLocation('');
-      console.log('Hunt log added successfully');
     } catch (err) {
-      setError(err.message);
+      setError(err.message);  // Capture and display error message
     }
   };
 
@@ -56,6 +56,7 @@ const HuntLogForm = () => {
             className="input-field"
           />
         </div>
+        {error && <p className="error-message">{error}</p>} {/* Display error if any */}
         <button className="submit-btn" onClick={handleLog}>
           Submit Log
         </button>

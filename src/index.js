@@ -1,13 +1,19 @@
-// src/index.js
-import React from 'react';           // Import React for JSX syntax
-import ReactDOM from 'react-dom';    // Import ReactDOM to render React components to the DOM
-import './index.css';                // Import global CSS (optional)
-import App from './App';             // Import the root App component
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { AuthProvider } from './authContext'; // Import AuthProvider
 
-// Render the App component inside the 'root' element in index.html
-ReactDOM.render(
+const rootElement = document.getElementById('root');
+const root = createRoot(rootElement);
+
+root.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <Router>
+      <AuthProvider> {/* Wrap the app inside AuthProvider */}
+        <App />
+      </AuthProvider>
+    </Router>
+  </React.StrictMode>
 );
