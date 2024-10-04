@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate,u seLocation } from 'react-router-dom';
+
+
 import { db, auth } from '../firebase';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { updatePassword, signInWithEmailAndPassword } from 'firebase/auth';
 
 const HunterSetup = () => {
-  const { hunterId } = useParams();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const hunterId = queryParams.get('hunterId');  // Get hunterId from query param
   const [password, setPassword] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
