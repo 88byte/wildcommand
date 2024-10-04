@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { Route, Routes, Link, useLocation, Navigate } from "react-router-dom";
+import { HashRouter as Router, Route, Routes, Navigate, useLocation } from "react-router-dom";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
@@ -42,6 +42,7 @@ const App = () => {
 
   return (
     <div className="App">
+    <Router> {/* Use HashRouter */}
       <Routes>
         {/* Public Routes */}
         <Route path="/signup" element={<FadeInWrapper><Signup /></FadeInWrapper>} />
@@ -109,6 +110,7 @@ const App = () => {
         {/* Default Redirect */}
         <Route path="*" element={<Navigate to={user ? "/dashboard" : "/"} />} />
       </Routes>
+      </Router>
     </div>
   );
 };
