@@ -1,69 +1,75 @@
-/* Center the form with smaller width */
-.hunter-setup-container {
-  max-width: 400px; /* Set a smaller max-width */
-  margin: 100px auto; /* Center the form and add vertical spacing */
-  padding: 20px; /* Add padding around the form */
-  background-color: #f9f9f9; /* Light background color */
-  border-radius: 8px; /* Slightly rounded corners */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-}
-
-.hunter-setup-container h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
+/* Form container */
+.page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f9f9f9; /* Background similar to signup page */
 }
 
 .form-container {
+  background-color: #1c1c1c;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 90%;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  justify-content: center;
 }
 
-.form-container input {
-  padding: 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-  width: 100%; /* Ensure inputs take the full width of the form */
-  box-sizing: border-box;
+.form-title {
+  font-family: 'Poppins', sans-serif;
+  color: #d4af37; /* Gold color */
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2rem;
 }
 
-.form-container input:focus {
-  border-color: #007bff;
-  outline: none;
-}
-
-.form-container button {
-  padding: 12px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.form-container button:hover {
-  background-color: #0056b3;
-}
-
-.error-message {
-  color: red;
-  font-size: 14px;
+.form-group {
   margin-bottom: 15px;
 }
 
-@media (max-width: 500px) {
-  .hunter-setup-container {
-    width: 90%; /* Reduce width on smaller screens */
-    padding: 20px;
-  }
-  .form-container input {
-    font-size: 14px;
-  }
-  .form-container button {
-    font-size: 14px;
-  }
+input[type="text"], input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #2b2b2b;
+  color: #fff;
+  border: 2px solid #444;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-size: 1rem;
+}
+
+input:focus {
+  border-color: #d4af37; /* Gold outline when focused */
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.7); /* Glowing effect */
+  outline: none;
+}
+
+button.submit-btn {
+  background-color: #d4af37; /* Gold */
+  color: #0d0d0d;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  text-transform: uppercase;
+  width: 100%;
+  margin-top: 20px;
+}
+
+button.submit-btn:hover {
+  background-color: #bfa13b;
+  transform: translateY(-2px); /* Lift effect */
+}
+
+.error-message {
+  color: #ff4d4d;
+  margin-bottom: 15px;
+  text-align: center;
 }
