@@ -1,0 +1,69 @@
+/* Center the form with smaller width */
+.hunter-setup-container {
+  max-width: 400px; /* Set a smaller max-width */
+  margin: 100px auto; /* Center the form and add vertical spacing */
+  padding: 20px; /* Add padding around the form */
+  background-color: #f9f9f9; /* Light background color */
+  border-radius: 8px; /* Slightly rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.hunter-setup-container h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-container input {
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  width: 100%; /* Ensure inputs take the full width of the form */
+  box-sizing: border-box;
+}
+
+.form-container input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.form-container button {
+  padding: 12px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.form-container button:hover {
+  background-color: #0056b3;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+@media (max-width: 500px) {
+  .hunter-setup-container {
+    width: 90%; /* Reduce width on smaller screens */
+    padding: 20px;
+  }
+  .form-container input {
+    font-size: 14px;
+  }
+  .form-container button {
+    font-size: 14px;
+  }
+}
