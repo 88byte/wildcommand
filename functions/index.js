@@ -1,7 +1,6 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
-const nodemailer = require("nodemailer"); // Add this line to import Nodemailer
-
+const nodemailer = require("nodemailer"); // Import Nodemailer
 
 admin.initializeApp();
 
@@ -24,9 +23,6 @@ exports.setUserRole = functions.https.onCall((data, context) => {
     });
 });
 
-
-
-
 // Setup Nodemailer using Firebase environment variables
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -36,35 +32,54 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-
+// Function to add a hunter and send the welcome email with a temporary password
 exports.sendWelcomeEmail = functions.firestore
   .document('outfitters/{outfitterId}/hunters/{hunterId}')
-  .onCreate((snap, context) => {
+  .onCreate(async (snap, context) => {
     const hunter = snap.data();
     const hunterEmail = hunter.email;
-    const token = context.params.hunterId; // Use hunterId as token
+    const hunterName = hunter.name;
+    const outfitterId = context.params.outfitterId;
+    const hunterId = context.params.hunterId;
+    
+    // Generate a temporary password
+    const tempPassword = 'TempPassword123!';
 
-    const inviteLink = `https://wildcommand.com/#/hunter-setup?token=${token}`;
-
-    const mailOptions = {
-      from: functions.config().gmail.email,
-      to: hunterEmail,
-      subject: 'Welcome to the Outfitter!',
-      html: `<h1>Welcome to the Outfitter!</h1>
-             <p>Hello ${hunter.name},</p>
-             <p>You’ve been invited to join the outfitter. Click the link below to set up your account.</p>
-             <a href="${inviteLink}">Set Up Your Account</a>`
-    };
-
-    return transporter.sendMail(mailOptions)
-      .then((info) => {
-        console.log(`Email sent to ${hunterEmail}: ${info.response}`);
-        return { success: true };
-      })
-      .catch((error) => {
-        console.error('Error sending email to ', hunterEmail, ': ', error);
-        return { success: false, error: error.message };
+    try {
+      // Create the hunter in Firebase Authentication with the temporary password
+      const userRecord = await admin.auth().createUser({
+        uid: hunterId,
+        email: hunterEmail,
+        password: tempPassword,
+        displayName: hunterName
       });
+
+      console.log(`Hunter created in Firebase Auth: ${userRecord.uid}`);
+
+      // Set custom claims to associate the hunter with the outfitter and set role
+      await admin.auth().setCustomUserClaims(userRecord.uid, {
+        role: 'hunter',
+        outfitterId: outfitterId,
+        accountSetupComplete: false // Mark account as incomplete for setup
+      });
+
+      // Send welcome email with the temporary password
+      const inviteLink = `https://wildcommand.com/#/login`; // Direct them to the login page
+      const mailOptions = {
+        from: functions.config().gmail.email,
+        to: hunterEmail,
+        subject: 'Welcome to the Outfitter!',
+        html: `<h1>Welcome to the Outfitter!</h1>
+               <p>Hello ${hunterName},</p>
+               <p>You’ve been added to the outfitter platform. Please log in using the temporary password below and complete your account setup.</p>
+               <p><strong>Temporary Password:</strong> ${tempPassword}</p>
+               <p><a href="${inviteLink}">Click here</a> to log in and set up your account.</p>`
+      };
+
+      await transporter.sendMail(mailOptions);
+      console.log(`Email sent to ${hunterEmail}`);
+    } catch (error) {
+      console.error('Error creating user or sending email:', error);
+      throw new functions.https.HttpsError('internal', 'Error creating hunter or sending welcome email.');
+    }
   });
-
-

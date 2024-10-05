@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { HashRouter as Router, Route, Routes, Navigate, Link, useLocation } from "react-router-dom";
+import { HashRouter as Router, Route, Routes, Navigate, useLocation } from "react-router-dom";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
@@ -15,7 +15,7 @@ const App = () => {
   const [userRole, setUserRole] = useState(null);
   const [accountSetupComplete, setAccountSetupComplete] = useState(false);
 
-  // Handle authentication state
+  // Handle authentication state and fetch user claims
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
@@ -34,10 +34,14 @@ const App = () => {
 
   const location = useLocation();
 
-  // Allow the user to access hunter-setup even if not authenticated
-  // This prevents the login screen from appearing if the hunter isn't logged in but accesses the /hunter-setup route
+  // Allow hunters to access the hunter setup even if not fully authenticated
   if (!user && location.pathname === '/hunter-setup') {
     return <HunterSetup />; // Directly render HunterSetup for unauthenticated users
+  }
+
+  // Redirect hunters to the setup page if their profile is incomplete after login
+  if (user && userRole === 'hunter' && !accountSetupComplete && location.pathname !== '/hunter-setup') {
+    return <Navigate to="/hunter-setup" />;
   }
 
   // Redirect if authenticated but on login/signup
@@ -63,12 +67,12 @@ const App = () => {
                   <h1 className="hero-title">Conquer the Wild.</h1>
                   <h2 className="hero-subtitle">Command the Hunt.</h2>
                   <div className="hero-buttons">
-                    <Link to="/signup">
+                    <Navigate to="/signup">
                       <button className="signup-btn">Sign Up</button>
-                    </Link>
-                    <Link to="/login">
+                    </Navigate>
+                    <Navigate to="/login">
                       <button className="login-btn">Log In</button>
-                    </Link>
+                    </Navigate>
                   </div>
                 </div>
               </div>
@@ -79,11 +83,6 @@ const App = () => {
         {/* Hunter Account Setup Route */}
         {/* Allowing access even if user is not authenticated */}
         <Route path="/hunter-setup" element={<HunterSetup />} />
-
-        {/* Redirect hunters to setup if not complete */}
-        {userRole === 'hunter' && !accountSetupComplete && location.pathname !== '/hunter-setup' && (
-          <Navigate to="/hunter-setup" />
-        )}
 
         {/* Protected Routes */}
         {user && userRole !== 'hunter' && (

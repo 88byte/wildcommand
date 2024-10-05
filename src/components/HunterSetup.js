@@ -1,53 +1,57 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { db } from '../firebase'; // Assuming you're importing Firestore
-import { doc, getDoc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+import { db, auth } from '../firebase';
+import { doc, updateDoc } from 'firebase/firestore';
+import { updatePassword } from 'firebase/auth';
 
 const HunterSetup = () => {
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const hunterId = queryParams.get('hunterId');  // Extract the hunterId from the URL
-  const [hunterData, setHunterData] = useState(null);
+  const [password, setPassword] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [country, setCountry] = useState('');
+  const [licenseNumber, setLicenseNumber] = useState('');
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  console.log("Hunter ID from URL:", hunterId);  // Log the hunterId to verify it's being captured
-
-  useEffect(() => {
-    const fetchHunterData = async () => {
-      try {
-        const docRef = doc(db, 'outfitters', 'outfitterId', 'hunters', hunterId); // Make sure the path is correct
-        const hunterDoc = await getDoc(docRef);
-        if (hunterDoc.exists()) {
-          setHunterData(hunterDoc.data());
-        } else {
-          setError('Hunter not found.');
-        }
-      } catch (err) {
-        setError('Failed to load hunter data.');
-      }
-    };
-
-    if (hunterId) {
-      fetchHunterData();
+  const handleSubmit = async () => {
+    if (!password || !address || !city || !state || !country || !licenseNumber) {
+      setError('All fields are required.');
+      return;
     }
-  }, [hunterId]);
 
-  if (!hunterId) {
-    return <p>Invalid hunter ID. Please check the link.</p>;
-  }
+    try {
+      // Update hunter details in Firestore
+      const user = auth.currentUser;
+      await updateDoc(doc(db, 'outfitters', 'outfitterId', 'hunters', user.uid), {
+        address,
+        city,
+        state,
+        country,
+        licenseNumber,
+        accountSetupComplete: true,
+      });
+
+      // Optionally, update the password
+      await updatePassword(user, password);
+
+      navigate('/hunter-dashboard');
+    } catch (error) {
+      setError('Error updating your profile.');
+    }
+  };
 
   return (
-    <div className="hunter-setup-container">
-      <h1>Hunter Setup Page</h1>
+    <div>
+      <h1>Complete Your Account Setup</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      {hunterData ? (
-        <div>
-          <p>Welcome, {hunterData.name}</p>
-          {/* Add your form to update the hunter information here */}
-        </div>
-      ) : (
-        <p>Loading hunter information...</p>
-      )}
+      <input type="password" placeholder="Set Your Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+      <input type="text" placeholder="Home Address" value={address} onChange={(e) => setAddress(e.target.value)} />
+      <input type="text" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} />
+      <input type="text" placeholder="State" value={state} onChange={(e) => setState(e.target.value)} />
+      <input type="text" placeholder="Country" value={country} onChange={(e) => setCountry(e.target.value)} />
+      <input type="text" placeholder="Hunting License Number" value={licenseNumber} onChange={(e) => setLicenseNumber(e.target.value)} />
+      <button onClick={handleSubmit}>Submit</button>
     </div>
   );
 };
