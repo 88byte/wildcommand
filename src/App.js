@@ -35,8 +35,9 @@ const App = () => {
   const location = useLocation();
 
   // Allow the user to access hunter-setup even if not authenticated
+  // This prevents the login screen from appearing if the hunter isn't logged in but accesses the /hunter-setup route
   if (!user && location.pathname === '/hunter-setup') {
-    return null; // Make sure this doesn't trigger a redirect loop
+    return <HunterSetup />; // Directly render HunterSetup for unauthenticated users
   }
 
   // Redirect if authenticated but on login/signup
@@ -76,8 +77,8 @@ const App = () => {
         )}
 
         {/* Hunter Account Setup Route */}
+        {/* Allowing access even if user is not authenticated */}
         <Route path="/hunter-setup" element={<HunterSetup />} />
-
 
         {/* Redirect hunters to setup if not complete */}
         {userRole === 'hunter' && !accountSetupComplete && location.pathname !== '/hunter-setup' && (
