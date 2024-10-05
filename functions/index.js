@@ -64,7 +64,7 @@ exports.sendWelcomeEmail = functions.firestore
       });
 
       // Send welcome email with the temporary password
-      const inviteLink = `https://wildcommand.com/#/login`; // Direct them to the login page
+      const inviteLink = `https://wildcommand.com/#/hunter-setup?outfitterId=${outfitterId}&hunterId=${hunterId}`; // Include both outfitterId and hunterId
       const mailOptions = {
         from: functions.config().gmail.email,
         to: hunterEmail,
@@ -73,7 +73,7 @@ exports.sendWelcomeEmail = functions.firestore
                <p>Hello ${hunterName},</p>
                <p>You’ve been added to the outfitter platform. Please log in using the temporary password below and complete your account setup.</p>
                <p><strong>Temporary Password:</strong> ${tempPassword}</p>
-               <p><a href="${inviteLink}">Click here</a> to log in and set up your account.</p>`
+               <p><a href="${inviteLink}">Click here</a> to complete your account setup.</p>`
       };
 
       await transporter.sendMail(mailOptions);

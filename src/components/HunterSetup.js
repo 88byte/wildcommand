@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { db, auth } from '../firebase';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { db, auth } from '../firebase'; // Ensure 'auth' is imported here
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
-import { createUserWithEmailAndPassword, updatePassword } from 'firebase/auth';
+import { updatePassword } from 'firebase/auth';
 import './HunterSetup.css'; // Import the CSS for styling
 
 const HunterSetup = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  
+  // Get hunterId and outfitterId from the URL query parameters
   const hunterId = queryParams.get('hunterId');
+  const outfitterId = queryParams.get('outfitterId'); // Fetch outfitterId from the URL
+
   const [password, setPassword] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
@@ -19,14 +23,22 @@ const HunterSetup = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch hunter data using the hunterId token from the URL
+  // Fetch hunter data using hunterId and outfitterId from the URL
   useEffect(() => {
     const fetchHunterData = async () => {
       try {
-        const docRef = doc(db, 'outfitters', 'outfitterId', 'hunters', hunterId);
+        if (!outfitterId || !hunterId) {
+          setError('Outfitter ID or Hunter ID is missing.');
+          return;
+        }
+
+        // Fetch hunter data from Firestore using outfitterId and hunterId
+        const docRef = doc(db, 'outfitters', outfitterId, 'hunters', hunterId); 
         const hunterDoc = await getDoc(docRef);
+
         if (hunterDoc.exists()) {
-          setEmail(hunterDoc.data().email);
+          const hunterData = hunterDoc.data();
+          setEmail(hunterData.email); // Set hunter's email in the form
         } else {
           setError('Hunter not found.');
         }
@@ -34,8 +46,9 @@ const HunterSetup = () => {
         setError('Failed to load hunter data.');
       }
     };
+
     fetchHunterData();
-  }, [hunterId]);
+  }, [outfitterId, hunterId]);
 
   const handleSubmit = async () => {
     if (!password || !address || !city || !state || !country || !licenseNumber) {
@@ -44,10 +57,10 @@ const HunterSetup = () => {
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+      const user = auth.currentUser; // Fetch the current authenticated user
 
-      await updateDoc(doc(db, 'outfitters', 'outfitterId', 'hunters', hunterId), {
+      // Update hunter details in Firestore
+      await updateDoc(doc(db, 'outfitters', outfitterId, 'hunters', hunterId), {
         address,
         city,
         state,
@@ -56,8 +69,10 @@ const HunterSetup = () => {
         accountSetupComplete: true,
       });
 
+      // Update hunter password in Firebase Auth
       await updatePassword(user, password);
 
+      // Redirect to hunter's dashboard after setup completion
       navigate('/hunter-dashboard');
     } catch (error) {
       setError('Error setting up your account. Please try again.');
