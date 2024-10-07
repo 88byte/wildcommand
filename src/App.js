@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { HashRouter as Router, Route, Routes, Navigate, useLocation } from "react-router-dom";
+import { HashRouter as Router, Route, Routes, Navigate, Link, useLocation } from "react-router-dom";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
@@ -14,7 +14,9 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [accountSetupComplete, setAccountSetupComplete] = useState(false);
-
+  const [outfitterId, setOutfitterId] = useState(null); // For dynamic passing of outfitterId
+  const [hunterId, setHunterId] = useState(null); // For dynamic passing of hunterId
+  
   // Handle authentication state and fetch user claims
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -24,6 +26,8 @@ const App = () => {
         const claims = token.claims;
         setUserRole(claims.role || null);
         setAccountSetupComplete(claims.accountSetupComplete || false);
+        setOutfitterId(claims.outfitterId || null); // Get outfitterId from claims
+        setHunterId(claims.uid || null); // Hunter's UID from claims
       } else {
         setUserRole(null);
         setAccountSetupComplete(false);
@@ -34,14 +38,9 @@ const App = () => {
 
   const location = useLocation();
 
-  // Allow hunters to access the hunter setup even if not fully authenticated
-  if (!user && location.pathname === '/hunter-setup') {
-    return <HunterSetup />; // Directly render HunterSetup for unauthenticated users
-  }
-
   // Redirect hunters to the setup page if their profile is incomplete after login
   if (user && userRole === 'hunter' && !accountSetupComplete && location.pathname !== '/hunter-setup') {
-    return <Navigate to="/hunter-setup" />;
+    return <Navigate to={`/hunter-setup?outfitterId=${outfitterId}&hunterId=${hunterId}`} />;
   }
 
   // Redirect if authenticated but on login/signup
@@ -65,14 +64,14 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt.</h2>
+                  <h2 className="hero-subtitle">Command the Hunt</h2>
                   <div className="hero-buttons">
-                    <Navigate to="/signup">
+                    <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
-                    </Navigate>
-                    <Navigate to="/login">
+                    </Link>
+                    <Link to="/login">
                       <button className="login-btn">Log In</button>
-                    </Navigate>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -81,7 +80,6 @@ const App = () => {
         )}
 
         {/* Hunter Account Setup Route */}
-        {/* Allowing access even if user is not authenticated */}
         <Route path="/hunter-setup" element={<HunterSetup />} />
 
         {/* Protected Routes */}
