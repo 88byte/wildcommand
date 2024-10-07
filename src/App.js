@@ -38,7 +38,7 @@ const App = () => {
 
   const location = useLocation();
 
-  // Redirect hunters to the setup page if their profile is incomplete after login
+  // Redirect authenticated hunters to the setup page if their profile is incomplete
   if (user && userRole === 'hunter' && !accountSetupComplete && location.pathname !== '/hunter-setup') {
     return <Navigate to={`/hunter-setup?outfitterId=${outfitterId}&hunterId=${hunterId}`} />;
   }
@@ -54,6 +54,9 @@ const App = () => {
         {/* Public Routes */}
         <Route path="/signup" element={<FadeInWrapper><Signup /></FadeInWrapper>} />
         <Route path="/login" element={<FadeInWrapper><Login /></FadeInWrapper>} />
+
+        {/* Hunter Account Setup Route */}
+        <Route path="/hunter-setup" element={<HunterSetup />} />
 
         {/* Home page '/' displays the hero section */}
         {!user && (
@@ -79,8 +82,6 @@ const App = () => {
           />
         )}
 
-        {/* Hunter Account Setup Route */}
-        <Route path="/hunter-setup" element={<HunterSetup />} />
 
         {/* Protected Routes */}
         {user && userRole !== 'hunter' && (

@@ -3,15 +3,16 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { db, auth } from '../firebase';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { updatePassword } from 'firebase/auth';
-import './HunterSetup.css'; // Import the CSS for styling
+import './HunterSetup.css';
 
 const HunterSetup = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  
-  const outfitterId = queryParams.get('outfitterId'); // Get outfitterId from URL
-  const hunterId = queryParams.get('hunterId'); // Get hunterId from URL
-  
+
+  // Get outfitterId and hunterId from URL query params
+  const outfitterId = queryParams.get('outfitterId'); 
+  const hunterId = queryParams.get('hunterId');
+
   const [password, setPassword] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
@@ -31,12 +32,12 @@ const HunterSetup = () => {
           return;
         }
 
-        const docRef = doc(db, 'outfitters', outfitterId, 'hunters', hunterId); // Correct Firestore path
+        const docRef = doc(db, 'outfitters', outfitterId, 'hunters', hunterId);
         const hunterDoc = await getDoc(docRef);
 
         if (hunterDoc.exists()) {
           const hunterData = hunterDoc.data();
-          setEmail(hunterData.email); // Set the hunter's email
+          setEmail(hunterData.email);
         } else {
           setError('Hunter not found.');
         }
@@ -55,7 +56,7 @@ const HunterSetup = () => {
     }
 
     try {
-      const user = auth.currentUser; // Fetch the current authenticated user
+      const user = auth.currentUser;
 
       // Update hunter details in Firestore
       await updateDoc(doc(db, 'outfitters', outfitterId, 'hunters', hunterId), {
@@ -70,7 +71,7 @@ const HunterSetup = () => {
       // Update hunter password in Firebase Auth
       await updatePassword(user, password);
 
-      // Redirect to hunter's dashboard after setup completion
+      // Redirect to hunter's dashboard
       navigate('/hunter-dashboard');
     } catch (error) {
       setError('Error setting up your account. Please try again.');
