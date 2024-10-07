@@ -41,7 +41,7 @@ exports.sendWelcomeEmail = functions.firestore
     const hunterName = hunter.name;
     const outfitterId = context.params.outfitterId;
     const hunterId = context.params.hunterId;
-    
+
     // Generate a temporary password
     const tempPassword = 'TempPassword123!';
 
@@ -79,7 +79,8 @@ exports.sendWelcomeEmail = functions.firestore
       await transporter.sendMail(mailOptions);
       console.log(`Email sent to ${hunterEmail}`);
     } catch (error) {
-      console.error('Error creating user or sending email:', error);
-      throw new functions.https.HttpsError('internal', 'Error creating hunter or sending welcome email.');
+      console.error('Error creating hunter or sending email:', error.message); // Log actual error message
+      throw new functions.https.HttpsError('internal', error.message); // Send actual error message back
     }
   });
+
