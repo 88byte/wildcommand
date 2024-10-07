@@ -16,8 +16,15 @@ const App = () => {
   const [accountSetupComplete, setAccountSetupComplete] = useState(false);
   const [outfitterId, setOutfitterId] = useState(null); // For dynamic passing of outfitterId
   const [hunterId, setHunterId] = useState(null); // For dynamic passing of hunterId
-
+  
   const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+
+  // Get outfitterId and hunterId from the URL
+  useEffect(() => {
+    setOutfitterId(queryParams.get('outfitterId'));
+    setHunterId(queryParams.get('hunterId'));
+  }, [location]);
 
   // Handle authentication state and fetch user claims
   useEffect(() => {
@@ -28,8 +35,6 @@ const App = () => {
         const claims = token.claims;
         setUserRole(claims.role || null);
         setAccountSetupComplete(claims.accountSetupComplete || false);
-        setOutfitterId(claims.outfitterId || null); // Get outfitterId from claims
-        setHunterId(claims.uid || null); // Hunter's UID from claims
       } else {
         setUserRole(null);
         setAccountSetupComplete(false);
@@ -38,7 +43,7 @@ const App = () => {
     return () => unsubscribe();
   }, []);
 
-  // Redirect hunters to the setup page if their profile is incomplete after login
+  // Redirect authenticated hunters to the setup page if their profile is incomplete
   if (user && userRole === 'hunter' && !accountSetupComplete && location.pathname !== '/hunter-setup') {
     return <Navigate to={`/hunter-setup?outfitterId=${outfitterId}&hunterId=${hunterId}`} />;
   }
@@ -67,7 +72,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt.</h2>
+                  <h2 className="hero-subtitle">Command the Hunt..</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
