@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { db, auth } from '../firebase';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
-import { updatePassword } from 'firebase/auth';
+import { updatePassword, onAuthStateChanged } from 'firebase/auth'; // Make sure to import onAuthStateChanged
 import './HunterSetup.css';
 
 const HunterSetup = () => {
@@ -21,6 +21,7 @@ const HunterSetup = () => {
   const [licenseNumber, setLicenseNumber] = useState('');
   const [email, setEmail] = useState('');
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); // Add a loading state
   const navigate = useNavigate();
 
   // Fetch hunter data using outfitterId and hunterId from the URL
@@ -32,22 +33,32 @@ const HunterSetup = () => {
           return;
         }
 
-        const docRef = doc(db, 'outfitters', outfitterId, 'hunters', hunterId);
-        const hunterDoc = await getDoc(docRef);
+        // Check if the user is authenticated
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            const docRef = doc(db, 'outfitters', outfitterId, 'hunters', hunterId);
+            const hunterDoc = await getDoc(docRef);
 
-        if (hunterDoc.exists()) {
-          const hunterData = hunterDoc.data();
-          setEmail(hunterData.email);
-        } else {
-          setError('Hunter not found.');
-        }
+            if (hunterDoc.exists()) {
+              const hunterData = hunterDoc.data();
+              setEmail(hunterData.email);
+            } else {
+              setError('Hunter not found.');
+            }
+          } else {
+            // If the user is not authenticated, redirect to login page
+            navigate('/login');
+          }
+          setIsLoading(false); // Stop loading after authentication check
+        });
       } catch (err) {
         setError('Failed to load hunter data.');
+        setIsLoading(false);
       }
     };
 
     fetchHunterData();
-  }, [outfitterId, hunterId]);
+  }, [outfitterId, hunterId, navigate]);
 
   const handleSubmit = async () => {
     if (!password || !address || !city || !state || !country || !licenseNumber) {
@@ -57,6 +68,10 @@ const HunterSetup = () => {
 
     try {
       const user = auth.currentUser;
+      if (!user) {
+        setError('User not authenticated. Please log in.');
+        return;
+      }
 
       // Update hunter details in Firestore
       await updateDoc(doc(db, 'outfitters', outfitterId, 'hunters', hunterId), {
@@ -78,6 +93,10 @@ const HunterSetup = () => {
       console.error('Error updating hunter info:', error);
     }
   };
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="page-container">

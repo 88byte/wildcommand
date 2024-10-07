@@ -16,7 +16,9 @@ const App = () => {
   const [accountSetupComplete, setAccountSetupComplete] = useState(false);
   const [outfitterId, setOutfitterId] = useState(null); // For dynamic passing of outfitterId
   const [hunterId, setHunterId] = useState(null); // For dynamic passing of hunterId
-  
+
+  const location = useLocation();
+
   // Handle authentication state and fetch user claims
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -36,9 +38,7 @@ const App = () => {
     return () => unsubscribe();
   }, []);
 
-  const location = useLocation();
-
-  // Redirect authenticated hunters to the setup page if their profile is incomplete
+  // Redirect hunters to the setup page if their profile is incomplete after login
   if (user && userRole === 'hunter' && !accountSetupComplete && location.pathname !== '/hunter-setup') {
     return <Navigate to={`/hunter-setup?outfitterId=${outfitterId}&hunterId=${hunterId}`} />;
   }
@@ -67,7 +67,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt</h2>
+                  <h2 className="hero-subtitle">Command the Hunt.</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
@@ -81,7 +81,6 @@ const App = () => {
             }
           />
         )}
-
 
         {/* Protected Routes */}
         {user && userRole !== 'hunter' && (
