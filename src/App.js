@@ -29,19 +29,25 @@ const App = () => {
   // Handle authentication state and fetch user claims
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
       if (currentUser) {
+        setUser(currentUser);
         const token = await currentUser.getIdTokenResult();
         const claims = token.claims;
+        
         setUserRole(claims.role || null);
         setAccountSetupComplete(claims.accountSetupComplete || false);
+        
+        // Set outfitterId and hunterId from claims if not present in URL
+        setOutfitterId(claims.outfitterId || queryParams.get('outfitterId'));
+        setHunterId(claims.uid || queryParams.get('hunterId'));
       } else {
+        setUser(null);
         setUserRole(null);
         setAccountSetupComplete(false);
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, [location, queryParams]);
 
   // Redirect authenticated hunters to the setup page if their profile is incomplete
   if (user && userRole === 'hunter' && !accountSetupComplete && location.pathname !== '/hunter-setup') {
@@ -72,7 +78,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt..</h2>
+                  <h2 className="hero-subtitle">Command the Hunt.</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
