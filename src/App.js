@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "./firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";  // Import magic link methods
 import { HashRouter as Router, Route, Routes, Navigate, Link, useLocation } from "react-router-dom";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
@@ -14,9 +14,11 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [accountSetupComplete, setAccountSetupComplete] = useState(false);
-  const [outfitterId, setOutfitterId] = useState(null); // For dynamic passing of outfitterId
-  const [hunterId, setHunterId] = useState(null); // For dynamic passing of hunterId
-  
+  const [outfitterId, setOutfitterId] = useState(null);
+  const [hunterId, setHunterId] = useState(null);
+  const [email, setEmail] = useState(null); // Store the hunter's email for the magic link flow
+  const [loading, setLoading] = useState(true); // Loading state for async operations
+
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
@@ -26,17 +28,42 @@ const App = () => {
     setHunterId(queryParams.get('hunterId'));
   }, [location]);
 
+  // Check if the user is being signed in using a magic link
+  useEffect(() => {
+    const checkMagicLink = async () => {
+      if (isSignInWithEmailLink(auth, window.location.href)) {
+        // Get email from local storage or prompt user to provide it
+        let email = window.localStorage.getItem('emailForSignIn');
+        if (!email) {
+          // If email is not stored, prompt the user to provide it
+          email = window.prompt('Please provide your email for confirmation');
+        }
+        
+        try {
+          // Sign in the user with the email link
+          const result = await signInWithEmailLink(auth, email, window.location.href);
+          setUser(result.user); // Set the authenticated user
+          window.localStorage.removeItem('emailForSignIn'); // Clean up email from local storage
+        } catch (error) {
+          console.error("Error signing in with email link:", error);
+        }
+      }
+    };
+    checkMagicLink();
+  }, []);
+
   // Handle authentication state and fetch user claims
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setLoading(false); // Stop loading when user is detected
       if (currentUser) {
         setUser(currentUser);
         const token = await currentUser.getIdTokenResult();
         const claims = token.claims;
-        
+
         setUserRole(claims.role || null);
         setAccountSetupComplete(claims.accountSetupComplete || false);
-        
+
         // Set outfitterId and hunterId from claims if not present in URL
         setOutfitterId(claims.outfitterId || queryParams.get('outfitterId'));
         setHunterId(claims.uid || queryParams.get('hunterId'));
@@ -57,6 +84,10 @@ const App = () => {
   // Redirect if authenticated but on login/signup
   if (user && (location.pathname === '/login' || location.pathname === '/signup')) {
     return <Navigate to="/dashboard" />;
+  }
+
+  if (loading) {
+    return <div>Loading...</div>; // Optionally show a loading screen while checking authentication
   }
 
   return (
@@ -128,3 +159,4 @@ const FadeInWrapper = ({ children }) => {
 };
 
 export default App;
+

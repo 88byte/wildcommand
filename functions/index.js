@@ -1,6 +1,7 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
-const nodemailer = require("nodemailer"); // Import Nodemailer
+const nodemailer = require("nodemailer");
+const axios = require("axios"); // Import axios to make HTTP requests to Firebase REST API
 
 admin.initializeApp();
 
@@ -28,12 +29,12 @@ exports.setUserRole = functions.https.onCall(async (data, context) => {
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: functions.config().gmail.email, // Retrieve from Firebase config
-    pass: functions.config().gmail.password // Retrieve from Firebase config
+    user: functions.config().gmail.email,
+    pass: functions.config().gmail.password
   }
 });
 
-// Function to add a hunter and send the welcome email with a temporary password
+// Function to send a magic login link and welcome email to the hunter
 exports.sendWelcomeEmail = functions.firestore
   .document('outfitters/{outfitterId}/hunters/{hunterId}')
   .onCreate(async (snap, context) => {
@@ -43,48 +44,42 @@ exports.sendWelcomeEmail = functions.firestore
     const outfitterId = context.params.outfitterId;
     const hunterId = context.params.hunterId;
 
-    // Generate a temporary password
-    const tempPassword = 'TempPassword123!';
-
     try {
-      // Create the hunter in Firebase Authentication with the temporary password
-      const userRecord = await admin.auth().createUser({
-        uid: hunterId,
+      // Firebase project API key
+      const firebaseApiKey = functions.config().firebase.api_key;
+
+      // Firebase Authentication REST API endpoint for generating the sign-in link
+      const apiUrl = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${firebaseApiKey}`;
+
+      // Payload for generating the magic link
+      const payload = {
+        requestType: "EMAIL_SIGNIN",  // Set request type to 'EMAIL_SIGNIN' for the magic link
         email: hunterEmail,
-        password: tempPassword,
-        displayName: hunterName
-      });
+        returnUrl: `https://wildcommand.com/#/hunter-setup?outfitterId=${outfitterId}&hunterId=${hunterId}`,  // Set the return URL to hunter setup page
+        handleCodeInApp: true
+      };
 
-      console.log(`Hunter created in Firebase Auth: ${userRecord.uid}`);
+      // Generate the magic link via Firebase Auth REST API
+      const response = await axios.post(apiUrl, payload);
 
-      // Set custom claims to associate the hunter with the outfitter and set role
-      await admin.auth().setCustomUserClaims(userRecord.uid, {
-        role: 'hunter',
-        outfitterId: outfitterId,
-        accountSetupComplete: false // Mark account as incomplete for setup
-      });
+      // The magic link is returned in the response data
+      const magicLink = response.data.oobLink;
 
-      // Revoke refresh tokens to make sure the user picks up the new claims
-      await admin.auth().revokeRefreshTokens(userRecord.uid);
-
-      // Send welcome email with the temporary password
-      const loginLink = `https://wildcommand.com/#/login`; // Link to the login page
+      // Send the magic link via email using Nodemailer
       const mailOptions = {
         from: functions.config().gmail.email,
         to: hunterEmail,
         subject: 'Welcome to the Outfitter!',
         html: `<h1>Welcome to the Outfitter!</h1>
                <p>Hello ${hunterName},</p>
-               <p>You’ve been added to the outfitter platform. Please log in using the temporary password below and complete your account setup.</p>
-               <p><strong>Temporary Password:</strong> ${tempPassword}</p>
-               <p><a href="${loginLink}">Click here</a> to log in.</p>
-               <p>After logging in, you'll be automatically redirected to complete your account setup.</p>`
+               <p>You’ve been added to the outfitter platform. Click the link below to log in and complete your account setup.</p>
+               <p><a href="${magicLink}">Click here to log in and complete your setup</a></p>`
       };
 
       await transporter.sendMail(mailOptions);
-      console.log(`Email sent to ${hunterEmail}`);
+      console.log(`Magic link email sent to ${hunterEmail}`);
     } catch (error) {
-      console.error('Error creating hunter or sending email:', error.message); // Log actual error message
-      throw new functions.https.HttpsError('internal', error.message); // Send actual error message back
+      console.error('Error sending magic link or email:', error.message);
+      throw new functions.https.HttpsError('internal', error.message);
     }
   });
