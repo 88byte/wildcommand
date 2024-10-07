@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { db, auth } from '../firebase'; // Ensure 'auth' is imported here
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { db, auth } from '../firebase';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { updatePassword } from 'firebase/auth';
 import './HunterSetup.css'; // Import the CSS for styling
@@ -9,10 +9,9 @@ const HunterSetup = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   
-  // Get hunterId and outfitterId from the URL query parameters
-  const hunterId = queryParams.get('hunterId');
-  const outfitterId = queryParams.get('outfitterId'); // Fetch outfitterId from the URL
-
+  const outfitterId = queryParams.get('outfitterId'); // Get outfitterId from URL
+  const hunterId = queryParams.get('hunterId'); // Get hunterId from URL
+  
   const [password, setPassword] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
@@ -23,7 +22,7 @@ const HunterSetup = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch hunter data using hunterId and outfitterId from the URL
+  // Fetch hunter data using outfitterId and hunterId from the URL
   useEffect(() => {
     const fetchHunterData = async () => {
       try {
@@ -32,13 +31,12 @@ const HunterSetup = () => {
           return;
         }
 
-        // Fetch hunter data from Firestore using outfitterId and hunterId
-        const docRef = doc(db, 'outfitters', outfitterId, 'hunters', hunterId); 
+        const docRef = doc(db, 'outfitters', outfitterId, 'hunters', hunterId); // Correct Firestore path
         const hunterDoc = await getDoc(docRef);
 
         if (hunterDoc.exists()) {
           const hunterData = hunterDoc.data();
-          setEmail(hunterData.email); // Set hunter's email in the form
+          setEmail(hunterData.email); // Set the hunter's email
         } else {
           setError('Hunter not found.');
         }
