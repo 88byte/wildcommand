@@ -5,7 +5,7 @@ const nodemailer = require("nodemailer"); // Import Nodemailer
 admin.initializeApp();
 
 // Function to set custom claims for users (outfitter, guide, hunter)
-exports.setUserRole = functions.https.onCall((data, context) => {
+exports.setUserRole = functions.https.onCall(async (data, context) => {
   const { uid, role, outfitterId } = data;
 
   // Check if the user is authenticated
@@ -13,14 +13,15 @@ exports.setUserRole = functions.https.onCall((data, context) => {
     throw new functions.https.HttpsError('failed-precondition', 'The function must be called while authenticated.');
   }
 
-  // Set custom claims
-  return admin.auth().setCustomUserClaims(uid, { role, outfitterId })
-    .then(() => {
-      return { message: `Success! Role ${role} assigned to user.` };
-    })
-    .catch((error) => {
-      throw new functions.https.HttpsError('internal', error.message);
-    });
+  try {
+    // Set custom claims
+    await admin.auth().setCustomUserClaims(uid, { role, outfitterId });
+    // Force refresh to pick up new claims
+    await admin.auth().revokeRefreshTokens(uid);
+    return { message: `Success! Role ${role} assigned to user.` };
+  } catch (error) {
+    throw new functions.https.HttpsError('internal', error.message);
+  }
 });
 
 // Setup Nodemailer using Firebase environment variables
@@ -63,8 +64,11 @@ exports.sendWelcomeEmail = functions.firestore
         accountSetupComplete: false // Mark account as incomplete for setup
       });
 
+      // Revoke refresh tokens to make sure the user picks up the new claims
+      await admin.auth().revokeRefreshTokens(userRecord.uid);
+
       // Send welcome email with the temporary password
-      const inviteLink = `https://wildcommand.com/#/hunter-setup?outfitterId=${outfitterId}&hunterId=${hunterId}`; // Include both outfitterId and hunterId
+      const loginLink = `https://wildcommand.com/#/login`; // Link to the login page
       const mailOptions = {
         from: functions.config().gmail.email,
         to: hunterEmail,
@@ -73,7 +77,8 @@ exports.sendWelcomeEmail = functions.firestore
                <p>Hello ${hunterName},</p>
                <p>You’ve been added to the outfitter platform. Please log in using the temporary password below and complete your account setup.</p>
                <p><strong>Temporary Password:</strong> ${tempPassword}</p>
-               <p><a href="${inviteLink}">Click here</a> to complete your account setup.</p>`
+               <p><a href="${loginLink}">Click here</a> to log in.</p>
+               <p>After logging in, you'll be automatically redirected to complete your account setup.</p>`
       };
 
       await transporter.sendMail(mailOptions);
@@ -83,4 +88,3 @@ exports.sendWelcomeEmail = functions.firestore
       throw new functions.https.HttpsError('internal', error.message); // Send actual error message back
     }
   });
-
