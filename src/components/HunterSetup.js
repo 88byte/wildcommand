@@ -9,9 +9,8 @@ const HunterSetup = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
-  // Get outfitterId and hunterId from URL query params
-  const outfitterId = queryParams.get('outfitterId'); 
-  const hunterId = queryParams.get('hunterId');
+  const outfitterId = queryParams.get('outfitterId'); // Get outfitterId from URL
+  const hunterId = queryParams.get('hunterId'); // Get hunterId from URL
 
   const [password, setPassword] = useState('');
   const [address, setAddress] = useState('');
@@ -19,88 +18,68 @@ const HunterSetup = () => {
   const [state, setState] = useState('');
   const [country, setCountry] = useState('');
   const [licenseNumber, setLicenseNumber] = useState('');
-  const [email, setEmail] = useState('');
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // Loading state for fetching hunter data
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Fetch hunter data using outfitterId and hunterId from the URL
+  // Fetch hunter data and allow updating their profile
   useEffect(() => {
     const fetchHunterData = async () => {
       try {
-        if (!outfitterId || !hunterId) {
-          setError('Outfitter ID or Hunter ID is missing.');
-          setIsLoading(false);
-          return;
+        const user = auth.currentUser;
+        if (!user) {
+          throw new Error("User not authenticated");
         }
 
-        // Check if the user is authenticated
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            // Fetch hunter data from Firestore
-            const docRef = doc(db, 'outfitters', outfitterId, 'hunters', hunterId);
-            const hunterDoc = await getDoc(docRef);
+        // Fetch hunter data using outfitterId and hunterId from URL
+        const docRef = doc(db, 'outfitters', outfitterId, 'hunters', hunterId);
+        const hunterDoc = await getDoc(docRef);
 
-            if (hunterDoc.exists()) {
-              const hunterData = hunterDoc.data();
-              setEmail(hunterData.email); // Set hunter's email in state
-            } else {
-              setError('Hunter not found.');
-            }
-          } else {
-            // If user is not authenticated, redirect to login page
-            navigate('/login');
-          }
-          setIsLoading(false); // Stop loading after checking authentication
-        });
+        if (hunterDoc.exists()) {
+          const hunterData = hunterDoc.data();
+          // Populate fields with existing hunter data if needed
+          setAddress(hunterData.address || '');
+          setCity(hunterData.city || '');
+          setState(hunterData.state || '');
+          setCountry(hunterData.country || '');
+          setLicenseNumber(hunterData.licenseNumber || '');
+        } else {
+          setError('Hunter not found.');
+        }
       } catch (err) {
         setError('Failed to load hunter data.');
-        setIsLoading(false);
+        console.error('Error fetching hunter data:', err);
       }
+      setIsLoading(false);
     };
 
     fetchHunterData();
-  }, [outfitterId, hunterId, navigate]);
+  }, [outfitterId, hunterId]);
 
-  // Handle form submission
   const handleSubmit = async () => {
-    if (!password || !address || !city || !state || !country || !licenseNumber) {
-      setError('All fields are required.');
-      return;
-    }
-
     try {
-      const user = auth.currentUser; // Get the authenticated user
-      if (!user) {
-        setError('User not authenticated. Please log in.');
-        return;
-      }
+      const user = auth.currentUser;
+      if (!user) throw new Error("User not authenticated");
 
-      // Update hunter details in Firestore
-      await updateDoc(doc(db, 'outfitters', outfitterId, 'hunters', hunterId), {
-        address,
-        city,
-        state,
-        country,
-        licenseNumber,
-        accountSetupComplete: true, // Mark account as complete
+      // Update hunter's details in Firestore
+      const docRef = doc(db, 'outfitters', outfitterId, 'hunters', hunterId);
+      await updateDoc(docRef, {
+        address, city, state, country, licenseNumber,
+        accountSetupComplete: true
       });
 
-      // Update hunter password in Firebase Auth
+      // Set the new password
       await updatePassword(user, password);
 
-      // Redirect to hunter's dashboard
+      // Redirect to hunter's dashboard or show success message
       navigate('/hunter-dashboard');
     } catch (error) {
-      setError('Error setting up your account. Please try again.');
-      console.error('Error updating hunter info:', error);
+      setError("Failed to complete setup");
+      console.error("Error during setup:", error);
     }
   };
 
-  // Display loading state while fetching data
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <div className="page-container">

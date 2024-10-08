@@ -22,35 +22,33 @@ const App = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
+  
+
   // Get outfitterId and hunterId from the URL
   useEffect(() => {
     setOutfitterId(queryParams.get('outfitterId'));
     setHunterId(queryParams.get('hunterId'));
   }, [location]);
 
-  // Check if the user is being signed in using a magic link
+   // Check if the user clicked a magic sign-in link
   useEffect(() => {
-    const checkMagicLink = async () => {
-      if (isSignInWithEmailLink(auth, window.location.href)) {
-        // Get email from local storage or prompt user to provide it
-        let email = window.localStorage.getItem('emailForSignIn');
-        if (!email) {
-          // If email is not stored, prompt the user to provide it
-          email = window.prompt('Please provide your email for confirmation');
-        }
-        
-        try {
-          // Sign in the user with the email link
-          const result = await signInWithEmailLink(auth, email, window.location.href);
-          setUser(result.user); // Set the authenticated user
-          window.localStorage.removeItem('emailForSignIn'); // Clean up email from local storage
-        } catch (error) {
-          console.error("Error signing in with email link:", error);
-        }
+    const url = window.location.href;
+    if (isSignInWithEmailLink(auth, url)) {
+      let email = window.localStorage.getItem('emailForSignIn');
+      if (!email) {
+        email = window.prompt('Please provide your email for confirmation');
       }
-    };
-    checkMagicLink();
-  }, []);
+      signInWithEmailLink(auth, email, url)
+        .then(result => {
+          // Clear the email from local storage
+          window.localStorage.removeItem('emailForSignIn');
+          setUser(result.user);
+        })
+        .catch(error => {
+          console.error("Error signing in with email link:", error.message);
+        });
+    }
+  }, [location]);
 
   // Handle authentication state and fetch user claims
   useEffect(() => {
