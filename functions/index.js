@@ -36,7 +36,6 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Function to send a magic login link and welcome email to the hunter
 exports.sendWelcomeEmail = functions.firestore
   .document('outfitters/{outfitterId}/hunters/{hunterId}')
   .onCreate(async (snap, context) => {
@@ -44,18 +43,8 @@ exports.sendWelcomeEmail = functions.firestore
     const hunterEmail = hunter.email;
     const hunterName = hunter.name;
 
-    const actionCodeSettings = {
-      // URL to redirect the user after clicking the magic link.
-      url: `https://wildcommand.com/#/hunter-setup`,
-      handleCodeInApp: true,
-    };
-
     try {
-      // Send the magic link using Firebase Admin SDK
-      const auth = getAuth();
-      await auth.generateSignInWithEmailLink(hunterEmail, actionCodeSettings);
-
-      // Send the link via email using Nodemailer
+      // Just send an email without the magic link
       const mailOptions = {
         from: functions.config().gmail.email,
         to: hunterEmail,
@@ -67,9 +56,9 @@ exports.sendWelcomeEmail = functions.firestore
       };
 
       await transporter.sendMail(mailOptions);
-      console.log(`Magic link email sent to ${hunterEmail}`);
+      console.log(`Welcome email sent to ${hunterEmail}`);
     } catch (error) {
-      console.error('Error sending magic link or email:', error.message);
+      console.error('Error sending email:', error.message);
       throw new functions.https.HttpsError('internal', error.message);
     }
   });

@@ -1,0 +1,22 @@
+[debug] [2024-10-08T00:50:00.321Z] ----------------------------------------------------------------------
+[debug] [2024-10-08T00:50:00.323Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\flavi\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2024-10-08T00:50:00.323Z] CLI Version:   13.20.2
+[debug] [2024-10-08T00:50:00.323Z] Platform:      win32
+[debug] [2024-10-08T00:50:00.323Z] Node Version:  v20.17.0
+[debug] [2024-10-08T00:50:00.323Z] Time:          Mon Oct 07 2024 17:50:00 GMT-0700 (Pacific Daylight Time)
+[debug] [2024-10-08T00:50:00.323Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-10-08T00:50:00.370Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-10-08T00:50:00.370Z] > authorizing via signed-in user (flaviod022@gmail.com)
+[debug] [2024-10-08T00:50:00.370Z] [iam] checking project wild-command for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2024-10-08T00:50:00.371Z] Checked if tokens are valid: true, expires at: 1728350985198
+[debug] [2024-10-08T00:50:00.371Z] Checked if tokens are valid: true, expires at: 1728350985198
+[debug] [2024-10-08T00:50:00.372Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/wild-command:testIamPermissions [none]
+[debug] [2024-10-08T00:50:00.372Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/wild-command:testIamPermissions x-goog-quota-user=projects/wild-command
+[debug] [2024-10-08T00:50:00.372Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/wild-command:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2024-10-08T00:50:00.725Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/wild-command:testIamPermissions 200
+[debug] [2024-10-08T00:50:00.725Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/wild-command:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2024-10-08T00:50:00.725Z] Checked if tokens are valid: true, expires at: 1728350985198
+[debug] [2024-10-08T00:50:00.725Z] Checked if tokens are valid: true, expires at: 1728350985198
+[debug] [2024-10-08T00:50:00.725Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/wild-command/serviceAccounts/wild-command@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2024-10-08T00:50:00.725Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/wild-command/serviceAccounts/wild-command@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
