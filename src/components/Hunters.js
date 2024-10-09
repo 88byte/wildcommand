@@ -38,16 +38,29 @@ const Hunters = () => {
   }, [filterText, hunters]);
 
   const handleAddHunter = async () => {
-    try {
-      const docRef = await addDoc(collection(db, `outfitters/${user.outfitterId}/hunters`), newHunter);
-      const addedHunter = { id: docRef.id, ...newHunter };
-      setHunters([...hunters, addedHunter]);
-      setFilteredHunters([...hunters, addedHunter]); // Update filtered list
-      setNewHunter({ name: '', email: '', phone: '' });
-    } catch (error) {
-      console.error('Error adding hunter:', error);
-    }
-  };
+  try {
+    const hunterData = {
+      name: newHunter.name,
+      email: newHunter.email,
+      phone: newHunter.phone,
+      role: 'hunter',  // Setting the role as 'hunter'
+      accountSetupComplete: false,  // Setting account setup status to false
+      createdAt: new Date()  // Optional: Track creation time
+    };
+
+    // Add the hunter to the Firestore under the outfitters collection
+    const docRef = await addDoc(collection(db, `outfitters/${user.outfitterId}/hunters`), hunterData);
+    
+    const addedHunter = { id: docRef.id, ...hunterData };
+    setHunters([...hunters, addedHunter]);
+    setFilteredHunters([...hunters, addedHunter]); // Update filtered list
+    setNewHunter({ name: '', email: '', phone: '' }); // Reset the input fields
+  } catch (error) {
+    console.error('Error adding hunter:', error);
+  }
+};
+
+
 
   const handleEditHunter = async (id) => {
     const hunterDocRef = doc(db, `outfitters/${user.outfitterId}/hunters`, id);

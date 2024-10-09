@@ -54,26 +54,28 @@ const HunterSetup = () => {
   }, [outfitterId, hunterId]);
 
   const handleSubmit = async () => {
-    try {
-      const user = auth.currentUser;
-      if (!user) throw new Error("User not authenticated");
+	  try {
+	    const user = auth.currentUser;
+	    if (!user) throw new Error("User not authenticated");
 
-      const docRef = doc(db, 'outfitters', outfitterId, 'hunters', hunterId);
-      await updateDoc(docRef, {
-        address, city, state, country, licenseNumber,
-        accountSetupComplete: true
-      });
+	    // Update hunter's details in Firestore
+	    const docRef = doc(db, 'outfitters', outfitterId, 'hunters', hunterId);
+	    await updateDoc(docRef, {
+	      address, city, state, country, licenseNumber,
+	      accountSetupComplete: true // Mark account setup as complete
+	    });
 
-      // Set the new password
-      await updatePassword(user, password);
+	    // Set the new password
+	    await updatePassword(user, password);
 
-      // Redirect to the dashboard
-      navigate('/hunter-dashboard');
-    } catch (error) {
-      setError("Failed to complete setup");
-      console.error("Error during setup:", error);
-    }
-  };
+	    // Redirect to the hunter's dashboard
+	    navigate('/hunter-dashboard');
+	  } catch (error) {
+	    setError("Failed to complete setup");
+	    console.error("Error during setup:", error);
+	  }
+	};
+
 
   if (isLoading) return <p>Loading...</p>;
 

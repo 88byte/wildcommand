@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "./firebase";
-import { onAuthStateChanged, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";  // Import magic link methods
-import { HashRouter as Router, Route, Routes, Navigate, Link, useLocation } from "react-router-dom";
+import { onAuthStateChanged, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";  
+import { HashRouter as Router, Route, Routes, Navigate, Link, useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
@@ -16,19 +16,23 @@ const App = () => {
   const [accountSetupComplete, setAccountSetupComplete] = useState(false);
   const [outfitterId, setOutfitterId] = useState(null);
   const [hunterId, setHunterId] = useState(null);
-  const [email, setEmail] = useState(null); // Store the hunter's email for the magic link flow
-  const [loading, setLoading] = useState(true); // Loading state for async operations
+  const [email, setEmail] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const location = useLocation();
+  const navigate = useNavigate(); // Initialize navigate
+
   const queryParams = new URLSearchParams(location.search);
 
-  
+
 
   // Get outfitterId and hunterId from the URL
   useEffect(() => {
     setOutfitterId(queryParams.get('outfitterId'));
     setHunterId(queryParams.get('hunterId'));
   }, [location]);
+
+
 
    // Check if the user clicked a magic sign-in link
   useEffect(() => {
@@ -40,15 +44,20 @@ const App = () => {
       }
       signInWithEmailLink(auth, email, url)
         .then(result => {
-          // Clear the email from local storage
           window.localStorage.removeItem('emailForSignIn');
           setUser(result.user);
+
+          // Redirect to the Hunter Setup page after successful login
+          navigate(`/hunter-setup?outfitterId=${outfitterId}&hunterId=${result.user.uid}`);
         })
         .catch(error => {
           console.error("Error signing in with email link:", error.message);
         });
     }
   }, [location]);
+
+
+
 
   // Handle authentication state and fetch user claims
   useEffect(() => {
