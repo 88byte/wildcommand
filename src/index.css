@@ -186,6 +186,28 @@ button.submit-btn {
   margin-top: 20px;
 }
 
+/* Add some margin between the buttons */
+.submit-btn {
+  margin-top: 10px; /* Adds space at the top */
+  padding: 10px 20px;
+}
+
+.magic-link-btn {
+  margin-top: 20px; /* Adds a larger gap between the password login and the magic link button */
+}
+
+.toggle-btn, .back-btn {
+  margin-top: 50px; /* Add space between toggle button and the previous button */
+  padding: 10px 20px;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 10px; /* Add some space below the error message */
+}
+
+
+
 button.submit-btn:hover {
   background-color: #bfa13b;
   transform: translateY(-2px); /* Lift effect */

@@ -97,25 +97,26 @@ const Login = () => {
         )}
 
         {isEmailLinkLogin && (
-          <button className="submit-btn" onClick={handleSendLoginLink}>
+          <button className="submit-btn magic-link-btn" onClick={handleSendLoginLink}>
             Send Login Link
           </button>
         )}
+
+        {/* Back button */}
+        <button className="back-btn" onClick={() => navigate('/')}>
+          Back
+        </button>
 
         {/* Toggle between login methods */}
         <button className="toggle-btn" onClick={toggleLoginMode}>
           {isEmailLinkLogin ? 'Use Email/Password Login' : 'Use Email Link Login'}
         </button>
 
-        {/* Back button */}
-        <button className="back-btn" onClick={() => navigate('/')}>
-          Back
-        </button>
+        
       </div>
     </div>
   );
 };
 
 export default Login;
-
 
