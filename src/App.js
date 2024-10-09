@@ -1,27 +1,37 @@
 import React, { useState, useEffect } from "react";
-import { auth, db } from "./firebase";  // Add 'db' for Firestore access
+import { auth } from "./firebase";
 import { onAuthStateChanged, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";  
+import { doc, getDoc } from "firebase/firestore"; // Import Firestore methods
 import { HashRouter as Router, Route, Routes, Navigate, Link, useLocation, useNavigate } from "react-router-dom"; 
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Hunters from "./components/Hunters";
 import DashboardLayout from "./components/DashboardLayout";
-import HunterSetupModal from "./components/HunterSetupModal";
+import HunterSetupModal from "./components/HunterSetupModal"; // Modal for hunter setup
 import wildLogo from './images/wildlogo.png';
-import { doc, getDoc } from 'firebase/firestore';  // Firestore methods
+import { db } from "./firebase"; // Import the Firestore database
 
 const App = () => {
   const [user, setUser] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [accountSetupComplete, setAccountSetupComplete] = useState(false);
-  const [outfitterId, setOutfitterId] = useState(null);
+  const [outfitterId, setOutfitterId] = useState(null); // Store outfitterId from Firestore or claims
   const [hunterId, setHunterId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showSetupModal, setShowSetupModal] = useState(false); // To show the modal
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Helper to extract outfitterId and hunterId from the URL
+  const extractIdsFromUrl = (url) => {
+    const queryParams = new URLSearchParams(new URL(url).search);
+    return {
+      outfitterId: queryParams.get('outfitterId'),
+      hunterId: queryParams.get('hunterId'),
+    };
+  };
 
   // Handle sign-in link completion (if magic link is clicked)
   useEffect(() => {
@@ -35,11 +45,39 @@ const App = () => {
       }
 
       signInWithEmailLink(auth, email, url)
-        .then((result) => {
+        .then(async (result) => {
           // Clear the email from local storage
           window.localStorage.removeItem('emailForSignIn');
-          setUser(result.user);  // Set user after sign-in
-          navigate("/dashboard"); // Directly navigate to the dashboard after sign-in
+
+          // Force refresh token to fetch updated claims (ensure claims are updated post-sign-in)
+          const tokenResult = await result.user.getIdTokenResult(true);
+
+          // Check the token's claims to see if the account setup is complete
+          const claims = tokenResult.claims;
+
+          // Try to get outfitterId from claims first
+          if (claims.role === 'hunter' && !claims.accountSetupComplete) {
+            let fetchedOutfitterId = claims.outfitterId;
+            let fetchedHunterId = result.user.uid;
+
+            // If outfitterId is still not available, extract it from the magic link URL
+            if (!fetchedOutfitterId) {
+              const { outfitterId: urlOutfitterId, hunterId: urlHunterId } = extractIdsFromUrl(url);
+              fetchedOutfitterId = urlOutfitterId;
+              fetchedHunterId = urlHunterId;
+            }
+
+            if (fetchedOutfitterId && fetchedHunterId) {
+              setOutfitterId(fetchedOutfitterId);
+              setHunterId(fetchedHunterId);
+              setShowSetupModal(true);
+            } else {
+              console.error('outfitterId or hunterId is missing.');
+            }
+          } else {
+            // Navigate to dashboard if the profile is complete
+            navigate("/dashboard");
+          }
         })
         .catch((error) => {
           console.error("Error signing in with email link:", error.message);
@@ -47,35 +85,34 @@ const App = () => {
     }
   }, [location, navigate]);
 
-  // Handle authentication state and check profile setup status from Firestore
+  // Handle authentication state and fetch user claims
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setLoading(false); // Stop loading when user is detected
       if (currentUser) {
         setUser(currentUser);
-        const userId = currentUser.uid;
 
-        // Log outfitterId and userId for debugging
-        console.log("Fetching hunter document with outfitterId:", outfitterId, "and userId:", userId);
+        // Force refresh token to fetch updated claims after login or verification
+        const token = await currentUser.getIdTokenResult(true);
+        const claims = token.claims;
 
-        // Fetch hunter's document from Firestore to check if setup is complete
-        const hunterDocRef = doc(db, `outfitters/${outfitterId}/hunters/${userId}`);
-        const hunterDocSnap = await getDoc(hunterDocRef);
+        setUserRole(claims.role || null);
+        setAccountSetupComplete(claims.accountSetupComplete || false);
 
-        if (hunterDocSnap.exists()) {
-          const hunterData = hunterDocSnap.data();
-          setUserRole('hunter');
-          setAccountSetupComplete(hunterData.accountSetupComplete || false);
+        // Check if the account setup is incomplete and role is 'hunter'
+        if (claims.role === 'hunter' && !claims.accountSetupComplete) {
+          let fetchedOutfitterId = claims.outfitterId;
+          let fetchedHunterId = currentUser.uid;
 
-          if (!hunterData.accountSetupComplete) {
-            setOutfitterId(hunterData.outfitterId);
-            setHunterId(userId);
-            setShowSetupModal(true);
-          } else {
-            setShowSetupModal(false);
+          if (!fetchedOutfitterId) {
+            console.error("outfitterId is missing from claims.");
+            setShowSetupModal(false); // Prevent modal from showing without valid outfitterId
+            return;
           }
-        } else {
-          console.error("Hunter document not found.");
+
+          setOutfitterId(fetchedOutfitterId);
+          setHunterId(fetchedHunterId);
+          setShowSetupModal(true);
         }
       } else {
         setUser(null);
@@ -84,8 +121,7 @@ const App = () => {
       }
     });
     return () => unsubscribe();
-  }, [location, outfitterId]);
-
+  }, [location]);
 
   if (loading) {
     return <div>Loading...</div>; // Optionally show a loading screen while checking authentication
@@ -121,7 +157,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt....</h2>
+                  <h2 className="hero-subtitle">Command the Hunt.</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
