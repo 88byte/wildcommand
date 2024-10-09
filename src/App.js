@@ -36,21 +36,27 @@ const App = () => {
   // Handle sign-in link completion (if magic link is clicked)
   useEffect(() => {
     const url = window.location.href;
+    console.log("Checking for magic link in URL:", url);
 
     if (isSignInWithEmailLink(auth, url)) {
       let email = window.localStorage.getItem('emailForSignIn');
+      console.log("Email from localStorage:", email);
 
       if (!email) {
         email = window.prompt('Please provide your email for confirmation');
+        console.log("Email after prompt:", email);
       }
 
       signInWithEmailLink(auth, email, url)
         .then(async (result) => {
+          console.log("Sign in with email link successful:", result);
+
           // Clear the email from local storage
           window.localStorage.removeItem('emailForSignIn');
 
           // Force refresh token to fetch updated claims (ensure claims are updated post-sign-in)
           const tokenResult = await result.user.getIdTokenResult(true);
+          console.log("Token result:", tokenResult);
 
           // Check the token's claims to see if the account setup is complete
           const claims = tokenResult.claims;
@@ -60,22 +66,27 @@ const App = () => {
             let fetchedOutfitterId = claims.outfitterId;
             let fetchedHunterId = result.user.uid;
 
+            console.log("Claims-based outfitterId:", fetchedOutfitterId, "hunterId:", fetchedHunterId);
+
             // If outfitterId is still not available, extract it from the magic link URL
             if (!fetchedOutfitterId) {
               const { outfitterId: urlOutfitterId, hunterId: urlHunterId } = extractIdsFromUrl(url);
               fetchedOutfitterId = urlOutfitterId;
               fetchedHunterId = urlHunterId;
+              console.log("URL-based outfitterId:", urlOutfitterId, "hunterId:", urlHunterId);
             }
 
             if (fetchedOutfitterId && fetchedHunterId) {
               setOutfitterId(fetchedOutfitterId);
               setHunterId(fetchedHunterId);
               setShowSetupModal(true);
+              console.log("Showing setup modal");
             } else {
               console.error('outfitterId or hunterId is missing.');
             }
           } else {
             // Navigate to dashboard if the profile is complete
+            console.log("Profile is complete, navigating to dashboard.");
             navigate("/dashboard");
           }
         })
@@ -90,11 +101,15 @@ const App = () => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setLoading(false); // Stop loading when user is detected
       if (currentUser) {
+        console.log("User authenticated:", currentUser);
+
         setUser(currentUser);
 
         // Force refresh token to fetch updated claims after login or verification
         const token = await currentUser.getIdTokenResult(true);
         const claims = token.claims;
+
+        console.log("Token claims:", claims);
 
         setUserRole(claims.role || null);
         setAccountSetupComplete(claims.accountSetupComplete || false);
@@ -113,8 +128,10 @@ const App = () => {
           setOutfitterId(fetchedOutfitterId);
           setHunterId(fetchedHunterId);
           setShowSetupModal(true);
+          console.log("Displaying setup modal after auth state change.");
         }
       } else {
+        console.log("No user authenticated, resetting states.");
         setUser(null);
         setUserRole(null);
         setAccountSetupComplete(false);
@@ -157,7 +174,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt.</h2>
+                  <h2 className="hero-subtitle">Command the Hunt....</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
@@ -207,3 +224,4 @@ const FadeInWrapper = ({ children }) => {
 };
 
 export default App;
+
