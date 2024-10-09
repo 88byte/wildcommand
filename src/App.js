@@ -34,9 +34,23 @@ const App = () => {
       }
 
       signInWithEmailLink(auth, email, url)
-        .then((result) => {
+        .then(async (result) => {
           // Clear the email from local storage
           window.localStorage.removeItem('emailForSignIn');
+
+          // Force refresh token to fetch updated claims (ensure claims are updated post-sign-in)
+          const tokenResult = await result.user.getIdTokenResult(true);
+
+          // Check the token's claims to see if the account setup is complete
+          const claims = tokenResult.claims;
+
+          if (claims.role === 'hunter' && !claims.accountSetupComplete) {
+            // Show the modal if the hunter's profile is incomplete
+            setShowSetupModal(true);
+          } else {
+            // Navigate to dashboard if the profile is complete
+            navigate("/dashboard");
+          }
         })
         .catch((error) => {
           console.error("Error signing in with email link:", error.message);
@@ -50,7 +64,9 @@ const App = () => {
       setLoading(false); // Stop loading when user is detected
       if (currentUser) {
         setUser(currentUser);
-        const token = await currentUser.getIdTokenResult();
+
+        // Force refresh token to fetch updated claims after login or verification
+        const token = await currentUser.getIdTokenResult(true);
         const claims = token.claims;
 
         setUserRole(claims.role || null);
@@ -61,7 +77,7 @@ const App = () => {
           setShowSetupModal(true);
         }
 
-        // Set outfitterId and hunterId from claims if not present in URL
+        // Set outfitterId and hunterId from claims
         setOutfitterId(claims.outfitterId);
         setHunterId(claims.uid);
       } else {
@@ -92,7 +108,7 @@ const App = () => {
               <HunterSetupModal
                 outfitterId={outfitterId}
                 hunterId={hunterId}
-                onClose={() => setShowSetupModal(false)} // You can close the modal after setup
+                onClose={() => setShowSetupModal(false)} // Close the modal after setup
               />
             )}
           </>
