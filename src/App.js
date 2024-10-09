@@ -44,8 +44,11 @@ const App = () => {
           // Check the token's claims to see if the account setup is complete
           const claims = tokenResult.claims;
 
+          // Wait for claims to refresh, then check if setup is complete
           if (claims.role === 'hunter' && !claims.accountSetupComplete) {
             // Show the modal if the hunter's profile is incomplete
+            setOutfitterId(claims.outfitterId);
+            setHunterId(result.user.uid); // Make sure hunterId is set here
             setShowSetupModal(true);
           } else {
             // Navigate to dashboard if the profile is complete
@@ -56,7 +59,7 @@ const App = () => {
           console.error("Error signing in with email link:", error.message);
         });
     }
-  }, [location]);
+  }, [location, navigate]);
 
   // Handle authentication state and fetch user claims
   useEffect(() => {
@@ -72,14 +75,12 @@ const App = () => {
         setUserRole(claims.role || null);
         setAccountSetupComplete(claims.accountSetupComplete || false);
 
-        // Show the setup modal if the account is not set up
+        // Check if the account setup is incomplete and role is 'hunter'
         if (claims.role === 'hunter' && !claims.accountSetupComplete) {
+          setOutfitterId(claims.outfitterId);
+          setHunterId(currentUser.uid);
           setShowSetupModal(true);
         }
-
-        // Set outfitterId and hunterId from claims
-        setOutfitterId(claims.outfitterId);
-        setHunterId(claims.uid);
       } else {
         setUser(null);
         setUserRole(null);
@@ -123,7 +124,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt...</h2>
+                  <h2 className="hero-subtitle">Command the Hunt.</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
@@ -173,3 +174,4 @@ const FadeInWrapper = ({ children }) => {
 };
 
 export default App;
+
