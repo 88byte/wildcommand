@@ -38,27 +38,35 @@ const Hunters = () => {
   }, [filterText, hunters]);
 
   const handleAddHunter = async () => {
-  try {
-    const hunterData = {
-      name: newHunter.name,
-      email: newHunter.email,
-      phone: newHunter.phone,
-      role: 'hunter',  // Setting the role as 'hunter'
-      accountSetupComplete: false,  // Setting account setup status to false
-      createdAt: new Date()  // Optional: Track creation time
-    };
+    try {
+      // Make sure the outfitterId is available
+      if (!user || !user.outfitterId) {
+        console.error("Outfitter ID is missing.");
+        return;
+      }
 
-    // Add the hunter to the Firestore under the outfitters collection
-    const docRef = await addDoc(collection(db, `outfitters/${user.outfitterId}/hunters`), hunterData);
-    
-    const addedHunter = { id: docRef.id, ...hunterData };
-    setHunters([...hunters, addedHunter]);
-    setFilteredHunters([...hunters, addedHunter]); // Update filtered list
-    setNewHunter({ name: '', email: '', phone: '' }); // Reset the input fields
-  } catch (error) {
-    console.error('Error adding hunter:', error);
-  }
-};
+      // Include the outfitterId in the hunter's data
+      const hunterData = {
+        name: newHunter.name,
+        email: newHunter.email,
+        phone: newHunter.phone,
+        role: 'hunter',  // Setting the role as 'hunter'
+        accountSetupComplete: false,  // Setting account setup status to false
+        createdAt: new Date(),  // Optional: Track creation time
+        outfitterId: user.outfitterId  // Save the outfitter ID
+      };
+
+      // Add the hunter to the Firestore under the outfitter's collection
+      const docRef = await addDoc(collection(db, `outfitters/${user.outfitterId}/hunters`), hunterData);
+      
+      const addedHunter = { id: docRef.id, ...hunterData };
+      setHunters([...hunters, addedHunter]);
+      setFilteredHunters([...hunters, addedHunter]); // Update filtered list
+      setNewHunter({ name: '', email: '', phone: '' }); // Reset the input fields
+    } catch (error) {
+      console.error('Error adding hunter:', error);
+    }
+  };
 
 
 

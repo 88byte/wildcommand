@@ -1,10 +1,6 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
-const axios = require("axios"); // Import axios to make HTTP requests to Firebase REST API
-const { getAuth } = require("firebase-admin/auth");
-
-
 
 admin.initializeApp();
 
@@ -44,16 +40,11 @@ exports.sendWelcomeEmail = functions.firestore
     const hunterEmail = hunter.email;
     const hunterName = hunter.name;
     const outfitterId = context.params.outfitterId;
-
-    const actionCodeSettings = {
-      // Redirect URL to the Hunter Setup page after clicking the magic link
-      url: `https://wildcommand.com/#/hunter-setup?outfitterId=${outfitterId}&hunterId=${context.params.hunterId}`,
-      handleCodeInApp: true,
-    };
+    const hunterId = context.params.hunterId;
 
     try {
-      const auth = getAuth();
-      await auth.generateSignInWithEmailLink(hunterEmail, actionCodeSettings);
+      // Manually construct the magic link for the Hunter Setup page
+      const magicLink = `https://wildcommand.com/#/hunter-setup?outfitterId=${outfitterId}&hunterId=${hunterId}`;
 
       const mailOptions = {
         from: functions.config().gmail.email,
@@ -62,7 +53,7 @@ exports.sendWelcomeEmail = functions.firestore
         html: `<h1>Welcome to the Outfitter!</h1>
                <p>Hello ${hunterName},</p>
                <p>Click the link below to log in and complete your account setup.</p>
-               <p><a href="https://wildcommand.com/#/hunter-setup?outfitterId=${outfitterId}&hunterId=${context.params.hunterId}">Click here to log in and complete your setup</a></p>`
+               <p><a href="${magicLink}">Click here to log in and complete your setup</a></p>`
       };
 
       await transporter.sendMail(mailOptions);
