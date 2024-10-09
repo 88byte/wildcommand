@@ -50,15 +50,13 @@ const App = () => {
         // Clear the email from local storage
         window.localStorage.removeItem('emailForSignIn');
 
-        // Extract the continueUrl from the URL
+        // Extract the query parameters from the continueUrl
         const queryParams = new URLSearchParams(window.location.search);
         const continueUrl = queryParams.get('continueUrl');
-
-        // Check if continueUrl contains outfitterId and hunterId
+        
+        // Extract outfitterId and hunterId from the continueUrl
         if (continueUrl) {
           const continueParams = new URLSearchParams(new URL(continueUrl).search);
-
-          // Extract outfitterId and hunterId
           const outfitterId = continueParams.get('outfitterId');
           const hunterId = continueParams.get('hunterId');
 
@@ -68,6 +66,8 @@ const App = () => {
           } else {
             console.error('outfitterId or hunterId is missing from continueUrl');
           }
+        } else {
+          console.error('continueUrl not found');
         }
       })
       .catch((error) => {
@@ -138,7 +138,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt...</h2>
+                  <h2 className="hero-subtitle">Command the Hunt.</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
