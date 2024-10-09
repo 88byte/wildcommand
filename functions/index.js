@@ -1,6 +1,7 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
+const { getAuth } = require("firebase-admin/auth"); // Use this for Firebase Admin Auth
 
 admin.initializeApp();
 
@@ -32,7 +33,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Send the magic login link and instructions to the user
+// Send a magic login link to the hunter
 exports.sendWelcomeEmail = functions.firestore
   .document('outfitters/{outfitterId}/hunters/{hunterId}')
   .onCreate(async (snap, context) => {
@@ -43,9 +44,16 @@ exports.sendWelcomeEmail = functions.firestore
     const hunterId = context.params.hunterId;
 
     try {
-      // Manually construct the magic link for the Hunter Setup page
-      const magicLink = `https://wildcommand.com/#/hunter-setup?outfitterId=${outfitterId}&hunterId=${hunterId}`;
+      // Generate a magic sign-in link using Firebase Authentication
+      const actionCodeSettings = {
+        url: `https://wildcommand.com/#/hunter-setup?outfitterId=${outfitterId}&hunterId=${hunterId}`, // Redirect to hunter setup
+        handleCodeInApp: true // Ensure this is handled in the app
+      };
 
+      const auth = getAuth(); // Use Firebase Admin SDK to generate the sign-in link
+      const magicLink = await auth.generateSignInWithEmailLink(hunterEmail, actionCodeSettings);
+
+      // Send the magic link via email using Nodemailer
       const mailOptions = {
         from: functions.config().gmail.email,
         to: hunterEmail,

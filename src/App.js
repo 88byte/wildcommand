@@ -43,18 +43,23 @@ const App = () => {
         email = window.prompt('Please provide your email for confirmation');
       }
       signInWithEmailLink(auth, email, url)
-        .then(result => {
+        .then((result) => {
           window.localStorage.removeItem('emailForSignIn');
-          setUser(result.user);
 
-          // Redirect to the Hunter Setup page after successful login
-          navigate(`/hunter-setup?outfitterId=${outfitterId}&hunterId=${result.user.uid}`);
+          // Extract outfitterId and hunterId from the URL
+          const queryParams = new URLSearchParams(window.location.search);
+          const outfitterId = queryParams.get('outfitterId');
+          const hunterId = queryParams.get('hunterId');
+
+          // Redirect to hunter setup page with outfitterId and hunterId
+          navigate(`/hunter-setup?outfitterId=${outfitterId}&hunterId=${hunterId}`);
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error signing in with email link:", error.message);
         });
     }
   }, [location]);
+
 
 
 
