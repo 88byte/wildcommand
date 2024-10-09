@@ -160,11 +160,13 @@ const App = () => {
           <>
             {/* Hunter Account Setup Modal if setup is not complete */}
             {showSetupModal && (
-              <HunterSetupModal
-                outfitterId={outfitterId}
-                hunterId={hunterId}
-                onClose={() => setShowSetupModal(false)} // Close the modal after setup
-              />
+              <div>
+                <HunterSetupModal
+                  outfitterId={outfitterId}
+                  hunterId={hunterId}
+                  onClose={() => setShowSetupModal(false)} // Close the modal after setup
+                />
+              </div>
             )}
           </>
         )}
@@ -178,7 +180,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt....</h2>
+                  <h2 className="hero-subtitle">Command the Hunt.</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
