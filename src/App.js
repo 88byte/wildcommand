@@ -50,7 +50,7 @@ const App = () => {
         // Clear the email from local storage
         window.localStorage.removeItem('emailForSignIn');
 
-        // Extract the query parameters from the continueUrl
+        // Extract the continueUrl from the URL
         const queryParams = new URLSearchParams(window.location.search);
         const continueUrl = queryParams.get('continueUrl');
         
@@ -75,6 +75,7 @@ const App = () => {
       });
   }
 }, [location]);
+
 
 
 
