@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { auth } from "./firebase";
+import { auth, db } from "./firebase";  // Add 'db' for Firestore access
 import { onAuthStateChanged, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";  
 import { HashRouter as Router, Route, Routes, Navigate, Link, useLocation, useNavigate } from "react-router-dom"; 
 import Signup from "./components/Signup";
@@ -7,8 +7,9 @@ import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Hunters from "./components/Hunters";
 import DashboardLayout from "./components/DashboardLayout";
-import HunterSetupModal from "./components/HunterSetupModal"; // Modal for hunter setup
+import HunterSetupModal from "./components/HunterSetupModal";
 import wildLogo from './images/wildlogo.png';
+import { doc, getDoc } from 'firebase/firestore';  // Firestore methods
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -34,25 +35,11 @@ const App = () => {
       }
 
       signInWithEmailLink(auth, email, url)
-        .then(async (result) => {
+        .then((result) => {
           // Clear the email from local storage
           window.localStorage.removeItem('emailForSignIn');
-
-          // Force refresh token to fetch updated claims (ensure claims are updated post-sign-in)
-          const tokenResult = await result.user.getIdTokenResult(true);
-
-          // Check the token's claims to see if the account setup is complete
-          const claims = tokenResult.claims;
-
-          if (claims.role === 'hunter' && !claims.accountSetupComplete) {
-            // Show the modal if the hunter's profile is incomplete
-            setOutfitterId(claims.outfitterId);
-            setHunterId(result.user.uid); // Make sure hunterId is set here
-            setShowSetupModal(true); // Show modal
-          } else {
-            // Navigate to dashboard if the profile is complete
-            navigate("/dashboard");
-          }
+          setUser(result.user);  // Set user after sign-in
+          navigate("/dashboard"); // Directly navigate to the dashboard after sign-in
         })
         .catch((error) => {
           console.error("Error signing in with email link:", error.message);
@@ -60,35 +47,42 @@ const App = () => {
     }
   }, [location, navigate]);
 
-  // Handle authentication state and fetch user claims
+  // Handle authentication state and check profile setup status from Firestore
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setLoading(false); // Stop loading when user is detected
       if (currentUser) {
         setUser(currentUser);
+        const userId = currentUser.uid;
 
-        // Force refresh token to fetch updated claims after login or verification
-        const token = await currentUser.getIdTokenResult(true);
-        const claims = token.claims;
+        // Fetch hunter's document from Firestore to check if setup is complete
+        const hunterDocRef = doc(db, `outfitters/${outfitterId}/hunters/${userId}`);
+        const hunterDocSnap = await getDoc(hunterDocRef);
 
-        setUserRole(claims.role || null);
-        setAccountSetupComplete(claims.accountSetupComplete || false);
+        if (hunterDocSnap.exists()) {
+          const hunterData = hunterDocSnap.data();
+          setUserRole('hunter');
+          setAccountSetupComplete(hunterData.accountSetupComplete || false);
 
-        // Check if the account setup is incomplete and role is 'hunter'
-        if (claims.role === 'hunter' && !claims.accountSetupComplete) {
-          setOutfitterId(claims.outfitterId);
-          setHunterId(currentUser.uid);
-          setShowSetupModal(true); // Show modal if setup is incomplete
+          if (!hunterData.accountSetupComplete) {
+            // Show the modal if the profile setup is not complete
+            setOutfitterId(hunterData.outfitterId);
+            setHunterId(userId);
+            setShowSetupModal(true);
+          } else {
+            setShowSetupModal(false);
+          }
+        } else {
+          console.error("Hunter document not found.");
         }
       } else {
         setUser(null);
         setUserRole(null);
         setAccountSetupComplete(false);
       }
-
-      setLoading(false); // Stop loading after processing
     });
     return () => unsubscribe();
-  }, [location]);
+  }, [location, outfitterId]);
 
   if (loading) {
     return <div>Loading...</div>; // Optionally show a loading screen while checking authentication
@@ -124,7 +118,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt...</h2>
+                  <h2 className="hero-subtitle">Command the Hunt.</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
@@ -174,4 +168,3 @@ const FadeInWrapper = ({ children }) => {
 };
 
 export default App;
-
