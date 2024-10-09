@@ -24,14 +24,19 @@ const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Helper to extract outfitterId and hunterId from the URL
+  // Helper to extract outfitterId and hunterId from the URL or hash fragment
   const extractIdsFromUrl = (url) => {
-    const queryParams = new URLSearchParams(new URL(url).search);
-    return {
-      outfitterId: queryParams.get('outfitterId'),
-      hunterId: queryParams.get('hunterId'),
-    };
+    const hashFragment = url.split('#')[1]; // Get the part after the #
+    if (hashFragment) {
+      const queryParams = new URLSearchParams(hashFragment.split('?')[1]);
+      return {
+        outfitterId: queryParams.get('outfitterId'),
+        hunterId: queryParams.get('hunterId'),
+      };
+    }
+    return { outfitterId: null, hunterId: null };
   };
+
 
   // Handle sign-in link completion (if magic link is clicked)
   useEffect(() => {
@@ -173,7 +178,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt.</h2>
+                  <h2 className="hero-subtitle">Command the Hunt....</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
