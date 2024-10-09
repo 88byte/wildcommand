@@ -44,12 +44,11 @@ const App = () => {
           // Check the token's claims to see if the account setup is complete
           const claims = tokenResult.claims;
 
-          // Wait for claims to refresh, then check if setup is complete
           if (claims.role === 'hunter' && !claims.accountSetupComplete) {
             // Show the modal if the hunter's profile is incomplete
             setOutfitterId(claims.outfitterId);
             setHunterId(result.user.uid); // Make sure hunterId is set here
-            setShowSetupModal(true);
+            setShowSetupModal(true); // Show modal
           } else {
             // Navigate to dashboard if the profile is complete
             navigate("/dashboard");
@@ -64,7 +63,6 @@ const App = () => {
   // Handle authentication state and fetch user claims
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setLoading(false); // Stop loading when user is detected
       if (currentUser) {
         setUser(currentUser);
 
@@ -79,13 +77,15 @@ const App = () => {
         if (claims.role === 'hunter' && !claims.accountSetupComplete) {
           setOutfitterId(claims.outfitterId);
           setHunterId(currentUser.uid);
-          setShowSetupModal(true);
+          setShowSetupModal(true); // Show modal if setup is incomplete
         }
       } else {
         setUser(null);
         setUserRole(null);
         setAccountSetupComplete(false);
       }
+
+      setLoading(false); // Stop loading after processing
     });
     return () => unsubscribe();
   }, [location]);
@@ -124,7 +124,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt.</h2>
+                  <h2 className="hero-subtitle">Command the Hunt...</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
