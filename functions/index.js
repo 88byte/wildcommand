@@ -46,7 +46,7 @@ exports.sendWelcomeEmail = functions.firestore
     try {
       // Generate a magic sign-in link using Firebase Authentication
       const actionCodeSettings = {
-        url: `https://wildcommand.com/#/hunter-setup?outfitterId=${outfitterId}&hunterId=${hunterId}`, // Redirect to hunter setup
+        url: `https://wildcommand.com/#/dashboard?outfitterId=${outfitterId}&hunterId=${hunterId}`, // Redirect to dashboard after sign-in
         handleCodeInApp: true // Ensure this is handled in the app
       };
 
@@ -60,8 +60,8 @@ exports.sendWelcomeEmail = functions.firestore
         subject: 'Welcome to the Outfitter!',
         html: `<h1>Welcome to the Outfitter!</h1>
                <p>Hello ${hunterName},</p>
-               <p>Click the link below to verify your email and complete your account setup.</p>
-               <p><a href="${magicLink}">Click here to verify your email and complete setup</a></p>`
+               <p>Click the link below to verify your email and complete your account setup. You'll be directed to the dashboard after verifying your email.</p>
+               <p><a href="${magicLink}">Click here to verify your email and access your dashboard</a></p>`
       };
 
       await transporter.sendMail(mailOptions);

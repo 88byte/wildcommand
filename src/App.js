@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "./firebase";
-import { onAuthStateChanged, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";  
-import { doc, getDoc } from "firebase/firestore"; // Import Firestore methods
-import { HashRouter as Router, Route, Routes, Navigate, Link, useLocation, useNavigate } from "react-router-dom"; 
+import { onAuthStateChanged, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
+import { HashRouter as Router, Route, Routes, Navigate, Link, useLocation, useNavigate } from "react-router-dom";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Hunters from "./components/Hunters";
 import DashboardLayout from "./components/DashboardLayout";
-import HunterSetupModal from "./components/HunterSetupModal"; // Modal for hunter setup
 import wildLogo from './images/wildlogo.png';
 import { db } from "./firebase"; // Import the Firestore database
 
@@ -19,7 +17,6 @@ const App = () => {
   const [outfitterId, setOutfitterId] = useState(null); // Store outfitterId from Firestore or claims
   const [hunterId, setHunterId] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showSetupModal, setShowSetupModal] = useState(false); // To show the modal
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -80,15 +77,10 @@ const App = () => {
           if (fetchedOutfitterId && fetchedHunterId) {
             setOutfitterId(fetchedOutfitterId);
             setHunterId(fetchedHunterId);
-            
-            // Ensure claims have the latest account setup status
-            if (!claims.accountSetupComplete) {
-              console.log("Hunter account setup is incomplete, showing modal.");
-              setShowSetupModal(true);
-            } else {
-              console.log("Hunter account setup is already complete, navigating to dashboard.");
-              navigate("/dashboard");
-            }
+
+            console.log("Hunter account setup status:", claims.accountSetupComplete);
+            // Redirect the hunter to the dashboard
+            navigate("/dashboard");
           } else {
             console.error("OutfitterId or HunterId is missing.");
           }
@@ -117,21 +109,9 @@ const App = () => {
         setUserRole(claims.role || null);
         setAccountSetupComplete(claims.accountSetupComplete || false);
 
-        // Check if the account setup is incomplete and role is 'hunter'
-        if (claims.role === 'hunter' && !claims.accountSetupComplete) {
-          let fetchedOutfitterId = claims.outfitterId;
-          let fetchedHunterId = currentUser.uid;
-
-          if (!fetchedOutfitterId) {
-            console.error("OutfitterId is missing from claims, cannot show setup modal.");
-            setShowSetupModal(false); // Prevent modal from showing without valid outfitterId
-            return;
-          }
-
-          setOutfitterId(fetchedOutfitterId);
-          setHunterId(fetchedHunterId);
-          setShowSetupModal(true);
-          console.log("Displaying setup modal after auth state change.");
+        // Redirect to dashboard immediately if authenticated
+        if (claims.role === 'hunter') {
+          navigate("/dashboard");
         }
       } else {
         console.log("No user authenticated, resetting states.");
@@ -154,23 +134,6 @@ const App = () => {
         <Route path="/signup" element={<FadeInWrapper><Signup /></FadeInWrapper>} />
         <Route path="/login" element={<FadeInWrapper><Login /></FadeInWrapper>} />
 
-        {/* Hunter Setup Modal */}
-        {user && (
-          <>
-            {/* Hunter Account Setup Modal if setup is not complete */}
-            {showSetupModal && (
-              <div className="modal-overlay">
-                <HunterSetupModal
-                  outfitterId={outfitterId}
-                  hunterId={hunterId}
-                  onClose={() => setShowSetupModal(false)} // Close the modal after setup
-                />
-              </div>
-            )}
-
-          </>
-        )}
-
         {/* Home page '/' displays the hero section */}
         {!user && (
           <Route
@@ -180,7 +143,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt..</h2>
+                  <h2 className="hero-subtitle">Command the Hunt...</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
@@ -205,7 +168,7 @@ const App = () => {
 
         {/* Hunter Dashboard */}
         {user && userRole === 'hunter' && accountSetupComplete && (
-          <Route path="/hunter-dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         )}
 
         {/* Redirect to login if trying to access protected routes */}
@@ -213,7 +176,6 @@ const App = () => {
           <>
             <Route path="/dashboard" element={<Navigate to="/login" />} />
             <Route path="/hunters" element={<Navigate to="/login" />} />
-            <Route path="/hunter-dashboard" element={<Navigate to="/login" />} />
           </>
         )}
 
