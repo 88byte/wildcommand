@@ -1,29 +1,23 @@
-/* Modal Overlay */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8); /* Dark transparent background */
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Ensure the modal is on top */
+  z-index: 1000; /* Make sure it's on top of everything else */
 }
 
-/* Modal Container */
 .modal-content {
-  background-color: #1c1c1c; /* Dark background */
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Stronger shadow for a modal */
-  max-width: 400px;
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  animation: fadeIn 0.3s ease-in-out; /* Modal fade-in effect */
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes fadeIn {
