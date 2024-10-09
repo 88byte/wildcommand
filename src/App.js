@@ -36,29 +36,46 @@ const App = () => {
 
    // Check if the user clicked a magic sign-in link
   useEffect(() => {
-    const url = window.location.href;
-    if (isSignInWithEmailLink(auth, url)) {
-      let email = window.localStorage.getItem('emailForSignIn');
-      if (!email) {
-        email = window.prompt('Please provide your email for confirmation');
-      }
-      signInWithEmailLink(auth, email, url)
-        .then((result) => {
-          window.localStorage.removeItem('emailForSignIn');
+  const url = window.location.href;
 
-          // Extract outfitterId and hunterId from the URL
-          const queryParams = new URLSearchParams(window.location.search);
-          const outfitterId = queryParams.get('outfitterId');
-          const hunterId = queryParams.get('hunterId');
+  if (isSignInWithEmailLink(auth, url)) {
+    let email = window.localStorage.getItem('emailForSignIn');
 
-          // Redirect to hunter setup page with outfitterId and hunterId
-          navigate(`/hunter-setup?outfitterId=${outfitterId}&hunterId=${hunterId}`);
-        })
-        .catch((error) => {
-          console.error("Error signing in with email link:", error.message);
-        });
+    if (!email) {
+      email = window.prompt('Please provide your email for confirmation');
     }
-  }, [location]);
+
+    signInWithEmailLink(auth, email, url)
+      .then((result) => {
+        // Clear the email from local storage
+        window.localStorage.removeItem('emailForSignIn');
+
+        // Extract the continueUrl from the URL
+        const queryParams = new URLSearchParams(window.location.search);
+        const continueUrl = queryParams.get('continueUrl');
+
+        // Check if continueUrl contains outfitterId and hunterId
+        if (continueUrl) {
+          const continueParams = new URLSearchParams(new URL(continueUrl).search);
+
+          // Extract outfitterId and hunterId
+          const outfitterId = continueParams.get('outfitterId');
+          const hunterId = continueParams.get('hunterId');
+
+          if (outfitterId && hunterId) {
+            // Redirect to hunter-setup with outfitterId and hunterId
+            navigate(`/hunter-setup?outfitterId=${outfitterId}&hunterId=${hunterId}`);
+          } else {
+            console.error('outfitterId or hunterId is missing from continueUrl');
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error signing in with email link:", error.message);
+      });
+  }
+}, [location]);
+
 
 
 
@@ -121,7 +138,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt.</h2>
+                  <h2 className="hero-subtitle">Command the Hunt...</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
