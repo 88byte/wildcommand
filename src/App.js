@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "./firebase";
 import { onAuthStateChanged, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";  
-import { HashRouter as Router, Route, Routes, Navigate, Link, useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
+import { HashRouter as Router, Route, Routes, Navigate, Link, useLocation, useNavigate } from "react-router-dom"; 
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Hunters from "./components/Hunters";
 import DashboardLayout from "./components/DashboardLayout";
-import HunterSetup from "./components/HunterSetup";
+import HunterSetupModal from "./components/HunterSetupModal"; // Modal for hunter setup
 import wildLogo from './images/wildlogo.png';
 
 const App = () => {
@@ -16,71 +16,33 @@ const App = () => {
   const [accountSetupComplete, setAccountSetupComplete] = useState(false);
   const [outfitterId, setOutfitterId] = useState(null);
   const [hunterId, setHunterId] = useState(null);
-  const [email, setEmail] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showSetupModal, setShowSetupModal] = useState(false); // To show the modal
 
   const location = useLocation();
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
-  const queryParams = new URLSearchParams(location.search);
-
-
-
-  // Get outfitterId and hunterId from the URL
+  // Handle sign-in link completion (if magic link is clicked)
   useEffect(() => {
-    setOutfitterId(queryParams.get('outfitterId'));
-    setHunterId(queryParams.get('hunterId'));
-  }, [location]);
+    const url = window.location.href;
 
+    if (isSignInWithEmailLink(auth, url)) {
+      let email = window.localStorage.getItem('emailForSignIn');
 
+      if (!email) {
+        email = window.prompt('Please provide your email for confirmation');
+      }
 
-   // Check if the user clicked a magic sign-in link
-  useEffect(() => {
-  const url = window.location.href;
-
-  if (isSignInWithEmailLink(auth, url)) {
-    let email = window.localStorage.getItem('emailForSignIn');
-
-    if (!email) {
-      email = window.prompt('Please provide your email for confirmation');
+      signInWithEmailLink(auth, email, url)
+        .then((result) => {
+          // Clear the email from local storage
+          window.localStorage.removeItem('emailForSignIn');
+        })
+        .catch((error) => {
+          console.error("Error signing in with email link:", error.message);
+        });
     }
-
-    signInWithEmailLink(auth, email, url)
-      .then((result) => {
-        // Clear the email from local storage
-        window.localStorage.removeItem('emailForSignIn');
-
-        // Extract the continueUrl from the URL
-        const queryParams = new URLSearchParams(window.location.search);
-        const continueUrl = queryParams.get('continueUrl');
-        
-        // Extract outfitterId and hunterId from the continueUrl
-        if (continueUrl) {
-          const continueParams = new URLSearchParams(new URL(continueUrl).search);
-          const outfitterId = continueParams.get('outfitterId');
-          const hunterId = continueParams.get('hunterId');
-
-          if (outfitterId && hunterId) {
-            // Redirect to hunter-setup with outfitterId and hunterId
-            navigate(`/hunter-setup?outfitterId=${outfitterId}&hunterId=${hunterId}`);
-          } else {
-            console.error('outfitterId or hunterId is missing from continueUrl');
-          }
-        } else {
-          console.error('continueUrl not found');
-        }
-      })
-      .catch((error) => {
-        console.error("Error signing in with email link:", error.message);
-      });
-  }
-}, [location]);
-
-
-
-
-
-
+  }, [location]);
 
   // Handle authentication state and fetch user claims
   useEffect(() => {
@@ -94,9 +56,14 @@ const App = () => {
         setUserRole(claims.role || null);
         setAccountSetupComplete(claims.accountSetupComplete || false);
 
+        // Show the setup modal if the account is not set up
+        if (claims.role === 'hunter' && !claims.accountSetupComplete) {
+          setShowSetupModal(true);
+        }
+
         // Set outfitterId and hunterId from claims if not present in URL
-        setOutfitterId(claims.outfitterId || queryParams.get('outfitterId'));
-        setHunterId(claims.uid || queryParams.get('hunterId'));
+        setOutfitterId(claims.outfitterId);
+        setHunterId(claims.uid);
       } else {
         setUser(null);
         setUserRole(null);
@@ -104,17 +71,7 @@ const App = () => {
       }
     });
     return () => unsubscribe();
-  }, [location, queryParams]);
-
-  // Redirect authenticated hunters to the setup page if their profile is incomplete
-  if (user && userRole === 'hunter' && !accountSetupComplete && location.pathname !== '/hunter-setup') {
-    return <Navigate to={`/hunter-setup?outfitterId=${outfitterId}&hunterId=${hunterId}`} />;
-  }
-
-  // Redirect if authenticated but on login/signup
-  if (user && (location.pathname === '/login' || location.pathname === '/signup')) {
-    return <Navigate to="/dashboard" />;
-  }
+  }, [location]);
 
   if (loading) {
     return <div>Loading...</div>; // Optionally show a loading screen while checking authentication
@@ -127,8 +84,19 @@ const App = () => {
         <Route path="/signup" element={<FadeInWrapper><Signup /></FadeInWrapper>} />
         <Route path="/login" element={<FadeInWrapper><Login /></FadeInWrapper>} />
 
-        {/* Hunter Account Setup Route */}
-        <Route path="/hunter-setup" element={<HunterSetup />} />
+        {/* Hunter Setup Modal */}
+        {user && (
+          <>
+            {/* Hunter Account Setup Modal if setup is not complete */}
+            {showSetupModal && (
+              <HunterSetupModal
+                outfitterId={outfitterId}
+                hunterId={hunterId}
+                onClose={() => setShowSetupModal(false)} // You can close the modal after setup
+              />
+            )}
+          </>
+        )}
 
         {/* Home page '/' displays the hero section */}
         {!user && (
@@ -139,7 +107,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt.</h2>
+                  <h2 className="hero-subtitle">Command the Hunt...</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
@@ -189,4 +157,3 @@ const FadeInWrapper = ({ children }) => {
 };
 
 export default App;
-
