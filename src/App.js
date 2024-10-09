@@ -55,6 +55,9 @@ const App = () => {
         setUser(currentUser);
         const userId = currentUser.uid;
 
+        // Log outfitterId and userId for debugging
+        console.log("Fetching hunter document with outfitterId:", outfitterId, "and userId:", userId);
+
         // Fetch hunter's document from Firestore to check if setup is complete
         const hunterDocRef = doc(db, `outfitters/${outfitterId}/hunters/${userId}`);
         const hunterDocSnap = await getDoc(hunterDocRef);
@@ -65,7 +68,6 @@ const App = () => {
           setAccountSetupComplete(hunterData.accountSetupComplete || false);
 
           if (!hunterData.accountSetupComplete) {
-            // Show the modal if the profile setup is not complete
             setOutfitterId(hunterData.outfitterId);
             setHunterId(userId);
             setShowSetupModal(true);
@@ -83,6 +85,7 @@ const App = () => {
     });
     return () => unsubscribe();
   }, [location, outfitterId]);
+
 
   if (loading) {
     return <div>Loading...</div>; // Optionally show a loading screen while checking authentication
@@ -118,7 +121,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt.</h2>
+                  <h2 className="hero-subtitle">Command the Hunt....</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
