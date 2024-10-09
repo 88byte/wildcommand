@@ -36,6 +36,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// Send the magic login link and instructions to the user
 exports.sendWelcomeEmail = functions.firestore
   .document('outfitters/{outfitterId}/hunters/{hunterId}')
   .onCreate(async (snap, context) => {
@@ -43,22 +44,34 @@ exports.sendWelcomeEmail = functions.firestore
     const hunterEmail = hunter.email;
     const hunterName = hunter.name;
 
+    const actionCodeSettings = {
+      // URL to redirect the user to the hunter setup page after they click the magic link
+      url: `https://wildcommand.com/#/hunter-setup`,
+      handleCodeInApp: true,
+    };
+
     try {
-      // Just send an email without the magic link
+      // Generate the sign-in link
+      const auth = getAuth();
+      const magicLink = await auth.generateSignInWithEmailLink(hunterEmail, actionCodeSettings);
+
+      // Send the link via email using Nodemailer
       const mailOptions = {
         from: functions.config().gmail.email,
         to: hunterEmail,
-        subject: 'Welcome to the Outfitter!',
-        html: `<h1>Welcome to the Outfitter!</h1>
+        subject: 'Welcome to Wild Command! Complete Your Setup',
+        html: `<h1>Welcome to Wild Command!</h1>
                <p>Hello ${hunterName},</p>
-               <p>Click the link below to log in and complete your account setup.</p>
-               <p><a href="https://wildcommand.com/#/login">Click here to log in and complete your setup</a></p>`
+               <p>You're almost ready to start your adventure! Click the link below to log in and complete your account setup.</p>
+               <p><strong><a href="${magicLink}">Click here to log in and set your password</a></strong></p>
+               <p>Once logged in, you will be able to set your password and complete your profile.</p>
+               <p>If you have any questions, feel free to reach out to us!</p>`
       };
 
       await transporter.sendMail(mailOptions);
-      console.log(`Welcome email sent to ${hunterEmail}`);
+      console.log(`Welcome email with magic link sent to ${hunterEmail}`);
     } catch (error) {
-      console.error('Error sending email:', error.message);
+      console.error('Error sending welcome email:', error.message);
       throw new functions.https.HttpsError('internal', error.message);
     }
   });

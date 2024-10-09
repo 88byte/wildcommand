@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { db, auth } from '../firebase';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
-import { updatePassword, onAuthStateChanged } from 'firebase/auth'; // Import onAuthStateChanged
+import { updatePassword } from 'firebase/auth';
 import './HunterSetup.css';
 
 const HunterSetup = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
-  const outfitterId = queryParams.get('outfitterId'); // Get outfitterId from URL
-  const hunterId = queryParams.get('hunterId'); // Get hunterId from URL
+  const outfitterId = queryParams.get('outfitterId');
+  const hunterId = queryParams.get('hunterId');
 
   const [password, setPassword] = useState('');
   const [address, setAddress] = useState('');
@@ -31,13 +31,11 @@ const HunterSetup = () => {
           throw new Error("User not authenticated");
         }
 
-        // Fetch hunter data using outfitterId and hunterId from URL
         const docRef = doc(db, 'outfitters', outfitterId, 'hunters', hunterId);
         const hunterDoc = await getDoc(docRef);
 
         if (hunterDoc.exists()) {
           const hunterData = hunterDoc.data();
-          // Populate fields with existing hunter data if needed
           setAddress(hunterData.address || '');
           setCity(hunterData.city || '');
           setState(hunterData.state || '');
@@ -48,7 +46,6 @@ const HunterSetup = () => {
         }
       } catch (err) {
         setError('Failed to load hunter data.');
-        console.error('Error fetching hunter data:', err);
       }
       setIsLoading(false);
     };
@@ -61,7 +58,6 @@ const HunterSetup = () => {
       const user = auth.currentUser;
       if (!user) throw new Error("User not authenticated");
 
-      // Update hunter's details in Firestore
       const docRef = doc(db, 'outfitters', outfitterId, 'hunters', hunterId);
       await updateDoc(docRef, {
         address, city, state, country, licenseNumber,
@@ -71,7 +67,7 @@ const HunterSetup = () => {
       // Set the new password
       await updatePassword(user, password);
 
-      // Redirect to hunter's dashboard or show success message
+      // Redirect to the dashboard
       navigate('/hunter-dashboard');
     } catch (error) {
       setError("Failed to complete setup");

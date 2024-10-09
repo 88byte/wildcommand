@@ -7,7 +7,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState(''); // Add password state for standard login
   const [error, setError] = useState('');
-  const [isMagicLink, setIsMagicLink] = useState(false); // Toggle between magic link and password login
+  const [isEmailLinkLogin, setIsEmailLinkLogin] = useState(false); // Toggle between email link and password login
   const navigate = useNavigate();
 
   // Handle login with email/password
@@ -21,8 +21,8 @@ const Login = () => {
     }
   };
 
-  // Handle sending magic link
-  const handleSendMagicLink = async () => {
+  // Handle sending email login link
+  const handleSendLoginLink = async () => {
     try {
       const actionCodeSettings = {
         url: 'https://wildcommand.com/#/hunter-setup', // Redirect to hunter setup or dashboard if already setup
@@ -30,14 +30,14 @@ const Login = () => {
       };
       await sendSignInLinkToEmail(auth, email, actionCodeSettings);
       window.localStorage.setItem('emailForSignIn', email); // Store email for sign-in link flow
-      alert('Magic link sent! Check your email.');
+      alert('Login link sent! Check your email.');
     } catch (err) {
-      setError('Failed to send sign-in link: ' + err.message);
+      setError('Failed to send login link: ' + err.message);
     }
   };
 
-  // Handle magic link login if user clicks the link
-  const handleMagicLinkLogin = async () => {
+  // Handle email link login if user clicks the link
+  const handleEmailLinkLogin = async () => {
     try {
       const storedEmail = window.localStorage.getItem('emailForSignIn');
       if (isSignInWithEmailLink(auth, window.location.href)) {
@@ -48,17 +48,17 @@ const Login = () => {
         navigate('/dashboard'); // Redirect after successful login
       }
     } catch (err) {
-      setError('Failed to sign in with magic link: ' + err.message);
+      setError('Failed to sign in with login link: ' + err.message);
     }
   };
 
-  // Toggle login mode between email/password and magic link
-  const toggleLoginMode = () => setIsMagicLink(!isMagicLink);
+  // Toggle login mode between email/password and email link login
+  const toggleLoginMode = () => setIsEmailLinkLogin(!isEmailLinkLogin);
 
   return (
     <div className="page-container">
       <div className="form-container">
-        <h2 className="form-title">{isMagicLink ? 'Magic Link Login' : 'Email/Password Login'}</h2>
+        <h2 className="form-title">{isEmailLinkLogin ? 'Email Link Login' : 'Email/Password Login'}</h2>
         {error && <p className="error-message">{error}</p>}
         
         {/* Common email input field */}
@@ -75,7 +75,7 @@ const Login = () => {
           />
         </div>
 
-        {!isMagicLink && (
+        {!isEmailLinkLogin && (
           <>
             {/* Password input for standard login */}
             <div className="form-group">
@@ -96,15 +96,15 @@ const Login = () => {
           </>
         )}
 
-        {isMagicLink && (
-          <button className="submit-btn" onClick={handleSendMagicLink}>
-            Send Magic Link
+        {isEmailLinkLogin && (
+          <button className="submit-btn" onClick={handleSendLoginLink}>
+            Send Login Link
           </button>
         )}
 
         {/* Toggle between login methods */}
         <button className="toggle-btn" onClick={toggleLoginMode}>
-          {isMagicLink ? 'Use Email/Password Login' : 'Use Magic Link Login'}
+          {isEmailLinkLogin ? 'Use Email/Password Login' : 'Use Email Link Login'}
         </button>
 
         {/* Back button */}
@@ -117,4 +117,5 @@ const Login = () => {
 };
 
 export default Login;
+
 
