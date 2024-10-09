@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { db, auth } from '../firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import { updatePassword } from 'firebase/auth';
-import './HunterSetupModal.css'; // Optional: Add custom CSS for the modal
+import './HunterSetupModal.css'; // Custom CSS for modal
 
 const HunterSetupModal = ({ outfitterId, hunterId, onClose }) => {
   const [password, setPassword] = useState('');
@@ -12,31 +12,28 @@ const HunterSetupModal = ({ outfitterId, hunterId, onClose }) => {
   const [country, setCountry] = useState('');
   const [licenseNumber, setLicenseNumber] = useState('');
   const [error, setError] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false); // For form submission state
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
-    setIsSubmitting(true); // Set submitting state
+    setIsSubmitting(true);
     try {
       const user = auth.currentUser;
       if (!user) throw new Error("User not authenticated");
 
-      // Update hunter's details in Firestore
       const docRef = doc(db, 'outfitters', outfitterId, 'hunters', hunterId);
       await updateDoc(docRef, {
         address, city, state, country, licenseNumber,
         accountSetupComplete: true // Mark account setup as complete
       });
 
-      // Set the new password
       await updatePassword(user, password);
 
-      // Close the modal after successful setup
       onClose();
     } catch (error) {
       setError("Failed to complete setup. Please try again.");
       console.error("Error during setup:", error);
     } finally {
-      setIsSubmitting(false); // Stop submission state
+      setIsSubmitting(false);
     }
   };
 
@@ -84,7 +81,7 @@ const HunterSetupModal = ({ outfitterId, hunterId, onClose }) => {
         <button
           className="submit-btn"
           onClick={handleSubmit}
-          disabled={isSubmitting} // Disable button during submission
+          disabled={isSubmitting}
         >
           {isSubmitting ? 'Submitting...' : 'Submit'}
         </button>
@@ -94,3 +91,4 @@ const HunterSetupModal = ({ outfitterId, hunterId, onClose }) => {
 };
 
 export default HunterSetupModal;
+
