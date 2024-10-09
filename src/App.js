@@ -56,38 +56,37 @@ const App = () => {
 
           // Force refresh token to fetch updated claims (ensure claims are updated post-sign-in)
           const tokenResult = await result.user.getIdTokenResult(true);
-          console.log("Token result:", tokenResult);
+          console.log("Token result after sign in:", tokenResult);
 
           // Check the token's claims to see if the account setup is complete
           const claims = tokenResult.claims;
 
           // Try to get outfitterId from claims first
-          if (claims.role === 'hunter' && !claims.accountSetupComplete) {
-            let fetchedOutfitterId = claims.outfitterId;
-            let fetchedHunterId = result.user.uid;
+          let fetchedOutfitterId = claims.outfitterId;
+          let fetchedHunterId = result.user.uid;
 
-            console.log("Claims-based outfitterId:", fetchedOutfitterId, "hunterId:", fetchedHunterId);
+          if (!fetchedOutfitterId || !fetchedHunterId) {
+            console.log("Outfitter ID or Hunter ID missing in claims, checking URL...");
+            const { outfitterId: urlOutfitterId, hunterId: urlHunterId } = extractIdsFromUrl(url);
+            fetchedOutfitterId = urlOutfitterId;
+            fetchedHunterId = urlHunterId;
+            console.log("URL-based outfitterId:", urlOutfitterId, "hunterId:", urlHunterId);
+          }
 
-            // If outfitterId is still not available, extract it from the magic link URL
-            if (!fetchedOutfitterId) {
-              const { outfitterId: urlOutfitterId, hunterId: urlHunterId } = extractIdsFromUrl(url);
-              fetchedOutfitterId = urlOutfitterId;
-              fetchedHunterId = urlHunterId;
-              console.log("URL-based outfitterId:", urlOutfitterId, "hunterId:", urlHunterId);
-            }
-
-            if (fetchedOutfitterId && fetchedHunterId) {
-              setOutfitterId(fetchedOutfitterId);
-              setHunterId(fetchedHunterId);
+          if (fetchedOutfitterId && fetchedHunterId) {
+            setOutfitterId(fetchedOutfitterId);
+            setHunterId(fetchedHunterId);
+            
+            // Ensure claims have the latest account setup status
+            if (!claims.accountSetupComplete) {
+              console.log("Hunter account setup is incomplete, showing modal.");
               setShowSetupModal(true);
-              console.log("Showing setup modal");
             } else {
-              console.error('outfitterId or hunterId is missing.');
+              console.log("Hunter account setup is already complete, navigating to dashboard.");
+              navigate("/dashboard");
             }
           } else {
-            // Navigate to dashboard if the profile is complete
-            console.log("Profile is complete, navigating to dashboard.");
-            navigate("/dashboard");
+            console.error("outfitterId or hunterId is missing.");
           }
         })
         .catch((error) => {
@@ -109,7 +108,7 @@ const App = () => {
         const token = await currentUser.getIdTokenResult(true);
         const claims = token.claims;
 
-        console.log("Token claims:", claims);
+        console.log("Token claims after authentication:", claims);
 
         setUserRole(claims.role || null);
         setAccountSetupComplete(claims.accountSetupComplete || false);
@@ -120,7 +119,7 @@ const App = () => {
           let fetchedHunterId = currentUser.uid;
 
           if (!fetchedOutfitterId) {
-            console.error("outfitterId is missing from claims.");
+            console.error("OutfitterId is missing from claims, cannot show setup modal.");
             setShowSetupModal(false); // Prevent modal from showing without valid outfitterId
             return;
           }
@@ -174,7 +173,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt....</h2>
+                  <h2 className="hero-subtitle">Command the Hunt.</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
@@ -224,4 +223,5 @@ const FadeInWrapper = ({ children }) => {
 };
 
 export default App;
+
 
