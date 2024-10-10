@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "./firebase";
 import { onAuthStateChanged, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
-import { Route, Routes, Navigate, Link, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, Navigate, useLocation, Link, useNavigate } from "react-router-dom";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Hunters from "./components/Hunters";
 import DashboardLayout from "./components/DashboardLayout";
-import HunterProfileSetup from './components/HunterProfileSetup';  // Import the new component
+import HunterProfileSetup from './components/HunterProfileSetup';
 import wildLogo from './images/wildlogo.png';
-import { db } from "./firebase"; // Import the Firestore database
-import { doc, getDoc } from "firebase/firestore"; // Add these imports
+import { db } from "./firebase"; // Firestore database import
+import { doc, getDoc } from "firebase/firestore"; // Firestore imports
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -39,11 +39,9 @@ const App = () => {
 
     if (isSignInWithEmailLink(auth, url)) {
       let email = window.localStorage.getItem("emailForSignIn");
-      console.log("Email from localStorage:", email);
 
       if (!email) {
         email = window.prompt("Please provide your email for confirmation");
-        console.log("Email after prompt:", email);
       }
 
       signInWithEmailLink(auth, email, url)
@@ -55,7 +53,6 @@ const App = () => {
 
           // Force refresh token to fetch updated claims (ensure claims are updated post-sign-in)
           const tokenResult = await result.user.getIdTokenResult(true);
-          console.log("Token result after sign in:", tokenResult);
 
           // Extract outfitterId and hunterId from the URL or use claims
           const { outfitterId: urlOutfitterId, hunterId: urlHunterId } = extractIdsFromUrl(url);
@@ -67,8 +64,8 @@ const App = () => {
           setOutfitterId(fetchedOutfitterId);
           setHunterId(fetchedHunterId);
 
-          // Navigate to the dashboard or profile setup depending on profile completion
-          navigate("/dashboard");
+          // Handle the redirect based on profile completion
+          // Do NOT navigate to the dashboard yet until you verify profile setup
         })
         .catch((error) => {
           console.error("Error signing in with email link:", error.message);
@@ -81,14 +78,11 @@ const App = () => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setLoading(false);
       if (currentUser) {
-        console.log("User authenticated:", currentUser);
         setUser(currentUser);
 
         // Force refresh token to fetch updated claims
         const token = await currentUser.getIdTokenResult(true);
         const claims = token.claims;
-
-        console.log("Token claims after authentication:", claims);
 
         setUserRole(claims.role || null);
         setOutfitterId(claims.outfitterId || null);
@@ -127,7 +121,6 @@ const App = () => {
           }
         }
       } else {
-        console.log("No user authenticated, resetting states.");
         setUser(null);
         setUserRole(null);
         setAccountSetupComplete(false);
@@ -145,8 +138,8 @@ const App = () => {
     <div className="App">
       <Routes>
         {/* Public Routes */}
-        <Route path="/signup" element={<FadeInWrapper><Signup /></FadeInWrapper>} />
-        <Route path="/login" element={<FadeInWrapper><Login /></FadeInWrapper>} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
 
         {/* Home page '/' displays the hero section */}
         {!user && (
@@ -157,7 +150,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt.</h2>
+                  <h2 className="hero-subtitle">Command the Hunt....</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
@@ -205,12 +198,8 @@ const App = () => {
   );
 };
 
-// Fade-in wrapper to add animation
-const FadeInWrapper = ({ children }) => {
-  return <div className="fade-in">{children}</div>;
-};
-
 export default App;
+
 
 
 
