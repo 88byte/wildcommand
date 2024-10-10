@@ -51,7 +51,6 @@ const Hunters = () => {
         email: newHunter.email,
         phone: newHunter.phone,
         role: 'hunter',  // Setting the role as 'hunter'
-        accountSetupComplete: false,  // Setting account setup status to false
         createdAt: new Date(),  // Optional: Track creation time
         outfitterId: user.outfitterId  // Save the outfitter ID
       };
@@ -67,8 +66,6 @@ const Hunters = () => {
       console.error('Error adding hunter:', error);
     }
   };
-
-
 
   const handleEditHunter = async (id) => {
     const hunterDocRef = doc(db, `outfitters/${user.outfitterId}/hunters`, id);
@@ -195,11 +192,8 @@ const Hunters = () => {
         </table>
       </div>
     </div>
-
-
-
-
   );
 };
 
 export default Hunters;
+

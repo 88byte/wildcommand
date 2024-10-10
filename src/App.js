@@ -34,62 +34,53 @@ const App = () => {
     return { outfitterId: null, hunterId: null };
   };
 
-  // Handle sign-in link completion (if magic link is clicked)
-  useEffect(() => {
-    const url = window.location.href;
-    console.log("Checking for magic link in URL:", url);
+  // Remove the modal logic and streamline the flow
+useEffect(() => {
+  const url = window.location.href;
+  console.log("Checking for magic link in URL:", url);
 
-    if (isSignInWithEmailLink(auth, url)) {
-      let email = window.localStorage.getItem('emailForSignIn');
-      console.log("Email from localStorage:", email);
+  if (isSignInWithEmailLink(auth, url)) {
+    let email = window.localStorage.getItem('emailForSignIn');
+    console.log("Email from localStorage:", email);
 
-      if (!email) {
-        email = window.prompt('Please provide your email for confirmation');
-        console.log("Email after prompt:", email);
-      }
-
-      signInWithEmailLink(auth, email, url)
-        .then(async (result) => {
-          console.log("Sign in with email link successful:", result);
-
-          // Clear the email from local storage
-          window.localStorage.removeItem('emailForSignIn');
-
-          // Force refresh token to fetch updated claims (ensure claims are updated post-sign-in)
-          const tokenResult = await result.user.getIdTokenResult(true);
-          console.log("Token result after sign in:", tokenResult);
-
-          // Check the token's claims to see if the account setup is complete
-          const claims = tokenResult.claims;
-
-          // Try to get outfitterId from claims first
-          let fetchedOutfitterId = claims.outfitterId;
-          let fetchedHunterId = result.user.uid;
-
-          if (!fetchedOutfitterId || !fetchedHunterId) {
-            console.log("Outfitter ID or Hunter ID missing in claims, checking URL...");
-            const { outfitterId: urlOutfitterId, hunterId: urlHunterId } = extractIdsFromUrl(url);
-            fetchedOutfitterId = urlOutfitterId;
-            fetchedHunterId = urlHunterId;
-            console.log("URL-based outfitterId:", urlOutfitterId, "hunterId:", urlHunterId);
-          }
-
-          if (fetchedOutfitterId && fetchedHunterId) {
-            setOutfitterId(fetchedOutfitterId);
-            setHunterId(fetchedHunterId);
-
-            console.log("Hunter account setup status:", claims.accountSetupComplete);
-            // Redirect the hunter to the dashboard
-            navigate("/dashboard");
-          } else {
-            console.error("OutfitterId or HunterId is missing.");
-          }
-        })
-        .catch((error) => {
-          console.error("Error signing in with email link:", error.message);
-        });
+    if (!email) {
+      email = window.prompt('Please provide your email for confirmation');
+      console.log("Email after prompt:", email);
     }
-  }, [location, navigate]);
+
+    signInWithEmailLink(auth, email, url)
+      .then(async (result) => {
+        console.log("Sign in with email link successful:", result);
+
+        // Clear the email from local storage
+        window.localStorage.removeItem('emailForSignIn');
+
+        // Force refresh token to fetch updated claims (ensure claims are updated post-sign-in)
+        const tokenResult = await result.user.getIdTokenResult(true);
+        console.log("Token result after sign in:", tokenResult);
+
+        // Check if outfitterId and hunterId are in the URL
+        let fetchedOutfitterId = tokenResult.claims.outfitterId || null;
+        let fetchedHunterId = tokenResult.claims.hunterId || result.user.uid;
+
+        // Fallback to URL-based IDs
+        if (!fetchedOutfitterId) {
+          const urlParams = new URLSearchParams(new URL(url).search);
+          fetchedOutfitterId = urlParams.get('outfitterId');
+          fetchedHunterId = urlParams.get('hunterId');
+        }
+
+        console.log("URL-based outfitterId:", fetchedOutfitterId, "hunterId:", fetchedHunterId);
+
+        // Navigate to the dashboard directly after successful sign-in
+        navigate("/dashboard");
+      })
+      .catch((error) => {
+        console.error("Error signing in with email link:", error.message);
+      });
+  }
+}, [location, navigate]);
+
 
   // Handle authentication state and fetch user claims
   useEffect(() => {
@@ -143,7 +134,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt...</h2>
+                  <h2 className="hero-subtitle">Command the Hunt.</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
