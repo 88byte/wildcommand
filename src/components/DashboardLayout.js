@@ -52,8 +52,8 @@ const DashboardLayout = () => {
 
             {userRole === 'hunter' && (
               <>
-                <li>Calendar</li>
-                <li>Support</li>
+                <li onClick={() => navigate('/profile')}>Profile</li>
+                <li onClick={() => navigate('/support')}>Support</li>
               </>
             )}
 
@@ -82,3 +82,4 @@ const DashboardLayout = () => {
 };
 
 export default DashboardLayout;
+

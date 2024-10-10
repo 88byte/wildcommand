@@ -1,49 +1,86 @@
+/* Container for the profile setup */
 .profile-setup-container {
   max-width: 600px;
   margin: 50px auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  background-color: #f9f9f9; /* Softer background for form */
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Slightly deeper shadow */
 }
 
+/* Header styling */
 .profile-setup-container h2 {
   text-align: center;
   margin-bottom: 20px;
-  font-size: 1.8rem;
+  font-size: 2rem;
+  color: #333;
+  font-weight: bold;
+  letter-spacing: 1px;
 }
 
+/* Form group styling */
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px; /* More space between form fields */
 }
 
+/* Input field styling */
 .input-field {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid #ced4da; /* Lighter border color */
   font-size: 1rem;
-  margin-top: 5px;
+  margin-top: 8px;
+  background-color: #fff;
+  transition: border-color 0.3s ease; /* Smooth focus transition */
 }
 
+/* Input field focus state */
+.input-field:focus {
+  border-color: #28a745;
+  outline: none;
+  box-shadow: 0 0 5px rgba(40, 167, 69, 0.2); /* Green shadow on focus */
+}
+
+/* Submit button styling */
 .submit-btn {
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   background-color: #28a745;
   color: white;
   border: none;
   border-radius: 5px;
-  font-size: 1rem;
+  font-size: 1.1rem;
   cursor: pointer;
-  margin-top: 15px;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
 }
 
+/* Submit button hover effect */
 .submit-btn:hover {
   background-color: #218838;
 }
 
+/* Styling for error messages */
 .error-message {
-  color: red;
+  color: #d9534f;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+/* File upload styling */
+.form-group input[type="file"] {
+  padding: 5px;
+  font-size: 1rem;
+  border: none;
+  background-color: transparent;
+}
+
+/* Profile picture upload label */
+.profile-picture-label {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: #555;
 }
