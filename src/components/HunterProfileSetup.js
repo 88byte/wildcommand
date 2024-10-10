@@ -93,7 +93,7 @@ const HunterProfileSetup = () => {
         console.log("Profile picture uploaded to:", downloadURL);
       }
 
-      // Save the hunter's data to Firestore
+      // Save the hunter's data to Firestore and merge with existing data
       const hunterData = {
         name,
         phone,
@@ -106,6 +106,7 @@ const HunterProfileSetup = () => {
         updatedAt: new Date(),
       };
 
+      // Use merge: true to add these fields to the existing hunter doc without overwriting existing fields
       await setDoc(hunterDocRef, hunterData, { merge: true });
 
       console.log("Profile successfully updated with accountSetupComplete: true");
@@ -223,3 +224,4 @@ const HunterProfileSetup = () => {
 };
 
 export default HunterProfileSetup;
+

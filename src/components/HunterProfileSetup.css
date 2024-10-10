@@ -3,9 +3,9 @@
   max-width: 600px;
   margin: 50px auto;
   padding: 25px;
-  background-color: #f9f9f9; /* Softer background for form */
+  background-color: #fff; /* Match the background style from hunters page */
   border-radius: 10px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Slightly deeper shadow */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Consistent shadow */
 }
 
 /* Header styling */
@@ -20,7 +20,7 @@
 
 /* Form group styling */
 .form-group {
-  margin-bottom: 20px; /* More space between form fields */
+  margin-bottom: 20px; /* Consistent space between form fields */
 }
 
 /* Input field styling */
@@ -28,7 +28,7 @@
   width: 100%;
   padding: 12px;
   border-radius: 5px;
-  border: 1px solid #ced4da; /* Lighter border color */
+  border: 1px solid #ccc; /* Lighter, more consistent border color */
   font-size: 1rem;
   margin-top: 8px;
   background-color: #fff;
@@ -37,37 +37,9 @@
 
 /* Input field focus state */
 .input-field:focus {
-  border-color: #28a745;
+  border-color: #bfa13b; /* Align with focus styles from hunters page */
   outline: none;
-  box-shadow: 0 0 5px rgba(40, 167, 69, 0.2); /* Green shadow on focus */
-}
-
-/* Submit button styling */
-.submit-btn {
-  width: 100%;
-  padding: 14px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-weight: bold;
-}
-
-/* Submit button hover effect */
-.submit-btn:hover {
-  background-color: #218838;
-}
-
-/* Styling for error messages */
-.error-message {
-  color: #d9534f;
-  text-align: center;
-  margin-bottom: 15px;
-  font-size: 0.9rem;
-  font-weight: bold;
+  box-shadow: 0 0 5px rgba(191, 161, 59, 0.2); /* Subtle shadow */
 }
 
 /* File upload styling */
@@ -83,4 +55,48 @@
   margin-top: 10px;
   font-size: 1rem;
   color: #555;
+}
+
+/* Submit button styling */
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #28a745; /* Align button color */
+  color: white;
+  border: none;
+  border-radius: 30px; /* Consistent rounded button */
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+}
+
+/* Submit button hover effect */
+.submit-btn:hover {
+  background-color: #218838;
+}
+
+/* Error message styling */
+.error-message {
+  color: #d9534f;
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .profile-setup-container {
+    padding: 15px;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .submit-btn {
+    padding: 12px;
+    font-size: 1rem;
+  }
 }
