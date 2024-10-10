@@ -136,7 +136,7 @@ const App = () => {
   }, [location, outfitterId, navigate]);
 
   // Loading screen while waiting for authentication and profile data
-  if (loading) {
+  if (loading || profileLoading) {
     return <div>Loading...</div>;
   }
 
@@ -156,7 +156,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt..</h2>
+                  <h2 className="hero-subtitle">Command the Hunt.</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
@@ -205,6 +205,7 @@ const App = () => {
 };
 
 export default App;
+
 
 
 
