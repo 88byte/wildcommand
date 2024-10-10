@@ -16,28 +16,22 @@ const HunterProfileSetup = () => {
   const [outfitterId, setOutfitterId] = useState(null);
 
   useEffect(() => {
-    const fetchOutfitterId = async () => {
-      if (user) {
-        const token = await user.getIdTokenResult();
-        const claims = token.claims;
-        const claimOutfitterId = claims.outfitterId || null;
+    if (user) {
+      const claimOutfitterId = user.outfitterId || null; // Use the claims directly from the user object
 
-        if (claimOutfitterId) {
-          setOutfitterId(claimOutfitterId);
+      if (claimOutfitterId) {
+        setOutfitterId(claimOutfitterId);
+      } else {
+        const url = window.location.href;
+        const urlParams = new URLSearchParams(new URL(url).search);
+        const urlOutfitterId = urlParams.get('outfitterId');
+        if (urlOutfitterId) {
+          setOutfitterId(urlOutfitterId);
         } else {
-          const url = window.location.href;
-          const urlParams = new URLSearchParams(new URL(url).search);
-          const urlOutfitterId = urlParams.get('outfitterId');
-          if (urlOutfitterId) {
-            setOutfitterId(urlOutfitterId);
-          } else {
-            setError("Outfitter ID not found.");
-          }
+          setError("Outfitter ID not found.");
         }
       }
-    };
-
-    fetchOutfitterId();
+    }
   }, [user]);
 
   const handleSubmit = async (e) => {
@@ -121,4 +115,5 @@ const HunterProfileSetup = () => {
 };
 
 export default HunterProfileSetup;
+
 
