@@ -71,8 +71,14 @@ const Hunters = () => {
   const handleEditHunter = async (id) => {
     const hunterDocRef = doc(db, `outfitters/${user.outfitterId}/hunters`, id);
     try {
-      await updateDoc(hunterDocRef, newHunter);
-      const updatedHunters = hunters.map(h => (h.id === id ? { id, ...newHunter } : h));
+      // Only update the fields that can be edited
+      const updatedFields = {
+        name: newHunter.name,
+        email: newHunter.email,
+        phone: newHunter.phone,
+      };
+      await updateDoc(hunterDocRef, updatedFields);
+      const updatedHunters = hunters.map(h => (h.id === id ? { ...h, ...updatedFields } : h));
       setHunters(updatedHunters);
       setFilteredHunters(updatedHunters); // Update filtered list
       setIsEditing(false);
@@ -81,6 +87,7 @@ const Hunters = () => {
       console.error('Error updating hunter:', error);
     }
   };
+
 
   const handleDeleteHunter = async (id) => {
     try {
