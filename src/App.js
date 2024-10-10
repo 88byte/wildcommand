@@ -1,140 +1,72 @@
 import React, { useState, useEffect } from "react";
-import { auth } from "./firebase";
-import { onAuthStateChanged, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
-import { Route, Routes, Navigate, useLocation, useNavigate, Link } from "react-router-dom";
+import { Route, Routes, Navigate, Link, useNavigate } from "react-router-dom";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Hunters from "./components/Hunters";
 import DashboardLayout from "./components/DashboardLayout";
-import HunterProfileSetup from './components/HunterProfileSetup';  
+import HunterProfileSetup from './components/HunterProfileSetup';
 import wildLogo from './images/wildlogo.png';
 import { db } from "./firebase"; // Firestore database
 import { doc, getDoc } from "firebase/firestore"; // Firestore imports
+import { useAuth } from './authContext'; // Import useAuth to access the user from context
 
 const App = () => {
-  const [user, setUser] = useState(null);
-  const [userRole, setUserRole] = useState(null);
-  const [accountSetupComplete, setAccountSetupComplete] = useState(null);
-  const [outfitterId, setOutfitterId] = useState(null);
-  const [hunterId, setHunterId] = useState(null);
+  const { user } = useAuth(); // Get user from the AuthContext
   const [loading, setLoading] = useState(true); // General loading state
-  const [profileLoading, setProfileLoading] = useState(false); // Profile loading state only for hunters
-
-  const location = useLocation();
+  const [accountSetupComplete, setAccountSetupComplete] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(false); // Profile loading state for hunters
   const navigate = useNavigate();
 
-  // Helper to extract outfitterId and hunterId from the URL or hash fragment
-  const extractIdsFromUrl = (url) => {
-    const urlParams = new URLSearchParams(new URL(url).hash.split("?")[1]);
-    return {
-      outfitterId: urlParams.get("outfitterId"),
-      hunterId: urlParams.get("hunterId"),
-    };
-  };
-
-  // Check for magic link and handle sign-in
+  // Check if the hunter's profile setup is complete
   useEffect(() => {
-    const url = window.location.href;
-    console.log("Checking for magic link in URL:", url);
+    const checkProfileSetup = async () => {
+      if (user && user.role === "hunter" && user.outfitterId) {
+        setProfileLoading(true); // Start profile loading
 
-    if (isSignInWithEmailLink(auth, url)) {
-      let email = window.localStorage.getItem("emailForSignIn");
+        try {
+          const hunterDocRef = doc(db, `outfitters/${user.outfitterId}/hunters`, user.uid);
+          const hunterDocSnap = await getDoc(hunterDocRef);
 
-      if (!email) {
-        email = window.prompt("Please provide your email for confirmation");
-      }
+          if (hunterDocSnap.exists()) {
+            const hunterData = hunterDocSnap.data();
+            setAccountSetupComplete(hunterData.accountSetupComplete || false);
 
-      signInWithEmailLink(auth, email, url)
-        .then(async (result) => {
-          console.log("Sign in with email link successful:", result);
-
-          // Clear the email from local storage
-          window.localStorage.removeItem("emailForSignIn");
-
-          // Force refresh token to fetch updated claims (ensure claims are updated post-sign-in)
-          const tokenResult = await result.user.getIdTokenResult(true);
-          console.log("Token result after sign in:", tokenResult);
-
-          const { outfitterId: urlOutfitterId, hunterId: urlHunterId } = extractIdsFromUrl(url);
-          const fetchedOutfitterId = tokenResult.claims.outfitterId || urlOutfitterId;
-          const fetchedHunterId = tokenResult.claims.hunterId || urlHunterId || result.user.uid;
-
-          console.log("Extracted outfitterId:", fetchedOutfitterId, "hunterId:", fetchedHunterId);
-
-          setOutfitterId(fetchedOutfitterId);
-          setHunterId(fetchedHunterId);
-          setUser(result.user);
-        })
-        .catch((error) => {
-          console.error("Error signing in with email link:", error.message);
-        })
-        .finally(() => {
-          setLoading(false); // Stop general loading state after sign-in attempt
-        });
-    } else {
-      setLoading(false); // Stop loading if no magic link is present
-    }
-  }, [location]);
-
-  // Handle authentication state and fetch user claims
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        console.log("User authenticated:", currentUser);
-
-        const token = await currentUser.getIdTokenResult(true);
-        const claims = token.claims;
-
-        setUser(currentUser);
-        setUserRole(claims.role || null);
-        const claimOutfitterId = claims.outfitterId || outfitterId;
-        setOutfitterId(claimOutfitterId); // Always set outfitterId from claims or URL
-
-        if (claims.role === "hunter" && claimOutfitterId) {
-          setProfileLoading(true); // Start profile loading if it's a hunter
-          try {
-            console.log("Fetching hunter profile from Firestore...");
-            const hunterDocRef = doc(db, `outfitters/${claimOutfitterId}/hunters`, currentUser.uid);
-            const hunterDocSnap = await getDoc(hunterDocRef);
-
-            if (hunterDocSnap.exists()) {
-              const hunterData = hunterDocSnap.data();
-              console.log("Hunter profile found:", hunterData);
-              setAccountSetupComplete(hunterData.accountSetupComplete || false);
-
-              // Only navigate after confirming account setup status
-              if (hunterData.accountSetupComplete) {
-                console.log("Profile setup complete. Navigating to dashboard...");
-                navigate("/dashboard");
-              } else {
-                console.log("Profile not complete. Navigating to profile setup...");
-                navigate("/profile-setup");
-              }
+            // Redirect based on account setup status
+            if (hunterData.accountSetupComplete) {
+              navigate("/dashboard");
             } else {
-              console.log("No hunter document found, redirecting to profile setup.");
-              setAccountSetupComplete(false);
               navigate("/profile-setup");
             }
-          } catch (error) {
-            console.error("Error fetching hunter data:", error);
+          } else {
             setAccountSetupComplete(false);
             navigate("/profile-setup");
-          } finally {
-            setProfileLoading(false); // Stop profile loading regardless of the outcome
           }
+        } catch (error) {
+          console.error("Error fetching hunter data:", error);
+          setAccountSetupComplete(false);
+          navigate("/profile-setup");
+        } finally {
+          setProfileLoading(false); // Stop profile loading
         }
       } else {
-        setUser(null);
-        setUserRole(null);
-        setOutfitterId(null);
-        setAccountSetupComplete(false);
-        setLoading(false); // Stop loading when no user is authenticated
+        setLoading(false); // Stop loading if user is not a hunter
       }
-    });
+    };
 
-    return () => unsubscribe();
-  }, [location, outfitterId, navigate]);
+    if (user) {
+      checkProfileSetup();
+    } else {
+      setLoading(false); // Stop loading when no user is found
+    }
+  }, [user, navigate]);
+
+  // Check if loading state should be stopped
+  useEffect(() => {
+    if (!profileLoading && !loading) {
+      setLoading(false);
+    }
+  }, [profileLoading]);
 
   // Loading screen while waiting for authentication and profile data
   if (loading || profileLoading) {
@@ -156,7 +88,7 @@ const App = () => {
               <div className="hero-section">
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
-                  <h1 className="hero-title">Conquer the Wild.</h1>
+                  <h1 className="hero-title">Conquer the Wild...</h1>
                   <h2 className="hero-subtitle">Command the Hunt.</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
@@ -173,7 +105,7 @@ const App = () => {
         )}
 
         {/* Protected Routes for non-hunters */}
-        {user && userRole !== "hunter" && (
+        {user && user.role !== "hunter" && (
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/hunters" element={<Hunters />} />
@@ -181,12 +113,12 @@ const App = () => {
         )}
 
         {/* Hunter Profile Setup Route */}
-        {user && userRole === "hunter" && !accountSetupComplete && (
+        {user && user.role === "hunter" && !accountSetupComplete && (
           <Route path="/profile-setup" element={<HunterProfileSetup />} />
         )}
 
         {/* Hunter Dashboard */}
-        {user && userRole === "hunter" && accountSetupComplete && (
+        {user && user.role === "hunter" && accountSetupComplete && (
           <Route path="/dashboard" element={<Dashboard />} />
         )}
 
@@ -206,6 +138,7 @@ const App = () => {
 };
 
 export default App;
+
 
 
 

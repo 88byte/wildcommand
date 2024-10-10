@@ -19,8 +19,15 @@ export const AuthProvider = ({ children }) => {
           ...currentUser,
           ...tokenResult.claims, // Merge the token claims with the user
         });
+        
+        // Add the console log here to debug the user object
+        console.log("Authenticated user in AuthContext:", {
+          ...currentUser,
+          ...tokenResult.claims,
+        });
       } else {
         setUser(null);
+        console.log("No authenticated user"); // Add this to log when no user is authenticated
       }
       setLoading(false);
     });
