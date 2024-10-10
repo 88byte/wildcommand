@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, getIdTokenResult, isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth';
 import { auth, db } from './firebase'; // Import Firestore
-import { doc, updateDoc, getDoc, query, collection, where, getDocs } from "firebase/firestore";
+import { doc, updateDoc, query, collection, where, getDocs } from "firebase/firestore";
 
 const AuthContext = createContext();
 
@@ -23,29 +23,46 @@ export const AuthProvider = ({ children }) => {
         }
 
         try {
+          // Sign in with email link
           const result = await signInWithEmailLink(auth, email, url);
           window.localStorage.removeItem('emailForSignIn'); // Remove from storage
 
           const tokenResult = await getIdTokenResult(result.user);
           const { email: userEmail } = result.user;
 
-          // Find the corresponding hunter document based on email
-          const q = query(
-            collection(db, 'outfitters'),
-            where('email', '==', userEmail)
-          );
+          // Query all outfitters for matching hunter by email
+          const q = query(collection(db, 'outfitters'));
           const querySnapshot = await getDocs(q);
 
-          // Ensure we found a matching document
-          if (!querySnapshot.empty) {
-            querySnapshot.forEach(async (docSnap) => {
-              const hunterDocRef = doc(db, `outfitters/${docSnap.data().outfitterId}/hunters`, docSnap.id);
+          let hunterFound = false;
 
-              // Update the hunter document with the authenticated user's UID
-              await updateDoc(hunterDocRef, { uid: result.user.uid });
-            });
+          // Search through all outfitters to find the correct hunter document
+          querySnapshot.forEach(async (outfitterDoc) => {
+            const outfitterId = outfitterDoc.id;
+
+            // Query hunters within the outfitter for matching email
+            const hunterQuery = query(
+              collection(db, `outfitters/${outfitterId}/hunters`),
+              where('email', '==', userEmail)
+            );
+            const hunterSnapshot = await getDocs(hunterQuery);
+
+            // If the hunter document is found, update its `uid`
+            if (!hunterSnapshot.empty) {
+              hunterSnapshot.forEach(async (hunterDoc) => {
+                const hunterDocRef = doc(db, `outfitters/${outfitterId}/hunters`, hunterDoc.id);
+                await updateDoc(hunterDocRef, { uid: result.user.uid }); // Update hunter with `uid`
+                console.log(`Hunter profile updated with UID: ${result.user.uid}`);
+                hunterFound = true;
+              });
+            }
+          });
+
+          if (!hunterFound) {
+            console.warn("No hunter document found matching the email:", userEmail);
           }
 
+          // Set the user with the merged claims and user data
           setUser({
             ...result.user,
             ...tokenResult.claims,
@@ -67,7 +84,7 @@ export const AuthProvider = ({ children }) => {
       if (currentUser) {
         const tokenResult = await getIdTokenResult(currentUser);
         const claims = tokenResult.claims;
-        console.log("Claims from token:", claims); // Add this to inspect the claims
+        console.log("Claims from token:", claims); // Log token claims
         setUser({
           ...currentUser,
           ...claims, // Merge the token claims with the user
