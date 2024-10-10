@@ -123,8 +123,6 @@ const App = () => {
           } finally {
             setProfileLoading(false); // Stop profile loading regardless of the outcome
           }
-        } else {
-          setProfileLoading(false); // No need to fetch profile if not a hunter
         }
       } else {
         setUser(null);
