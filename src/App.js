@@ -94,14 +94,15 @@ useEffect(() => {
       setUser(currentUser);
 
       // Force refresh token to fetch updated claims after login or verification
-      const token = await currentUser.getIdTokenResult(true);
+      const token = await currentUser.getIdTokenResult(true); // Force refresh
       const claims = token.claims;
 
       console.log("Token claims after authentication:", claims);
 
       setUserRole(claims.role || null);
+      setAccountSetupComplete(claims.accountSetupComplete || false);
 
-      // Fetch hunter profile from Firestore
+      // Fetch hunter profile from Firestore only after claims are available
       const hunterDocRef = doc(db, "hunters", currentUser.uid);
       const hunterDocSnap = await getDoc(hunterDocRef);
 
@@ -127,6 +128,7 @@ useEffect(() => {
   return () => unsubscribe();
 }, [location]);
 
+
   if (loading) {
     return <div>Loading...</div>; // Optionally show a loading screen while checking authentication
   }
@@ -147,7 +149,7 @@ useEffect(() => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt.</h2>
+                  <h2 className="hero-subtitle">Command the Hunt...</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
