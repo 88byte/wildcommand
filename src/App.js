@@ -9,6 +9,8 @@ import Hunters from "./components/Hunters";
 import DashboardLayout from "./components/DashboardLayout";
 import wildLogo from './images/wildlogo.png';
 import { db } from "./firebase"; // Import the Firestore database
+import { doc, getDoc } from "firebase/firestore"; // Import Firestore methods
+
 
 const App = () => {
   const [user, setUser] = useState(null);
