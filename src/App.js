@@ -4,6 +4,8 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Hunters from "./components/Hunters";
+import Profile from './components/Profile'; // Import the new Profile component
+import Support from './components/Support'; // Import the new Support component
 import DashboardLayout from "./components/DashboardLayout";
 import HunterProfileSetup from './components/HunterProfileSetup';
 import wildLogo from './images/wildlogo.png';
@@ -21,11 +23,9 @@ const App = () => {
   // Check if the hunter's profile setup is complete
   useEffect(() => {
     const checkProfileSetup = async () => {
-      if (user && user.role === "hunter" && user.uid) { // Check by UID now
-        setProfileLoading(true); // Start profile loading
-
+      if (user && user.role === "hunter" && user.uid) {
+        setProfileLoading(true);
         try {
-          // Use UID for lookup and ensure outfitterId is included
           const hunterDocRef = doc(db, `outfitters/${user.outfitterId}/hunters`, user.uid);
           const hunterDocSnap = await getDoc(hunterDocRef);
 
@@ -98,22 +98,19 @@ const App = () => {
           />
         )}
 
-        {/* Protected Routes for outfitters, hunters, and guides */}
-        {user && user.role !== "hunter" && (
+        {/* Protected Routes for all roles */}
+        {user && (
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/hunters" element={<Hunters />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/support" element={<Support />} />
           </Route>
         )}
 
         {/* Hunter Profile Setup Route */}
         {user && user.role === "hunter" && !accountSetupComplete && (
           <Route path="/profile-setup" element={<HunterProfileSetup />} />
-        )}
-
-        {/* Hunter Dashboard */}
-        {user && user.role === "hunter" && accountSetupComplete && (
-          <Route path="/dashboard" element={<Dashboard />} />
         )}
 
         {/* Redirect to login if trying to access protected routes */}
@@ -132,6 +129,7 @@ const App = () => {
 };
 
 export default App;
+
 
 
 

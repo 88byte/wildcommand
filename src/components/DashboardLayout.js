@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
-import { auth } from '../firebase';
+import { auth } from '../firebase'; // Ensure auth is imported from your Firebase setup
 import wildLogo from '../images/wildlogo.png';
 import './DashboardLayout.css'; // Custom CSS for DashboardLayout
 
@@ -47,11 +47,13 @@ const DashboardLayout = () => {
                 <li>Guides</li>
                 <li>Book Hunt</li>
                 <li>Log Hunt</li>
+                <li onClick={() => navigate('/profile')}>Profile</li>
               </>
             )}
 
             {userRole === 'hunter' && (
               <>
+                <li onClick={() => navigate('/dashboard')}>Dashboard</li>
                 <li onClick={() => navigate('/profile')}>Profile</li>
                 <li onClick={() => navigate('/support')}>Support</li>
               </>
@@ -62,11 +64,12 @@ const DashboardLayout = () => {
                 <li>Calendar</li>
                 <li>Book Hunt</li>
                 <li>Log Hunt</li>
+                <li onClick={() => navigate('/profile')}>Profile</li>
               </>
             )}
 
             {/* Common items for all roles */}
-            <li>Support</li>
+            <li onClick={() => navigate('/support')}>Support</li>
           </ul>
         </nav>
         <button className="logout-btn" onClick={handleLogout}>Log Out</button>
@@ -74,7 +77,6 @@ const DashboardLayout = () => {
 
       {/* Main Content */}
       <div className="main-content">
-        {/* Use the Outlet component here to render nested routes */}
         <Outlet />
       </div>
     </div>

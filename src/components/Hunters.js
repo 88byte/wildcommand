@@ -30,11 +30,18 @@ const Hunters = () => {
 
   // Real-time filter logic
   useEffect(() => {
-    const filtered = hunters.filter((hunter) =>
-      hunter.name.toLowerCase().includes(filterText.toLowerCase()) ||
-      hunter.email.toLowerCase().includes(filterText.toLowerCase()) ||
-      hunter.phone.toLowerCase().includes(filterText.toLowerCase())
-    );
+    const filtered = hunters.filter((hunter) => {
+      // Ensure these fields exist before applying toLowerCase
+      const name = hunter.name ? hunter.name.toLowerCase() : '';
+      const email = hunter.email ? hunter.email.toLowerCase() : '';
+      const phone = hunter.phone ? hunter.phone.toLowerCase() : '';
+
+      return (
+        name.includes(filterText.toLowerCase()) ||
+        email.includes(filterText.toLowerCase()) ||
+        phone.includes(filterText.toLowerCase())
+      );
+    });
     setFilteredHunters(filtered);
   }, [filterText, hunters]);
 
@@ -192,9 +199,9 @@ const Hunters = () => {
           <tbody>
             {filteredHunters.map((hunter) => (
               <tr key={hunter.id}>
-                <td>{hunter.name}</td>
-                <td>{hunter.email}</td>
-                <td>{hunter.phone}</td>
+                <td>{hunter.name || 'N/A'}</td> {/* Safely handle undefined values */}
+                <td>{hunter.email || 'N/A'}</td> {/* Safely handle undefined values */}
+                <td>{hunter.phone || 'N/A'}</td> {/* Safely handle undefined values */}
                 <td>{hunter.accountSetupComplete ? "Yes" : "No"}</td> {/* Show profile completion status */}
                 <td>
                   <button className="edit-btn" onClick={() => handleEditClick(hunter)}>Edit</button>
@@ -210,3 +217,4 @@ const Hunters = () => {
 };
 
 export default Hunters;
+

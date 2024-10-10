@@ -1,4 +1,3 @@
-// src/authContext.js
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, getIdTokenResult, isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth';
 import { auth, db } from './firebase'; // Import Firestore
@@ -11,6 +10,16 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Fetch the user role based on custom claims (useful if needed externally)
+  const fetchUserRole = async () => {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      const token = await currentUser.getIdTokenResult();
+      return token.claims.role; // Return the role from the custom claims
+    }
+    return null;
+  };
 
   useEffect(() => {
     const handleEmailLinkSignIn = async () => {
@@ -59,17 +68,24 @@ export const AuthProvider = ({ children }) => {
 
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        const tokenResult = await getIdTokenResult(currentUser);
-        const claims = tokenResult.claims;
-        setUser({
-          ...currentUser,
-          ...claims, // Merge the token claims with the user
-        });
-        
-        console.log("Authenticated user in AuthContext:", {
-          ...currentUser,
-          ...claims,
-        });
+        try {
+          // Fetch token and claims
+          const tokenResult = await getIdTokenResult(currentUser);
+          const claims = tokenResult.claims;
+          
+          // Set the user object with the role
+          setUser({
+            ...currentUser,
+            ...claims, // Merge the token claims with the user
+          });
+
+          console.log("Authenticated user in AuthContext:", {
+            ...currentUser,
+            ...claims,
+          });
+        } catch (error) {
+          console.error('Error fetching token claims:', error);
+        }
       } else {
         setUser(null);
         console.log("No authenticated user");
@@ -81,7 +97,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user }}>
+    <AuthContext.Provider value={{ user, fetchUserRole }}>
       {!loading && children}
     </AuthContext.Provider>
   );
