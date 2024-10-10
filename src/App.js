@@ -119,20 +119,20 @@ useEffect(() => {
             const hunterDocSnap = await getDoc(hunterDocRef);
 
             if (hunterDocSnap.exists()) {
-              const hunterData = hunterDocSnap.data();
+              const hunterData = hunterDocSnap.data(); // Define hunterData inside this block
               setAccountSetupComplete(hunterData.accountSetupComplete || false);
+
+              // Redirect based on account setup status
+              if (hunterData.accountSetupComplete) {
+                navigate("/dashboard");
+              } else {
+                navigate("/profile-setup");
+              }
             } else {
               console.log("No such hunter document!");
               setAccountSetupComplete(false);
-            }
-
-            // Redirect based on account setup status
-            if (hunterData && hunterData.accountSetupComplete) {
-              navigate("/dashboard");
-            } else {
               navigate("/profile-setup");
             }
-
           } catch (error) {
             console.error("Error fetching hunter data:", error);
             setAccountSetupComplete(false);
@@ -154,6 +154,7 @@ useEffect(() => {
   });
   return () => unsubscribe();
 }, [location, outfitterId]);
+
 
 
   if (loading) {
