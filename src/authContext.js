@@ -1,7 +1,8 @@
 // src/authContext.js
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, getIdTokenResult, isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth';
-import { auth } from './firebase';
+import { auth, db } from './firebase'; // Import Firestore
+import { doc, updateDoc, getDoc, query, collection, where, getDocs } from "firebase/firestore";
 
 const AuthContext = createContext();
 
@@ -26,11 +27,31 @@ export const AuthProvider = ({ children }) => {
           window.localStorage.removeItem('emailForSignIn'); // Remove from storage
 
           const tokenResult = await getIdTokenResult(result.user);
+          const { email: userEmail } = result.user;
+
+          // Find the corresponding hunter document based on email
+          const q = query(
+            collection(db, 'outfitters'),
+            where('email', '==', userEmail)
+          );
+          const querySnapshot = await getDocs(q);
+
+          // Ensure we found a matching document
+          if (!querySnapshot.empty) {
+            querySnapshot.forEach(async (docSnap) => {
+              const hunterDocRef = doc(db, `outfitters/${docSnap.data().outfitterId}/hunters`, docSnap.id);
+
+              // Update the hunter document with the authenticated user's UID
+              await updateDoc(hunterDocRef, { uid: result.user.uid });
+            });
+          }
+
           setUser({
             ...result.user,
             ...tokenResult.claims,
           });
-          console.log('Signed in with email link:', {
+
+          console.log('Signed in with email link and updated hunter profile:', {
             ...result.user,
             ...tokenResult.claims,
           });
@@ -40,7 +61,6 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
-    // Call handleEmailLinkSignIn to check and sign in with email link if available
     handleEmailLinkSignIn();
 
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -53,7 +73,6 @@ export const AuthProvider = ({ children }) => {
           ...claims, // Merge the token claims with the user
         });
         
-        // Add another log to inspect the final user object
         console.log("Authenticated user in AuthContext:", {
           ...currentUser,
           ...claims,
@@ -74,4 +93,3 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-

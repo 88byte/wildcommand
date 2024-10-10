@@ -20,20 +20,16 @@ const App = () => {
 
   // Check if the hunter's profile setup is complete
   useEffect(() => {
-  const checkProfileSetup = async () => {
-    if (user && user.role === "hunter" && user.outfitterId) {
-      setProfileLoading(true); // Start profile loading
+    const checkProfileSetup = async () => {
+      if (user && user.role === "hunter" && user.uid) { // Check by UID now
+        setProfileLoading(true); // Start profile loading
 
-      try {
-        const hunterDocRef = doc(db, `outfitters/${user.outfitterId}/hunters`, user.uid);
-        const hunterDocSnap = await getDoc(hunterDocRef);
+        try {
+          const hunterDocRef = doc(db, `outfitters/${user.outfitterId}/hunters`, user.uid); // Use UID for lookup
+          const hunterDocSnap = await getDoc(hunterDocRef);
 
-        if (hunterDocSnap.exists()) {
-          const hunterData = hunterDocSnap.data();
-          console.log("Hunter data from Firestore:", hunterData); // Add this log to inspect the retrieved document
-          
-          if (hunterData && hunterData.accountSetupComplete !== undefined) {
-            console.log("accountSetupComplete:", hunterData.accountSetupComplete); // Log the actual field
+          if (hunterDocSnap.exists()) {
+            const hunterData = hunterDocSnap.data();
             setAccountSetupComplete(hunterData.accountSetupComplete || false);
 
             // Redirect based on account setup status
@@ -43,33 +39,28 @@ const App = () => {
               navigate("/profile-setup");
             }
           } else {
-            console.error("accountSetupComplete field not found in Firestore data");
             setAccountSetupComplete(false);
             navigate("/profile-setup");
           }
-        } else {
-          console.log("No hunter document found, redirecting to profile setup.");
+        } catch (error) {
+          console.error("Error fetching hunter data:", error);
           setAccountSetupComplete(false);
           navigate("/profile-setup");
+        } finally {
+          setProfileLoading(false); // Stop profile loading
         }
-      } catch (error) {
-        console.error("Error fetching hunter data:", error);
-        setAccountSetupComplete(false);
-        navigate("/profile-setup");
-      } finally {
-        setProfileLoading(false); // Stop profile loading
+      } else {
+        setLoading(false); // Stop loading if user is not a hunter
       }
-    } else {
-      setLoading(false); // Stop loading if user is not a hunter
-    }
-  };
+    };
 
-  if (user) {
-    checkProfileSetup();
-  } else {
-    setLoading(false); // Stop loading when no user is found
-  }
-}, [user, navigate]);
+    if (user) {
+      checkProfileSetup();
+    } else {
+      setLoading(false); // Stop loading when no user is found
+    }
+  }, [user, navigate]);
+
 
 
 
@@ -95,7 +86,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild</h1>
-                  <h2 className="hero-subtitle">Command the Hunt..</h2>
+                  <h2 className="hero-subtitle">Command the Hunt.</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
