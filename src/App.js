@@ -87,46 +87,73 @@ const App = () => {
   // Handle authentication state and fetch user claims
 useEffect(() => {
   const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-    setLoading(false); // Stop loading when user is detected
+    setLoading(false);
     if (currentUser) {
       console.log("User authenticated:", currentUser);
-
       setUser(currentUser);
 
-      // Force refresh token to fetch updated claims after login or verification
-      const token = await currentUser.getIdTokenResult(true); // Force refresh
+      // Force refresh token to fetch updated claims
+      const token = await currentUser.getIdTokenResult(true);
       const claims = token.claims;
 
       console.log("Token claims after authentication:", claims);
 
       setUserRole(claims.role || null);
-      setAccountSetupComplete(claims.accountSetupComplete || false);
+      setOutfitterId(claims.outfitterId || null);
 
-      // Fetch hunter profile from Firestore only after claims are available
-      const hunterDocRef = doc(db, "hunters", currentUser.uid);
-      const hunterDocSnap = await getDoc(hunterDocRef);
-
-      if (hunterDocSnap.exists()) {
-        const hunterData = hunterDocSnap.data();
-        setAccountSetupComplete(hunterData.accountSetupComplete || false); // Use the Firestore value
-      } else {
-        console.log("No such document!");
-        setAccountSetupComplete(false); // Default to false if no document exists
+      // If outfitterId is not in claims, try to extract from URL
+      if (!claims.outfitterId) {
+        const url = window.location.href;
+        const urlParams = new URLSearchParams(new URL(url).search);
+        const fetchedOutfitterId = urlParams.get('outfitterId');
+        if (fetchedOutfitterId) {
+          setOutfitterId(fetchedOutfitterId);
+        }
       }
 
-      // Redirect to profile setup if hunter hasn't completed profile
-      if (claims.role === 'hunter' && !accountSetupComplete) {
-        navigate("/profile-setup");
+      // Fetch hunter profile from Firestore only after outfitterId is available
+      if (claims.role === 'hunter') {
+        if (outfitterId) {
+          try {
+            const hunterDocRef = doc(db, `outfitters/${outfitterId}/hunters`, currentUser.uid);
+            const hunterDocSnap = await getDoc(hunterDocRef);
+
+            if (hunterDocSnap.exists()) {
+              const hunterData = hunterDocSnap.data();
+              setAccountSetupComplete(hunterData.accountSetupComplete || false);
+            } else {
+              console.log("No such hunter document!");
+              setAccountSetupComplete(false);
+            }
+
+            // Redirect based on account setup status
+            if (hunterData && hunterData.accountSetupComplete) {
+              navigate("/dashboard");
+            } else {
+              navigate("/profile-setup");
+            }
+
+          } catch (error) {
+            console.error("Error fetching hunter data:", error);
+            setAccountSetupComplete(false);
+            navigate("/profile-setup");
+          }
+        } else {
+          console.log("OutfitterId not found, cannot fetch hunter data.");
+          setAccountSetupComplete(false);
+          navigate("/profile-setup");
+        }
       }
     } else {
       console.log("No user authenticated, resetting states.");
       setUser(null);
       setUserRole(null);
       setAccountSetupComplete(false);
+      setOutfitterId(null);
     }
   });
   return () => unsubscribe();
-}, [location]);
+}, [location, outfitterId]);
 
 
   if (loading) {
@@ -149,7 +176,7 @@ useEffect(() => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt...</h2>
+                  <h2 className="hero-subtitle">Command the Hunt.</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>

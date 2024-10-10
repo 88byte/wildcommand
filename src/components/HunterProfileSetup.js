@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { useAuth } from '../authContext';
@@ -6,14 +6,39 @@ import { useNavigate } from 'react-router-dom';
 import './HunterProfileSetup.css';
 
 const HunterProfileSetup = () => {
-  const { user } = useAuth(); // Get current authenticated user
+  const { user } = useAuth();
   const navigate = useNavigate();
 
-  // State for form data
   const [experience, setExperience] = useState('');
   const [preferences, setPreferences] = useState('');
   const [availability, setAvailability] = useState('');
   const [error, setError] = useState('');
+  const [outfitterId, setOutfitterId] = useState(null);
+
+  useEffect(() => {
+    const fetchOutfitterId = async () => {
+      if (user) {
+        const token = await user.getIdTokenResult();
+        const claims = token.claims;
+        const claimOutfitterId = claims.outfitterId || null;
+
+        if (claimOutfitterId) {
+          setOutfitterId(claimOutfitterId);
+        } else {
+          const url = window.location.href;
+          const urlParams = new URLSearchParams(new URL(url).search);
+          const urlOutfitterId = urlParams.get('outfitterId');
+          if (urlOutfitterId) {
+            setOutfitterId(urlOutfitterId);
+          } else {
+            setError("Outfitter ID not found.");
+          }
+        }
+      }
+    };
+
+    fetchOutfitterId();
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,19 +48,22 @@ const HunterProfileSetup = () => {
       return;
     }
 
+    if (!outfitterId) {
+      setError("Outfitter ID is missing. Cannot save profile.");
+      return;
+    }
+
     try {
-      // Create or update a document in Firestore for this hunter
-      const hunterDocRef = doc(db, `hunters`, user.uid);
+      const hunterDocRef = doc(db, `outfitters/${outfitterId}/hunters`, user.uid);
 
       await setDoc(hunterDocRef, {
         experience,
         preferences,
         availability,
-        accountSetupComplete: true,  // Mark account as setup complete
+        accountSetupComplete: true,
         updatedAt: new Date(),
-      }, { merge: true });  // Use merge to update existing document if it exists
+      }, { merge: true });
 
-      // Redirect to the dashboard after completing the profile
       navigate('/dashboard');
     } catch (err) {
       setError('Error saving profile: ' + err.message);
