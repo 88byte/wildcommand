@@ -61,13 +61,6 @@ const App = () => {
     }
   }, [user, navigate]);
 
-  // Check if loading state should be stopped
-  useEffect(() => {
-    if (!profileLoading && !loading) {
-      setLoading(false);
-    }
-  }, [profileLoading]);
-
   // Loading screen while waiting for authentication and profile data
   if (loading || profileLoading) {
     return <div>Loading...</div>;
@@ -138,6 +131,7 @@ const App = () => {
 };
 
 export default App;
+
 
 
 
