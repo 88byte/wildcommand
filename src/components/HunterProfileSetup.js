@@ -24,7 +24,7 @@ const HunterProfileSetup = () => {
     }
 
     try {
-      // Create a document in Firestore for this hunter
+      // Create or update a document in Firestore for this hunter
       const hunterDocRef = doc(db, `hunters`, user.uid);
 
       await setDoc(hunterDocRef, {
@@ -33,7 +33,7 @@ const HunterProfileSetup = () => {
         availability,
         accountSetupComplete: true,  // Mark account as setup complete
         updatedAt: new Date(),
-      }, { merge: true });
+      }, { merge: true });  // Use merge to update existing document if it exists
 
       // Redirect to the dashboard after completing the profile
       navigate('/dashboard');
@@ -93,3 +93,4 @@ const HunterProfileSetup = () => {
 };
 
 export default HunterProfileSetup;
+

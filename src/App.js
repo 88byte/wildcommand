@@ -10,6 +10,7 @@ import DashboardLayout from "./components/DashboardLayout";
 import HunterProfileSetup from './components/HunterProfileSetup';  // Import the new component
 import wildLogo from './images/wildlogo.png';
 import { db } from "./firebase"; // Import the Firestore database
+import { doc, getDoc } from "firebase/firestore"; // Add these imports
 
 
 const App = () => {
@@ -84,36 +85,47 @@ const App = () => {
   }, [location, navigate]);
 
   // Handle authentication state and fetch user claims
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setLoading(false); // Stop loading when user is detected
-      if (currentUser) {
-        console.log("User authenticated:", currentUser);
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    setLoading(false); // Stop loading when user is detected
+    if (currentUser) {
+      console.log("User authenticated:", currentUser);
 
-        setUser(currentUser);
+      setUser(currentUser);
 
-        // Force refresh token to fetch updated claims after login or verification
-        const token = await currentUser.getIdTokenResult(true);
-        const claims = token.claims;
+      // Force refresh token to fetch updated claims after login or verification
+      const token = await currentUser.getIdTokenResult(true);
+      const claims = token.claims;
 
-        console.log("Token claims after authentication:", claims);
+      console.log("Token claims after authentication:", claims);
 
-        setUserRole(claims.role || null);
-        setAccountSetupComplete(claims.accountSetupComplete || false);
+      setUserRole(claims.role || null);
 
-        // Redirect to profile setup if hunter hasn't completed profile
-        if (claims.role === 'hunter' && !claims.accountSetupComplete) {
-          navigate("/profile-setup");
-        }
+      // Fetch hunter profile from Firestore
+      const hunterDocRef = doc(db, "hunters", currentUser.uid);
+      const hunterDocSnap = await getDoc(hunterDocRef);
+
+      if (hunterDocSnap.exists()) {
+        const hunterData = hunterDocSnap.data();
+        setAccountSetupComplete(hunterData.accountSetupComplete || false); // Use the Firestore value
       } else {
-        console.log("No user authenticated, resetting states.");
-        setUser(null);
-        setUserRole(null);
-        setAccountSetupComplete(false);
+        console.log("No such document!");
+        setAccountSetupComplete(false); // Default to false if no document exists
       }
-    });
-    return () => unsubscribe();
-  }, [location]);
+
+      // Redirect to profile setup if hunter hasn't completed profile
+      if (claims.role === 'hunter' && !accountSetupComplete) {
+        navigate("/profile-setup");
+      }
+    } else {
+      console.log("No user authenticated, resetting states.");
+      setUser(null);
+      setUserRole(null);
+      setAccountSetupComplete(false);
+    }
+  });
+  return () => unsubscribe();
+}, [location]);
 
   if (loading) {
     return <div>Loading...</div>; // Optionally show a loading screen while checking authentication
@@ -135,7 +147,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt...</h2>
+                  <h2 className="hero-subtitle">Command the Hunt.</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
