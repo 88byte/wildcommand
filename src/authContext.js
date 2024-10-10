@@ -40,6 +40,9 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
+    // Call handleEmailLinkSignIn to check and sign in with email link if available
+    handleEmailLinkSignIn();
+
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         const tokenResult = await getIdTokenResult(currentUser);
@@ -71,3 +74,4 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
