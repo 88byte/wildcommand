@@ -25,7 +25,8 @@ const App = () => {
         setProfileLoading(true); // Start profile loading
 
         try {
-          const hunterDocRef = doc(db, `outfitters/${user.outfitterId}/hunters`, user.uid); // Use UID for lookup
+          // Use UID for lookup and ensure outfitterId is included
+          const hunterDocRef = doc(db, `outfitters/${user.outfitterId}/hunters`, user.uid);
           const hunterDocSnap = await getDoc(hunterDocRef);
 
           if (hunterDocSnap.exists()) {
@@ -50,7 +51,7 @@ const App = () => {
           setProfileLoading(false); // Stop profile loading
         }
       } else {
-        setLoading(false); // Stop loading if user is not a hunter
+        setLoading(false); // Stop loading if user is not a hunter or user is null
       }
     };
 
@@ -61,11 +62,7 @@ const App = () => {
     }
   }, [user, navigate]);
 
-
-
-
-
-  // Loading screen while waiting for authentication and profile data
+  // Adjust loading states based on conditions
   if (loading || profileLoading) {
     return <div>Loading...</div>;
   }
@@ -86,7 +83,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild</h1>
-                  <h2 className="hero-subtitle">Command the Hunt...</h2>
+                  <h2 className="hero-subtitle">Command the Hunt.</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
@@ -135,6 +132,7 @@ const App = () => {
 };
 
 export default App;
+
 
 
 

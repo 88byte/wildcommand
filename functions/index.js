@@ -46,7 +46,7 @@ exports.sendWelcomeEmail = functions.firestore
     try {
       // Generate a magic sign-in link using Firebase Authentication
       const actionCodeSettings = {
-        url: `https://wildcommand.com/#/dashboard?outfitterId=${outfitterId}&hunterId=${hunterId}`, // Redirect to dashboard after sign-in
+        url: `https://wildcommand.com/#/login?outfitterId=${outfitterId}&hunterId=${hunterId}`, // Use /login for consistent redirection
         handleCodeInApp: true // Ensure this is handled in the app
       };
 
@@ -71,5 +71,6 @@ exports.sendWelcomeEmail = functions.firestore
       throw new functions.https.HttpsError('internal', error.message);
     }
   });
+
 
 

@@ -1,8 +1,9 @@
 // src/authContext.js
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, getIdTokenResult, isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth';
-import { auth, db } from './firebase'; // Import Firestore
+import { auth, db, functions } from './firebase'; // Import Firestore and Functions
 import { doc, updateDoc, query, collection, where, getDocs } from "firebase/firestore";
+import { httpsCallable } from "firebase/functions"; // Import Firebase Functions
 
 const AuthContext = createContext();
 
@@ -34,11 +35,12 @@ export const AuthProvider = ({ children }) => {
           const q = query(collection(db, 'outfitters'));
           const querySnapshot = await getDocs(q);
 
+          let outfitterId = null;
           let hunterFound = false;
 
           // Search through all outfitters to find the correct hunter document
           for (const outfitterDoc of querySnapshot.docs) {
-            const outfitterId = outfitterDoc.id;
+            outfitterId = outfitterDoc.id;
 
             // Query hunters within the outfitter for matching email
             const hunterQuery = query(
@@ -55,6 +57,7 @@ export const AuthProvider = ({ children }) => {
                 console.log(`Hunter profile updated with UID: ${result.user.uid}`);
                 hunterFound = true;
               });
+              break; // Stop searching once the correct outfitter/hunter is found
             }
           }
 
@@ -68,9 +71,21 @@ export const AuthProvider = ({ children }) => {
             ...tokenResult.claims,
           });
 
-          console.log('Signed in with email link and updated hunter profile:', {
+          // Call setUserRole cloud function to set custom claims
+          const setUserRole = httpsCallable(functions, 'setUserRole');
+          await setUserRole({ uid: result.user.uid, role: 'hunter', outfitterId });
+
+          // Refresh the token to apply the new claims
+          const updatedTokenResult = await result.user.getIdTokenResult(true); // Force refresh
+
+          setUser({
             ...result.user,
-            ...tokenResult.claims,
+            ...updatedTokenResult.claims,
+          });
+
+          console.log('Signed in with email link, updated hunter profile, and set user role:', {
+            ...result.user,
+            ...updatedTokenResult.claims,
           });
         } catch (error) {
           console.error('Error signing in with email link:', error);
@@ -79,7 +94,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     handleEmailLinkSignIn();
-    
+
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         const tokenResult = await getIdTokenResult(currentUser);
@@ -103,7 +118,6 @@ export const AuthProvider = ({ children }) => {
 
     return () => unsubscribe();
   }, []);
-
 
   return (
     <AuthContext.Provider value={{ user }}>
