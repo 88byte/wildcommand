@@ -58,11 +58,13 @@ const HunterProfileSetup = () => {
         updatedAt: new Date(),
       }, { merge: true });
 
+      console.log("Profile successfully updated with accountSetupComplete: true");
       navigate('/dashboard');
     } catch (err) {
       setError('Error saving profile: ' + err.message);
     }
   };
+
 
   return (
     <div className="profile-setup-container">
