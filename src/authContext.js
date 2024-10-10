@@ -40,29 +40,32 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        const tokenResult = await getIdTokenResult(currentUser);
-        setUser({
-          ...currentUser,
-          ...tokenResult.claims,
-        });
+    useEffect(() => {
+      const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+        if (currentUser) {
+          const tokenResult = await getIdTokenResult(currentUser);
+          const claims = tokenResult.claims;
+          console.log("Claims from token:", claims); // Add this to inspect the claims
+          setUser({
+            ...currentUser,
+            ...claims, // Merge the token claims with the user
+          });
+          
+          // Add another log to inspect the final user object
+          console.log("Authenticated user in AuthContext:", {
+            ...currentUser,
+            ...claims,
+          });
+        } else {
+          setUser(null);
+          console.log("No authenticated user");
+        }
+        setLoading(false);
+      });
 
-        console.log('Authenticated user in AuthContext:', {
-          ...currentUser,
-          ...tokenResult.claims,
-        });
-      } else {
-        setUser(null);
-        console.log('No authenticated user');
-      }
-      setLoading(false);
-    });
+      return () => unsubscribe();
+    }, []);
 
-    handleEmailLinkSignIn(); // Check for email link sign-in on page load
-
-    return () => unsubscribe();
-  }, []);
 
   return (
     <AuthContext.Provider value={{ user }}>
