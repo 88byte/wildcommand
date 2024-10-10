@@ -88,13 +88,14 @@ const App = () => {
 
         setUser(currentUser);
         setUserRole(claims.role || null);
-        setOutfitterId(claims.outfitterId || outfitterId);
+        const claimOutfitterId = claims.outfitterId || outfitterId;
+        setOutfitterId(claimOutfitterId); // Always set outfitterId from claims or URL
 
-        if (claims.role === "hunter" && outfitterId) {
+        if (claims.role === "hunter" && claimOutfitterId) {
           setProfileLoading(true); // Start profile loading if it's a hunter
           try {
             console.log("Fetching hunter profile from Firestore...");
-            const hunterDocRef = doc(db, `outfitters/${outfitterId}/hunters`, currentUser.uid);
+            const hunterDocRef = doc(db, `outfitters/${claimOutfitterId}/hunters`, currentUser.uid);
             const hunterDocSnap = await getDoc(hunterDocRef);
 
             if (hunterDocSnap.exists()) {
@@ -122,6 +123,8 @@ const App = () => {
           } finally {
             setProfileLoading(false); // Stop profile loading regardless of the outcome
           }
+        } else {
+          setProfileLoading(false); // No need to fetch profile if not a hunter
         }
       } else {
         setUser(null);
@@ -156,7 +159,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt.....</h2>
+                  <h2 className="hero-subtitle">Command the Hunt.</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
@@ -205,6 +208,7 @@ const App = () => {
 };
 
 export default App;
+
 
 
 
