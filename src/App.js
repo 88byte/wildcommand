@@ -7,8 +7,10 @@ import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import Hunters from "./components/Hunters";
 import DashboardLayout from "./components/DashboardLayout";
+import HunterProfileSetup from './components/HunterProfileSetup';  // Import the new component
 import wildLogo from './images/wildlogo.png';
 import { db } from "./firebase"; // Import the Firestore database
+
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -35,52 +37,51 @@ const App = () => {
   };
 
   // Remove the modal logic and streamline the flow
-useEffect(() => {
-  const url = window.location.href;
-  console.log("Checking for magic link in URL:", url);
+  useEffect(() => {
+    const url = window.location.href;
+    console.log("Checking for magic link in URL:", url);
 
-  if (isSignInWithEmailLink(auth, url)) {
-    let email = window.localStorage.getItem('emailForSignIn');
-    console.log("Email from localStorage:", email);
+    if (isSignInWithEmailLink(auth, url)) {
+      let email = window.localStorage.getItem('emailForSignIn');
+      console.log("Email from localStorage:", email);
 
-    if (!email) {
-      email = window.prompt('Please provide your email for confirmation');
-      console.log("Email after prompt:", email);
+      if (!email) {
+        email = window.prompt('Please provide your email for confirmation');
+        console.log("Email after prompt:", email);
+      }
+
+      signInWithEmailLink(auth, email, url)
+        .then(async (result) => {
+          console.log("Sign in with email link successful:", result);
+
+          // Clear the email from local storage
+          window.localStorage.removeItem('emailForSignIn');
+
+          // Force refresh token to fetch updated claims (ensure claims are updated post-sign-in)
+          const tokenResult = await result.user.getIdTokenResult(true);
+          console.log("Token result after sign in:", tokenResult);
+
+          // Check if outfitterId and hunterId are in the URL
+          let fetchedOutfitterId = tokenResult.claims.outfitterId || null;
+          let fetchedHunterId = tokenResult.claims.hunterId || result.user.uid;
+
+          // Fallback to URL-based IDs
+          if (!fetchedOutfitterId) {
+            const urlParams = new URLSearchParams(new URL(url).search);
+            fetchedOutfitterId = urlParams.get('outfitterId');
+            fetchedHunterId = urlParams.get('hunterId');
+          }
+
+          console.log("URL-based outfitterId:", fetchedOutfitterId, "hunterId:", fetchedHunterId);
+
+          // Navigate to the dashboard directly after successful sign-in
+          navigate("/dashboard");
+        })
+        .catch((error) => {
+          console.error("Error signing in with email link:", error.message);
+        });
     }
-
-    signInWithEmailLink(auth, email, url)
-      .then(async (result) => {
-        console.log("Sign in with email link successful:", result);
-
-        // Clear the email from local storage
-        window.localStorage.removeItem('emailForSignIn');
-
-        // Force refresh token to fetch updated claims (ensure claims are updated post-sign-in)
-        const tokenResult = await result.user.getIdTokenResult(true);
-        console.log("Token result after sign in:", tokenResult);
-
-        // Check if outfitterId and hunterId are in the URL
-        let fetchedOutfitterId = tokenResult.claims.outfitterId || null;
-        let fetchedHunterId = tokenResult.claims.hunterId || result.user.uid;
-
-        // Fallback to URL-based IDs
-        if (!fetchedOutfitterId) {
-          const urlParams = new URLSearchParams(new URL(url).search);
-          fetchedOutfitterId = urlParams.get('outfitterId');
-          fetchedHunterId = urlParams.get('hunterId');
-        }
-
-        console.log("URL-based outfitterId:", fetchedOutfitterId, "hunterId:", fetchedHunterId);
-
-        // Navigate to the dashboard directly after successful sign-in
-        navigate("/dashboard");
-      })
-      .catch((error) => {
-        console.error("Error signing in with email link:", error.message);
-      });
-  }
-}, [location, navigate]);
-
+  }, [location, navigate]);
 
   // Handle authentication state and fetch user claims
   useEffect(() => {
@@ -100,9 +101,9 @@ useEffect(() => {
         setUserRole(claims.role || null);
         setAccountSetupComplete(claims.accountSetupComplete || false);
 
-        // Redirect to dashboard immediately if authenticated
-        if (claims.role === 'hunter') {
-          navigate("/dashboard");
+        // Redirect to profile setup if hunter hasn't completed profile
+        if (claims.role === 'hunter' && !claims.accountSetupComplete) {
+          navigate("/profile-setup");
         }
       } else {
         console.log("No user authenticated, resetting states.");
@@ -134,7 +135,7 @@ useEffect(() => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt.</h2>
+                  <h2 className="hero-subtitle">Command the Hunt...</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
@@ -149,12 +150,17 @@ useEffect(() => {
           />
         )}
 
-        {/* Protected Routes */}
+        {/* Protected Routes for non-hunters */}
         {user && userRole !== 'hunter' && (
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/hunters" element={<Hunters />} />
           </Route>
+        )}
+
+        {/* Hunter Profile Setup Route */}
+        {user && userRole === 'hunter' && !accountSetupComplete && (
+          <Route path="/profile-setup" element={<HunterProfileSetup />} />
         )}
 
         {/* Hunter Dashboard */}
@@ -183,6 +189,7 @@ const FadeInWrapper = ({ children }) => {
 };
 
 export default App;
+
 
 
 
