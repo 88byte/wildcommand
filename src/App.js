@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "./firebase";
 import { onAuthStateChanged, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
-import { Route, Routes, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, Navigate, useLocation, Link, useNavigate } from "react-router-dom";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
