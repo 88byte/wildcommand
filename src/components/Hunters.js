@@ -52,7 +52,8 @@ const Hunters = () => {
         phone: newHunter.phone,
         role: 'hunter',  // Setting the role as 'hunter'
         createdAt: new Date(),  // Optional: Track creation time
-        outfitterId: user.outfitterId  // Save the outfitter ID
+        outfitterId: user.outfitterId,  // Save the outfitter ID
+        accountSetupComplete: false  // Set profile completion to false by default
       };
 
       // Add the hunter to the Firestore under the outfitter's collection
@@ -111,7 +112,7 @@ const Hunters = () => {
   return (
     <div className="hunters-page">
       {/* Interaction Section */}
-       <div className="interaction-section">
+      <div className="interaction-section">
         <div className="interaction-header"> {/* Added div for interaction-header */}
           <h2 className="interaction-title">{isEditing ? 'Edit Hunter' : 'Add New Hunter'}</h2>
         </div>
@@ -146,7 +147,6 @@ const Hunters = () => {
         </div>
       </div>
       
-
       {/* Filter and Sort Section */}
       <div className="filter-sort-section">
         <input
@@ -173,6 +173,7 @@ const Hunters = () => {
               <th>Name</th>
               <th>Email</th>
               <th>Phone</th>
+              <th>Profile Complete</th> {/* New column to show profile completion status */}
               <th>Actions</th>
             </tr>
           </thead>
@@ -182,6 +183,7 @@ const Hunters = () => {
                 <td>{hunter.name}</td>
                 <td>{hunter.email}</td>
                 <td>{hunter.phone}</td>
+                <td>{hunter.accountSetupComplete ? "Yes" : "No"}</td> {/* Show profile completion status */}
                 <td>
                   <button className="edit-btn" onClick={() => handleEditClick(hunter)}>Edit</button>
                   <button className="delete-btn" onClick={() => handleDeleteHunter(hunter.id)}>Delete</button>
@@ -196,4 +198,3 @@ const Hunters = () => {
 };
 
 export default Hunters;
-
