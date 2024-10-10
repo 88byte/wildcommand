@@ -55,7 +55,7 @@ const App = () => {
       }
     };
 
-    if (user) {
+    if (user && user.role === "hunter") {
       checkProfileSetup();
     } else {
       setLoading(false); // Stop loading when no user is found
@@ -98,7 +98,7 @@ const App = () => {
           />
         )}
 
-        {/* Protected Routes for non-hunters */}
+        {/* Protected Routes for outfitters, hunters, and guides */}
         {user && user.role !== "hunter" && (
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
@@ -132,6 +132,7 @@ const App = () => {
 };
 
 export default App;
+
 
 
 

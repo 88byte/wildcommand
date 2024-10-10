@@ -33,7 +33,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Send a magic login link to the hunter
+// Send a welcome email after creating hunter's account
 exports.sendWelcomeEmail = functions.firestore
   .document('outfitters/{outfitterId}/hunters/{hunterId}')
   .onCreate(async (snap, context) => {
@@ -44,33 +44,40 @@ exports.sendWelcomeEmail = functions.firestore
     const hunterId = context.params.hunterId;
 
     try {
-      // Generate a magic sign-in link using Firebase Authentication
-      const actionCodeSettings = {
-        url: `https://wildcommand.com/#/login?outfitterId=${outfitterId}&hunterId=${hunterId}`, // Use /login for consistent redirection
-        handleCodeInApp: true // Ensure this is handled in the app
-      };
+      // 1. Create the user in Firebase Authentication
+      const auth = getAuth();
+      const userRecord = await auth.createUser({
+        email: hunterEmail,
+        emailVerified: false,
+        displayName: hunterName,
+        password: 'TemporaryPassword123!', // Use a temporary password or omit it for email/password reset flow
+        disabled: false,
+      });
 
-      const auth = getAuth(); // Use Firebase Admin SDK to generate the sign-in link
-      const magicLink = await auth.generateSignInWithEmailLink(hunterEmail, actionCodeSettings);
+      console.log(`Created new user for hunter: ${userRecord.uid}`);
 
-      // Send the magic link via email using Nodemailer
+      // 2. Set custom claims for the new user
+      await auth.setCustomUserClaims(userRecord.uid, { role: 'hunter', outfitterId: outfitterId });
+
+      // 3. Generate a password reset link for the hunter to set their own password
+      const passwordResetLink = await auth.generatePasswordResetLink(hunterEmail);
+
+      // 4. Send the email with the password reset link instead of a magic login link
       const mailOptions = {
         from: functions.config().gmail.email,
         to: hunterEmail,
-        subject: 'Welcome to the Outfitter!',
+        subject: 'Welcome to the Outfitter! Set Your Password',
         html: `<h1>Welcome to the Outfitter!</h1>
                <p>Hello ${hunterName},</p>
-               <p>Click the link below to verify your email and complete your account setup. You'll be directed to the dashboard after verifying your email.</p>
-               <p><a href="${magicLink}">Click here to verify your email and access your dashboard</a></p>`
+               <p>We've created an account for you. Please click the link below to set your password and complete your account setup:</p>
+               <p><a href="${passwordResetLink}">Set your password</a></p>
+               <p>Once you've set your password, you can log in to your dashboard.</p>`
       };
 
       await transporter.sendMail(mailOptions);
-      console.log(`Magic link email sent to ${hunterEmail}`);
+      console.log(`Password reset email sent to ${hunterEmail}`);
     } catch (error) {
-      console.error('Error sending magic link or email:', error.message);
+      console.error('Error creating user or sending email:', error.message);
       throw new functions.https.HttpsError('internal', error.message);
     }
   });
-
-
-

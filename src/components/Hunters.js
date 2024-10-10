@@ -13,6 +13,7 @@ const Hunters = () => {
   const [currentHunterId, setCurrentHunterId] = useState(null);
   const [filterText, setFilterText] = useState(''); // Filter text
   const [sortOrder, setSortOrder] = useState('asc'); // Sorting state
+  const [emailSent, setEmailSent] = useState(false); // Track if the welcome email was sent
 
   useEffect(() => {
     const fetchHunters = async () => {
@@ -58,11 +59,15 @@ const Hunters = () => {
 
       // Add the hunter to the Firestore under the outfitter's collection
       const docRef = await addDoc(collection(db, `outfitters/${user.outfitterId}/hunters`), hunterData);
-      
+
       const addedHunter = { id: docRef.id, ...hunterData };
       setHunters([...hunters, addedHunter]);
       setFilteredHunters([...hunters, addedHunter]); // Update filtered list
       setNewHunter({ name: '', email: '', phone: '' }); // Reset the input fields
+
+      // Show the "email sent" status if needed
+      setEmailSent(true);
+      setTimeout(() => setEmailSent(false), 5000); // Hide message after 5 seconds
     } catch (error) {
       console.error('Error adding hunter:', error);
     }
@@ -87,7 +92,6 @@ const Hunters = () => {
       console.error('Error updating hunter:', error);
     }
   };
-
 
   const handleDeleteHunter = async (id) => {
     try {
@@ -152,6 +156,7 @@ const Hunters = () => {
             </button>
           )}
         </div>
+        {emailSent && <p className="email-sent-message">Welcome email sent to hunter!</p>} {/* Optional status message */}
       </div>
       
       {/* Filter and Sort Section */}
