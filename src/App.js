@@ -9,8 +9,6 @@ import Hunters from "./components/Hunters";
 import DashboardLayout from "./components/DashboardLayout";
 import wildLogo from './images/wildlogo.png';
 import { db } from "./firebase"; // Import the Firestore database
-import { doc, getDoc } from "firebase/firestore"; // Import Firestore methods
-
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -86,41 +84,35 @@ useEffect(() => {
 
   // Handle authentication state and fetch user claims
   useEffect(() => {
-  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-    setLoading(false); // Stop loading when user is detected
-    if (currentUser) {
-      console.log("User authenticated:", currentUser);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setLoading(false); // Stop loading when user is detected
+      if (currentUser) {
+        console.log("User authenticated:", currentUser);
 
-      setUser(currentUser);
+        setUser(currentUser);
 
-      // Force refresh token to fetch updated claims after login or verification
-      const token = await currentUser.getIdTokenResult(true);
-      const claims = token.claims;
+        // Force refresh token to fetch updated claims after login or verification
+        const token = await currentUser.getIdTokenResult(true);
+        const claims = token.claims;
 
-      setUserRole(claims.role || null);
+        console.log("Token claims after authentication:", claims);
 
-      // Fetch hunter profile from Firestore
-      const hunterDocRef = doc(db, `outfitters/${claims.outfitterId}/hunters`, currentUser.uid);
-      const hunterDoc = await getDoc(hunterDocRef);
+        setUserRole(claims.role || null);
+        setAccountSetupComplete(claims.accountSetupComplete || false);
 
-      if (hunterDoc.exists()) {
-        const hunterData = hunterDoc.data();
-
-        // If the profile setup is not complete, redirect to Profile Setup page
-        if (!hunterData.profileSetupComplete) {
-          navigate("/profile-setup"); // Redirect to Profile Setup page
-        } else {
-          navigate("/dashboard"); // Redirect to Dashboard if profile is complete
+        // Redirect to dashboard immediately if authenticated
+        if (claims.role === 'hunter') {
+          navigate("/dashboard");
         }
+      } else {
+        console.log("No user authenticated, resetting states.");
+        setUser(null);
+        setUserRole(null);
+        setAccountSetupComplete(false);
       }
-    } else {
-      setUser(null);
-      setUserRole(null);
-    }
-  });
-  return () => unsubscribe();
-}, [location]);
-
+    });
+    return () => unsubscribe();
+  }, [location]);
 
   if (loading) {
     return <div>Loading...</div>; // Optionally show a loading screen while checking authentication
@@ -142,7 +134,7 @@ useEffect(() => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild.</h1>
-                  <h2 className="hero-subtitle">Command the Hunt.....</h2>
+                  <h2 className="hero-subtitle">Command the Hunt.</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>

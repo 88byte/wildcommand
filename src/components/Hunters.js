@@ -51,12 +51,13 @@ const Hunters = () => {
         email: newHunter.email,
         phone: newHunter.phone,
         role: 'hunter',  // Setting the role as 'hunter'
-        accountSetupComplete: false,  // Setting account setup status to false
-        profileSetupComplete: false,  // This flag ensures the profile setup is incomplete
-        createdAt: new Date(),
+        createdAt: new Date(),  // Optional: Track creation time
+        outfitterId: user.outfitterId  // Save the outfitter ID
       };
 
+      // Add the hunter to the Firestore under the outfitter's collection
       const docRef = await addDoc(collection(db, `outfitters/${user.outfitterId}/hunters`), hunterData);
+      
       const addedHunter = { id: docRef.id, ...hunterData };
       setHunters([...hunters, addedHunter]);
       setFilteredHunters([...hunters, addedHunter]); // Update filtered list
