@@ -15,11 +15,11 @@ import { doc, getDoc } from "firebase/firestore"; // Firestore imports
 const App = () => {
   const [user, setUser] = useState(null);
   const [userRole, setUserRole] = useState(null);
-  const [accountSetupComplete, setAccountSetupComplete] = useState(null); // Use null to distinguish undefined state
-  const [outfitterId, setOutfitterId] = useState(null); // Store outfitterId from Firestore or claims
+  const [accountSetupComplete, setAccountSetupComplete] = useState(null);
+  const [outfitterId, setOutfitterId] = useState(null);
   const [hunterId, setHunterId] = useState(null);
   const [loading, setLoading] = useState(true); // General loading state
-  const [profileLoading, setProfileLoading] = useState(true); // Profile loading state
+  const [profileLoading, setProfileLoading] = useState(false); // Profile loading state only for hunters
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -65,11 +65,12 @@ const App = () => {
           setOutfitterId(fetchedOutfitterId);
           setHunterId(fetchedHunterId);
           setUser(result.user);
-          setLoading(false); // Stop general loading state
         })
         .catch((error) => {
           console.error("Error signing in with email link:", error.message);
-          setLoading(false); // Stop loading even in case of an error
+        })
+        .finally(() => {
+          setLoading(false); // Stop general loading state after sign-in attempt
         });
     } else {
       setLoading(false); // Stop loading if no magic link is present
@@ -90,6 +91,7 @@ const App = () => {
         setOutfitterId(claims.outfitterId || outfitterId);
 
         if (claims.role === "hunter" && outfitterId) {
+          setProfileLoading(true); // Start profile loading if it's a hunter
           try {
             console.log("Fetching hunter profile from Firestore...");
             const hunterDocRef = doc(db, `outfitters/${outfitterId}/hunters`, currentUser.uid);
@@ -118,10 +120,8 @@ const App = () => {
             setAccountSetupComplete(false);
             navigate("/profile-setup");
           } finally {
-            setProfileLoading(false); // Stop profile loading
+            setProfileLoading(false); // Stop profile loading regardless of the outcome
           }
-        } else {
-          setProfileLoading(false); // No need to fetch profile if not a hunter
         }
       } else {
         setUser(null);
@@ -205,6 +205,7 @@ const App = () => {
 };
 
 export default App;
+
 
 
 
