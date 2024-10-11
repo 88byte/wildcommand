@@ -1,9 +1,18 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
-const { getAuth } = require("firebase-admin/auth"); // Use this for Firebase Admin Auth
+const { getAuth } = require("firebase-admin/auth");
 
 admin.initializeApp();
+
+// Nodemailer setup for email transport
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: functions.config().gmail.email,
+    pass: functions.config().gmail.password,
+  },
+});
 
 // Function to set custom claims for users (outfitter, guide, hunter)
 exports.setUserRole = functions.https.onCall(async (data, context) => {
@@ -25,71 +34,70 @@ exports.setUserRole = functions.https.onCall(async (data, context) => {
   }
 });
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: functions.config().gmail.email,
-    pass: functions.config().gmail.password
+// Callable function to add a hunter (single doc creation using UID)
+exports.addHunter = functions.https.onCall(async (data, context) => {
+  // Ensure only outfitters can call this function
+  if (!context.auth || context.auth.token.role !== 'outfitter') {
+    throw new functions.https.HttpsError('permission-denied', 'Only outfitters can add hunters.');
+  }
+
+  const { hunterName, hunterEmail, hunterPhone } = data;
+  const outfitterId = context.auth.token.outfitterId;
+
+  try {
+    const auth = getAuth();
+
+    // 1. Create the user in Firebase Authentication and get the UID
+    const userRecord = await auth.createUser({
+      email: hunterEmail,
+      emailVerified: false,
+      displayName: hunterName,
+      password: 'TemporaryPassword123!', // Temporary password for reset flow
+      disabled: false,
+    });
+
+    const uid = userRecord.uid;
+    console.log(`Created new user for hunter: ${uid}`);
+
+    // 2. Set custom claims for the new user
+    await auth.setCustomUserClaims(uid, { role: 'hunter', outfitterId });
+
+    // 3. Generate a password reset link for the hunter to set their password
+    const passwordResetLink = await auth.generatePasswordResetLink(hunterEmail);
+
+    // 4. Create the hunter document in Firestore with the UID as the document ID
+    const hunterDocRef = admin.firestore().doc(`outfitters/${outfitterId}/hunters/${uid}`);
+    await hunterDocRef.set({
+      name: hunterName,
+      email: hunterEmail,
+      phone: hunterPhone,
+      uid, // Store the UID for easy reference
+      role: 'hunter',
+      accountSetupComplete: false,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      outfitterId: outfitterId,  // Ensure we track the outfitter
+    });
+
+    // 5. Send the password reset email
+    const mailOptions = {
+      from: functions.config().gmail.email,
+      to: hunterEmail,
+      subject: 'Welcome to the Outfitter! Set Your Password',
+      html: `<h1>Welcome to the Outfitter!</h1>
+             <p>Hello ${hunterName},</p>
+             <p>We've created an account for you. Please click the link below to set your password and complete your account setup:</p>
+             <p><a href="${passwordResetLink}">Set your password</a></p>
+             <p>Once you've set your password, you can log in to your dashboard.</p>`
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`Password reset email sent to ${hunterEmail}`);
+
+    return { message: 'Hunter added successfully.' };
+  } catch (error) {
+    console.error('Error adding hunter:', error.message);
+    throw new functions.https.HttpsError('internal', error.message);
   }
 });
-
-// Send a welcome email after creating hunter's account
-exports.sendWelcomeEmail = functions.firestore
-  .document('outfitters/{outfitterId}/hunters/{hunterId}')
-  .onCreate(async (snap, context) => {
-    const hunter = snap.data();
-    const hunterEmail = hunter.email;
-    const hunterName = hunter.name;
-    const outfitterId = context.params.outfitterId;
-
-    try {
-      const auth = getAuth();
-
-      // 1. Create the user in Firebase Authentication and get the UID
-      const userRecord = await auth.createUser({
-        email: hunterEmail,
-        emailVerified: false,
-        displayName: hunterName,
-        password: 'TemporaryPassword123!', // Temporary password for reset flow
-        disabled: false,
-      });
-
-      const uid = userRecord.uid; // Get the newly created user's UID
-      console.log(`Created new user for hunter: ${uid}`);
-
-      // 2. Set custom claims for the new user
-      await auth.setCustomUserClaims(uid, { role: 'hunter', outfitterId });
-
-      // 3. Generate a password reset link for the hunter to set their password
-      const passwordResetLink = await auth.generatePasswordResetLink(hunterEmail);
-
-      // 4. Update Firestore document to use the Firebase UID as the hunterId
-      const hunterDocRef = admin.firestore().doc(`outfitters/${outfitterId}/hunters/${uid}`);
-      await hunterDocRef.set({
-        ...hunter,
-        uid, // Store the UID in the document for easy reference
-        accountSetupComplete: false,
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
-
-      // 5. Send the password reset email
-      const mailOptions = {
-        from: functions.config().gmail.email,
-        to: hunterEmail,
-        subject: 'Welcome to the Outfitter! Set Your Password',
-        html: `<h1>Welcome to the Outfitter!</h1>
-               <p>Hello ${hunterName},</p>
-               <p>We've created an account for you. Please click the link below to set your password and complete your account setup:</p>
-               <p><a href="${passwordResetLink}">Set your password</a></p>
-               <p>Once you've set your password, you can log in to your dashboard.</p>`
-      };
-
-      await transporter.sendMail(mailOptions);
-      console.log(`Password reset email sent to ${hunterEmail}`);
-    } catch (error) {
-      console.error('Error creating user or sending email:', error.message);
-      throw new functions.https.HttpsError('internal', error.message);
-    }
-  });
 
 

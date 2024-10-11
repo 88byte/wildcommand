@@ -1,37 +1,73 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../firebase';
-import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { db, functions } from '../firebase';
+import { httpsCallable } from 'firebase/functions';
+import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { useAuth } from '../authContext';
-import './Hunters.css'; // Updated CSS for new layout
+import './Hunters.css';
 
 const Hunters = () => {
   const { user } = useAuth();
   const [hunters, setHunters] = useState([]);
-  const [filteredHunters, setFilteredHunters] = useState([]); // For filtering
+  const [filteredHunters, setFilteredHunters] = useState([]);
   const [newHunter, setNewHunter] = useState({ name: '', email: '', phone: '' });
   const [isEditing, setIsEditing] = useState(false);
   const [currentHunterId, setCurrentHunterId] = useState(null);
-  const [filterText, setFilterText] = useState(''); // Filter text
-  const [sortOrder, setSortOrder] = useState('asc'); // Sorting state
-  const [emailSent, setEmailSent] = useState(false); // Track if the welcome email was sent
+  const [filterText, setFilterText] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [emailSent, setEmailSent] = useState(false);
+
+  // Fetch hunters data on load
+  const fetchHunters = async () => {
+    if (user && user.outfitterId) {
+      const huntersCollection = collection(db, `outfitters/${user.outfitterId}/hunters`);
+      const hunterSnapshot = await getDocs(huntersCollection);
+      const huntersData = hunterSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setHunters(huntersData);
+      setFilteredHunters(huntersData);
+    }
+  };
 
   useEffect(() => {
-    const fetchHunters = async () => {
-      if (user && user.outfitterId) {
-        const huntersCollection = collection(db, `outfitters/${user.outfitterId}/hunters`);
-        const hunterSnapshot = await getDocs(huntersCollection);
-        const huntersData = hunterSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setHunters(huntersData);
-        setFilteredHunters(huntersData); // Initially, all hunters are shown
-      }
-    };
     fetchHunters();
   }, [user]);
+
+  // Handle adding a new hunter
+  const handleAddHunter = async () => {
+    try {
+      if (!user || !user.outfitterId) {
+        console.error("Outfitter ID is missing.");
+        return;
+      }
+
+      // Prepare the data to send to the Cloud Function
+      const hunterData = {
+        hunterName: newHunter.name,
+        hunterEmail: newHunter.email,
+        hunterPhone: newHunter.phone,
+      };
+
+      // Call the Cloud Function
+      const addHunterFunction = httpsCallable(functions, 'addHunter');
+      const result = await addHunterFunction(hunterData);
+
+      console.log(result.data.message); // "Hunter added successfully."
+
+      // Fetch the updated list of hunters
+      fetchHunters();
+
+      setNewHunter({ name: '', email: '', phone: '' }); // Reset the input fields
+
+      // Show the "email sent" status
+      setEmailSent(true);
+      setTimeout(() => setEmailSent(false), 5000);
+    } catch (error) {
+      console.error('Error adding hunter:', error);
+    }
+  };
 
   // Real-time filter logic
   useEffect(() => {
     const filtered = hunters.filter((hunter) => {
-      // Ensure these fields exist before applying toLowerCase
       const name = hunter.name ? hunter.name.toLowerCase() : '';
       const email = hunter.email ? hunter.email.toLowerCase() : '';
       const phone = hunter.phone ? hunter.phone.toLowerCase() : '';
@@ -45,45 +81,9 @@ const Hunters = () => {
     setFilteredHunters(filtered);
   }, [filterText, hunters]);
 
-  const handleAddHunter = async () => {
-    try {
-      // Make sure the outfitterId is available
-      if (!user || !user.outfitterId) {
-        console.error("Outfitter ID is missing.");
-        return;
-      }
-
-      // Include the outfitterId in the hunter's data
-      const hunterData = {
-        name: newHunter.name,
-        email: newHunter.email,
-        phone: newHunter.phone,
-        role: 'hunter',  // Setting the role as 'hunter'
-        createdAt: new Date(),  // Optional: Track creation time
-        outfitterId: user.outfitterId,  // Save the outfitter ID
-        accountSetupComplete: false  // Set profile completion to false by default
-      };
-
-      // Add the hunter to the Firestore under the outfitter's collection
-      const docRef = await addDoc(collection(db, `outfitters/${user.outfitterId}/hunters`), hunterData);
-
-      const addedHunter = { id: docRef.id, ...hunterData };
-      setHunters([...hunters, addedHunter]);
-      setFilteredHunters([...hunters, addedHunter]); // Update filtered list
-      setNewHunter({ name: '', email: '', phone: '' }); // Reset the input fields
-
-      // Show the "email sent" status if needed
-      setEmailSent(true);
-      setTimeout(() => setEmailSent(false), 5000); // Hide message after 5 seconds
-    } catch (error) {
-      console.error('Error adding hunter:', error);
-    }
-  };
-
   const handleEditHunter = async (id) => {
     const hunterDocRef = doc(db, `outfitters/${user.outfitterId}/hunters`, id);
     try {
-      // Only update the fields that can be edited
       const updatedFields = {
         name: newHunter.name,
         email: newHunter.email,
@@ -92,7 +92,7 @@ const Hunters = () => {
       await updateDoc(hunterDocRef, updatedFields);
       const updatedHunters = hunters.map(h => (h.id === id ? { ...h, ...updatedFields } : h));
       setHunters(updatedHunters);
-      setFilteredHunters(updatedHunters); // Update filtered list
+      setFilteredHunters(updatedHunters);
       setIsEditing(false);
       setNewHunter({ name: '', email: '', phone: '' });
     } catch (error) {
@@ -105,7 +105,7 @@ const Hunters = () => {
       await deleteDoc(doc(db, `outfitters/${user.outfitterId}/hunters`, id));
       const remainingHunters = hunters.filter(hunter => hunter.id !== id);
       setHunters(remainingHunters);
-      setFilteredHunters(remainingHunters); // Update filtered list
+      setFilteredHunters(remainingHunters);
     } catch (error) {
       console.error('Error deleting hunter:', error);
     }
@@ -131,7 +131,7 @@ const Hunters = () => {
     <div className="hunters-page">
       {/* Interaction Section */}
       <div className="interaction-section">
-        <div className="interaction-header"> {/* Added div for interaction-header */}
+        <div className="interaction-header">
           <h2 className="interaction-title">{isEditing ? 'Edit Hunter' : 'Add New Hunter'}</h2>
         </div>
         <div className="hunter-form-container">
@@ -163,7 +163,7 @@ const Hunters = () => {
             </button>
           )}
         </div>
-        {emailSent && <p className="email-sent-message">Welcome email sent to hunter!</p>} {/* Optional status message */}
+        {emailSent && <p className="email-sent-message">Welcome email sent to hunter!</p>}
       </div>
       
       {/* Filter and Sort Section */}
@@ -192,17 +192,17 @@ const Hunters = () => {
               <th>Name</th>
               <th>Email</th>
               <th>Phone</th>
-              <th>Profile Complete</th> {/* New column to show profile completion status */}
+              <th>Profile Complete</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredHunters.map((hunter) => (
               <tr key={hunter.id}>
-                <td>{hunter.name || 'N/A'}</td> {/* Safely handle undefined values */}
-                <td>{hunter.email || 'N/A'}</td> {/* Safely handle undefined values */}
-                <td>{hunter.phone || 'N/A'}</td> {/* Safely handle undefined values */}
-                <td>{hunter.accountSetupComplete ? "Yes" : "No"}</td> {/* Show profile completion status */}
+                <td>{hunter.name || 'N/A'}</td>
+                <td>{hunter.email || 'N/A'}</td>
+                <td>{hunter.phone || 'N/A'}</td>
+                <td>{hunter.accountSetupComplete ? "Yes" : "No"}</td>
                 <td>
                   <button className="edit-btn" onClick={() => handleEditClick(hunter)}>Edit</button>
                   <button className="delete-btn" onClick={() => handleDeleteHunter(hunter.id)}>Delete</button>
@@ -217,4 +217,5 @@ const Hunters = () => {
 };
 
 export default Hunters;
+
 
