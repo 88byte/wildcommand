@@ -29,12 +29,12 @@ const HunterProfileSetup = () => {
       if (claimOutfitterId) {
         setOutfitterId(claimOutfitterId);
 
-        // Fetch existing hunter profile data from Firestore
+        // Fetch existing hunter profile data from Firestore using UID
         const fetchHunterData = async () => {
           try {
-            const hunterDocRef = doc(db, `outfitters/${claimOutfitterId}/hunters`, user.uid);
+            const hunterDocRef = doc(db, `outfitters/${claimOutfitterId}/hunters`, user.uid); // Use UID
             const hunterDocSnap = await getDoc(hunterDocRef);
-            
+
             if (hunterDocSnap.exists()) {
               const hunterData = hunterDocSnap.data();
               setName(hunterData.name || '');
@@ -45,28 +45,20 @@ const HunterProfileSetup = () => {
               setHuntingLicense(hunterData.huntingLicense || '');
               setProfilePictureURL(hunterData.profilePictureURL || ''); // Fetch existing profile picture URL if present
             } else {
-              console.log('Hunter document does not exist');
-              setError('Hunter document does not exist');
+              console.log("Hunter document does not exist");
             }
           } catch (err) {
             console.error('Error fetching hunter data:', err);
-            setError('Error fetching hunter data');
           }
         };
 
         fetchHunterData();
       } else {
-        const url = window.location.href;
-        const urlParams = new URLSearchParams(new URL(url).search);
-        const urlOutfitterId = urlParams.get('outfitterId');
-        if (urlOutfitterId) {
-          setOutfitterId(urlOutfitterId);
-        } else {
-          setError("Outfitter ID not found.");
-        }
+        console.error("Outfitter ID not found.");
       }
     }
   }, [user]);
+
 
   const handleProfilePictureChange = (e) => {
     setProfilePicture(e.target.files[0]);

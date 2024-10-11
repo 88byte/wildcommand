@@ -41,40 +41,38 @@ exports.sendWelcomeEmail = functions.firestore
     const hunterEmail = hunter.email;
     const hunterName = hunter.name;
     const outfitterId = context.params.outfitterId;
-    const hunterId = context.params.hunterId;
 
     try {
       const auth = getAuth();
 
-      // Check if user already exists in Firebase Authentication
-      let userRecord;
-      try {
-        userRecord = await auth.getUserByEmail(hunterEmail);
-        console.log(`User already exists: ${userRecord.uid}`);
-      } catch (error) {
-        if (error.code === 'auth/user-not-found') {
-          // If the user does not exist, create a new user
-          userRecord = await auth.createUser({
-            email: hunterEmail,
-            emailVerified: false,
-            displayName: hunterName,
-            password: 'TemporaryPassword123!', // You can omit the password for the reset flow
-            disabled: false,
-          });
-          console.log(`Created new user for hunter: ${userRecord.uid}`);
-        } else {
-          // Throw the error if it’s not a "user not found" error
-          throw error;
-        }
-      }
+      // 1. Create the user in Firebase Authentication and get the UID
+      const userRecord = await auth.createUser({
+        email: hunterEmail,
+        emailVerified: false,
+        displayName: hunterName,
+        password: 'TemporaryPassword123!', // Temporary password for reset flow
+        disabled: false,
+      });
 
-      // Set custom claims for the new/existing user
-      await auth.setCustomUserClaims(userRecord.uid, { role: 'hunter', outfitterId: outfitterId });
+      const uid = userRecord.uid; // Get the newly created user's UID
+      console.log(`Created new user for hunter: ${uid}`);
 
-      // Generate a password reset link for the hunter to set their own password
+      // 2. Set custom claims for the new user
+      await auth.setCustomUserClaims(uid, { role: 'hunter', outfitterId });
+
+      // 3. Generate a password reset link for the hunter to set their password
       const passwordResetLink = await auth.generatePasswordResetLink(hunterEmail);
 
-      // Send the password reset link via email
+      // 4. Update Firestore document to use the Firebase UID as the hunterId
+      const hunterDocRef = admin.firestore().doc(`outfitters/${outfitterId}/hunters/${uid}`);
+      await hunterDocRef.set({
+        ...hunter,
+        uid, // Store the UID in the document for easy reference
+        accountSetupComplete: false,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+      // 5. Send the password reset email
       const mailOptions = {
         from: functions.config().gmail.email,
         to: hunterEmail,
@@ -93,4 +91,5 @@ exports.sendWelcomeEmail = functions.firestore
       throw new functions.https.HttpsError('internal', error.message);
     }
   });
+
 
