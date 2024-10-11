@@ -4,6 +4,7 @@ import { httpsCallable } from 'firebase/functions';
 import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { useAuth } from '../authContext';
 import './Hunters.css';
+import ClipLoader from 'react-spinners/ClipLoader'; // Spinner component
 
 const Hunters = () => {
   const { user } = useAuth();
@@ -15,6 +16,7 @@ const Hunters = () => {
   const [filterText, setFilterText] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
   const [emailSent, setEmailSent] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // State for loading spinner
 
   // Fetch hunters data on load
   const fetchHunters = async () => {
@@ -39,6 +41,9 @@ const Hunters = () => {
         return;
       }
 
+      // Set loading to true
+      setIsLoading(true);
+
       // Prepare the data to send to the Cloud Function
       const hunterData = {
         hunterName: newHunter.name,
@@ -60,8 +65,12 @@ const Hunters = () => {
       // Show the "email sent" status
       setEmailSent(true);
       setTimeout(() => setEmailSent(false), 5000);
+
+      // Set loading to false after the operation is done
+      setIsLoading(false);
     } catch (error) {
       console.error('Error adding hunter:', error);
+      setIsLoading(false); // Ensure loading is false even after an error
     }
   };
 
@@ -158,14 +167,17 @@ const Hunters = () => {
               Update
             </button>
           ) : (
-            <button className="add-hunter-btn" onClick={handleAddHunter}>
-              Add
-            </button>
+            <>
+              <button className="add-hunter-btn" onClick={handleAddHunter} disabled={isLoading}>
+                {isLoading ? 'Adding...' : 'Add'}
+              </button>
+              {isLoading && <ClipLoader color="#28a745" size={35} />}
+            </>
           )}
         </div>
         {emailSent && <p className="email-sent-message">Welcome email sent to hunter!</p>}
       </div>
-      
+
       {/* Filter and Sort Section */}
       <div className="filter-sort-section">
         <input

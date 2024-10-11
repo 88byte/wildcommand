@@ -1,0 +1,133 @@
+/* Calendar Container */
+.calendar-container {
+  width: 100%; /* Ensure it takes the full width */
+  margin: 20px 0;
+  background-color: #ffffff; /* Lighter background for a cleaner look */
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Softer shadow */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* General Calendar Styling */
+.rbc-calendar {
+  background-color: #ffffff;
+  color: #333333; /* Darker text for readability */
+  border-radius: 10px;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Toolbar styling */
+.rbc-toolbar {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f0f0f0; /* Light toolbar background */
+  color: #333333;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  font-family: 'Poppins', sans-serif;
+  flex-wrap: wrap;
+}
+
+.rbc-toolbar button {
+  background-color: #d4af37; /* Gold for action buttons */
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 5px;
+}
+
+.rbc-toolbar button:hover {
+  background-color: #bfa13b;
+}
+
+/* Header (Days of the Week) Styling */
+.rbc-header {
+  background-color: #f7f7f7; /* Softer light background for headers */
+  color: #555555; /* Neutral gray for header text */
+  padding: 10px 0;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 1px solid #eaeaea; /* Subtle divider */
+}
+
+/* Date Squares (Day Cells) */
+.rbc-day-bg {
+  background-color: #ffffff; /* Light background for days */
+  transition: background-color 0.2s ease;
+}
+
+.rbc-day-bg:hover {
+  background-color: #f0f0f0; /* Slight hover effect */
+}
+
+/* Today's Date Styling */
+.rbc-today {
+  background-color: rgba(212, 175, 55, 0.1); /* Subtle gold tint for today's date */
+  border: none; /* Remove existing borders to prevent conflicts */
+  box-shadow: inset 0 0 0 2px #d4af37; /* Add an inner shadow to simulate a border on all sides */
+}
+
+/* Event Days Styling */
+.rbc-event {
+  background-color: #d4af37; /* Gold background for events */
+  color: #ffffff; /* White text for events */
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 0.85rem; /* Keep text small but readable */
+}
+
+/* Selected Date Styling */
+.rbc-selected-cell {
+  background-color: rgba(212, 175, 55, 0.3); /* Light gold tint for selected day */
+}
+
+/* Disabled or Outside Month Days (for days outside current month) */
+.rbc-off-range-bg {
+  background-color: #f5f5f5; /* Very light gray background for out-of-month days */
+  color: #999999; /* Lighter text for differentiation */
+}
+
+/* Custom Tooltip Styling for Event Hover */
+.rbc-event-tooltip {
+  background-color: #ffffff;
+  color: #333333;
+  border: 1px solid #d4af37;
+  padding: 8px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-size: 0.85rem;
+}
+
+/* Responsive Calendar Adjustments */
+@media (max-width: 768px) {
+  .rbc-toolbar {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .rbc-toolbar button {
+    width: 100%;
+    margin: 10px 0; /* Spacing between buttons */
+  }
+
+  .calendar-container {
+    padding: 15px;
+  }
+
+  .rbc-header {
+    font-size: 0.85rem; /* Smaller headers on mobile */
+  }
+
+  .rbc-event {
+    font-size: 0.75rem; /* Smaller event text on mobile */
+  }
+}
+

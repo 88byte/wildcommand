@@ -154,22 +154,62 @@ button:active {
   margin-bottom: 15px;
 }
 
+/* Input field styling */
 input[type="text"], input[type="email"], input[type="password"], textarea {
   width: 100%;
   padding: 12px;
   border-radius: 8px;
-  background-color: #2b2b2b;
-  color: #fff;
-  border: 2px solid #444;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: #2b2b2b; /* Dark background for input */
+  color: #fff; /* White text color */
+  border: 2px solid #444; /* Border color */
   font-size: 1rem;
+  transition: border-color 0.3s ease;
 }
 
+/* Remove focus glow and prevent background changes */
 input:focus, textarea:focus {
   border-color: #d4af37; /* Gold outline when focused */
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.7); /* Glowing effect */
-  outline: none;
+  background-color: #2b2b2b !important; /* Keep background color consistent */
+  outline: none; /* Remove default browser outline */
+  box-shadow: none !important; /* Remove any glowing effect */
 }
+
+/* Remove autofill background and keep it consistent */
+input:-webkit-autofill {
+  background-color: #2b2b2b !important; /* Prevent changing to white */
+  -webkit-box-shadow: 0 0 0 30px #2b2b2b inset !important;
+  -webkit-text-fill-color: #fff !important; /* Ensure text remains white */
+}
+
+/* Ensure the background stays consistent on autofill */
+input:-webkit-autofill:hover, input:-webkit-autofill:focus {
+  background-color: #2b2b2b !important; /* Keep background consistent */
+  -webkit-box-shadow: 0 0 0 30px #2b2b2b inset !important;
+  -webkit-text-fill-color: #fff !important; /* Text remains white */
+}
+
+/* Internal autofill handling */
+input:-internal-autofill-selected {
+  background-color: #2b2b2b !important; /* Keep background color */
+  color: #fff !important; /* Text color white */
+}
+
+/* Disable the focus visible highlight */
+input:focus-visible {
+  outline: none !important;
+  border-color: #d4af37; /* Gold border when focused */
+  box-shadow: none !important; /* Disable shadow */
+}
+
+/* Disable any default focus styles */
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, textarea:focus {
+  background-color: #2b2b2b !important; /* Ensure background doesn't change */
+  color: #fff !important; /* Ensure text color remains white */
+  outline: none; /* Remove any outline */
+}
+
+
+ 
 
 button.submit-btn {
   background-color: #d4af37; /* Gold */
@@ -256,32 +296,3 @@ button.back-btn:hover {
   text-align: center;
 }
 
-.dashboard-container {
-  display: flex;
-  height: 100vh;
-}
-
-.sidebar {
-  width: 250px;
-  background-color: #333;
-  padding: 20px;
-}
-
-.sidebar ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.sidebar ul li {
-  margin: 15px 0;
-}
-
-.sidebar ul li a {
-  color: white;
-  text-decoration: none;
-}
-
-.content {
-  flex-grow: 1;
-  padding: 20px;
-}

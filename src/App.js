@@ -83,7 +83,7 @@ const App = () => {
                 <div className="hero-content">
                   <img src={wildLogo} alt="Wild Command Logo" className="hero-logo" />
                   <h1 className="hero-title">Conquer the Wild</h1>
-                  <h2 className="hero-subtitle">Command the Hunt......</h2>
+                  <h2 className="hero-subtitle">Command the Hunt...</h2>
                   <div className="hero-buttons">
                     <Link to="/signup">
                       <button className="signup-btn">Sign Up</button>
@@ -98,11 +98,27 @@ const App = () => {
           />
         )}
 
-        {/* Protected Routes for all roles */}
-        {user && (
+        {/* Protected Routes based on role */}
+        {user && user.role === 'outfitter' && (
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/hunters" element={<Hunters />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/support" element={<Support />} />
+          </Route>
+        )}
+
+        {user && user.role === 'hunter' && accountSetupComplete && (
+          <Route element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/support" element={<Support />} />
+          </Route>
+        )}
+
+        {user && user.role === 'guide' && (
+          <Route element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/support" element={<Support />} />
           </Route>
@@ -113,11 +129,13 @@ const App = () => {
           <Route path="/profile-setup" element={<HunterProfileSetup />} />
         )}
 
-        {/* Redirect to login if trying to access protected routes */}
+        {/* Redirect to login if trying to access protected routes without login */}
         {!user && (
           <>
             <Route path="/dashboard" element={<Navigate to="/login" />} />
             <Route path="/hunters" element={<Navigate to="/login" />} />
+            <Route path="/profile" element={<Navigate to="/login" />} />
+            <Route path="/support" element={<Navigate to="/login" />} />
           </>
         )}
 
