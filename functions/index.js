@@ -44,25 +44,37 @@ exports.sendWelcomeEmail = functions.firestore
     const hunterId = context.params.hunterId;
 
     try {
-      // 1. Create the user in Firebase Authentication
       const auth = getAuth();
-      const userRecord = await auth.createUser({
-        email: hunterEmail,
-        emailVerified: false,
-        displayName: hunterName,
-        password: 'TemporaryPassword123!', // Use a temporary password or omit it for email/password reset flow
-        disabled: false,
-      });
 
-      console.log(`Created new user for hunter: ${userRecord.uid}`);
+      // Check if user already exists in Firebase Authentication
+      let userRecord;
+      try {
+        userRecord = await auth.getUserByEmail(hunterEmail);
+        console.log(`User already exists: ${userRecord.uid}`);
+      } catch (error) {
+        if (error.code === 'auth/user-not-found') {
+          // If the user does not exist, create a new user
+          userRecord = await auth.createUser({
+            email: hunterEmail,
+            emailVerified: false,
+            displayName: hunterName,
+            password: 'TemporaryPassword123!', // You can omit the password for the reset flow
+            disabled: false,
+          });
+          console.log(`Created new user for hunter: ${userRecord.uid}`);
+        } else {
+          // Throw the error if it’s not a "user not found" error
+          throw error;
+        }
+      }
 
-      // 2. Set custom claims for the new user
+      // Set custom claims for the new/existing user
       await auth.setCustomUserClaims(userRecord.uid, { role: 'hunter', outfitterId: outfitterId });
 
-      // 3. Generate a password reset link for the hunter to set their own password
+      // Generate a password reset link for the hunter to set their own password
       const passwordResetLink = await auth.generatePasswordResetLink(hunterEmail);
 
-      // 4. Send the email with the password reset link instead of a magic login link
+      // Send the password reset link via email
       const mailOptions = {
         from: functions.config().gmail.email,
         to: hunterEmail,
@@ -81,3 +93,4 @@ exports.sendWelcomeEmail = functions.firestore
       throw new functions.https.HttpsError('internal', error.message);
     }
   });
+

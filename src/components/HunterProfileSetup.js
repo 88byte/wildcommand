@@ -44,9 +44,13 @@ const HunterProfileSetup = () => {
               setState(hunterData.state || '');
               setHuntingLicense(hunterData.huntingLicense || '');
               setProfilePictureURL(hunterData.profilePictureURL || ''); // Fetch existing profile picture URL if present
+            } else {
+              console.log('Hunter document does not exist');
+              setError('Hunter document does not exist');
             }
           } catch (err) {
             console.error('Error fetching hunter data:', err);
+            setError('Error fetching hunter data');
           }
         };
 
@@ -84,6 +88,13 @@ const HunterProfileSetup = () => {
     try {
       const hunterDocRef = doc(db, `outfitters/${outfitterId}/hunters`, user.uid);
 
+      // Ensure the document already exists to avoid creating a duplicate
+      const hunterDocSnap = await getDoc(hunterDocRef);
+      if (!hunterDocSnap.exists()) {
+        setError("Hunter document not found, cannot update profile.");
+        return;
+      }
+
       // Upload profile picture if selected
       let downloadURL = profilePictureURL; // Use existing URL if no new picture is uploaded
       if (profilePicture) {
@@ -112,6 +123,7 @@ const HunterProfileSetup = () => {
       console.log("Profile successfully updated with accountSetupComplete: true");
       navigate('/dashboard');
     } catch (err) {
+      console.error('Error saving profile:', err);
       setError('Error saving profile: ' + err.message);
     }
   };
@@ -224,4 +236,5 @@ const HunterProfileSetup = () => {
 };
 
 export default HunterProfileSetup;
+
 
