@@ -9,15 +9,15 @@
 .sidebar {
   background-color: #0f0f0f; /* Matte black for the sidebar */
   color: #e0e0e0; /* Light text for contrast */
-  width: 250px; /* Sidebar width */
+  width: 250px; /* Default width */
   padding: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Align elements to the top */
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  justify-content: flex-start;
   position: fixed;
   height: 100%;
-  z-index: 1000; /* Ensure sidebar is always on top */
+  z-index: 999; /* Ensure sidebar is always on top */
+  transition: transform 0.3s ease, width 0.3s ease; /* Smooth transition */
 }
 
 .logo-container {
@@ -73,41 +73,39 @@
 
 /* Main content styles */
 .main-content {
+  margin-left: 120px; /* Ensure main content starts after the sidebar */
   flex-grow: 1;
-  padding: 20px; /* Padding inside content */
-  margin-left: 120px; /* Match this with the sidebar width */
+  padding: 20px;
   background-color: #f5f5f5; /* Light background for content area */
   text-align: left;
   overflow-y: auto;
+  transition: margin-left 0.3s ease; /* Smooth transition for collapsing */
 }
 
-
-
-/* Responsive design */
+/* Sidebar collapsed for mobile */
 @media (max-width: 768px) {
   .sidebar {
-    width: 100%;
-    height: auto;
-    position: relative; /* Sidebar adjusts to be horizontal on mobile */
-    flex-direction: row;
+    width: 100%; /* Full width for sidebar */
+    height: auto; /* Adjust height */
+    flex-direction: row; /* Horizontal layout for mobile */
     justify-content: space-between;
     align-items: center;
     padding: 10px;
   }
 
   .sidebar-logo {
-    width: 100px;
+    width: 100px; /* Smaller logo */
   }
 
   .nav-menu ul {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-around; /* Spread menu items */
     width: 100%;
   }
 
   .main-content {
-    padding: 20px;
-    margin-left: 0; /* Remove sidebar space on mobile */
+    margin-left: 0; /* No margin when sidebar is collapsed */
+    padding: 15px;
   }
 }
 
