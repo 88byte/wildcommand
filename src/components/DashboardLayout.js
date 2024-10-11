@@ -29,37 +29,42 @@ const DashboardLayout = () => {
     }
   };
 
+  const handleNavigationClick = (path) => {
+    setIsSidebarOpen(false); // Close sidebar on mobile when navigation is clicked
+    navigate(path);
+  };
+
   const renderNavigation = () => {
     switch (userRole) {
       case 'outfitter':
         return (
           <>
-            <li onClick={() => navigate('/dashboard')}>Dashboard</li>
-            <li onClick={() => navigate('/hunters')}>Hunters</li>
+            <li onClick={() => handleNavigationClick('/dashboard')}>Dashboard</li>
+            <li onClick={() => handleNavigationClick('/hunters')}>Hunters</li>
             <li>Guides</li>
             <li>Book Hunt</li>
             <li>Log Hunt</li>
-            <li onClick={() => navigate('/profile')}>Profile</li>
-            <li onClick={() => navigate('/support')}>Support</li>
+            <li onClick={() => handleNavigationClick('/profile')}>Profile</li>
+            <li onClick={() => handleNavigationClick('/support')}>Support</li>
           </>
         );
       case 'hunter':
         return (
           <>
-            <li onClick={() => navigate('/dashboard')}>Dashboard</li>
-            <li onClick={() => navigate('/profile')}>Profile</li>
-            <li onClick={() => navigate('/support')}>Support</li>
+            <li onClick={() => handleNavigationClick('/dashboard')}>Dashboard</li>
+            <li onClick={() => handleNavigationClick('/profile')}>Profile</li>
+            <li onClick={() => handleNavigationClick('/support')}>Support</li>
           </>
         );
       case 'guide':
         return (
           <>
-            <li onClick={() => navigate('/dashboard')}>Dashboard</li>
+            <li onClick={() => handleNavigationClick('/dashboard')}>Dashboard</li>
             <li>Calendar</li>
             <li>Book Hunt</li>
             <li>Log Hunt</li>
-            <li onClick={() => navigate('/profile')}>Profile</li>
-            <li onClick={() => navigate('/support')}>Support</li>
+            <li onClick={() => handleNavigationClick('/profile')}>Profile</li>
+            <li onClick={() => handleNavigationClick('/support')}>Support</li>
           </>
         );
       default:
@@ -94,3 +99,4 @@ const DashboardLayout = () => {
 };
 
 export default DashboardLayout;
+

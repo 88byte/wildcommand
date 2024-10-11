@@ -127,4 +127,11 @@
   .nav-menu li {
     font-size: 0.9rem;
   }
+
+  .sidebar-toggle {
+    top: 20px;
+    left: 15px;
+    padding: 8px 10px;
+    font-size: 1.2rem;
+  }
 }

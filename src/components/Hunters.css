@@ -11,6 +11,7 @@
   font-size: 1rem; /* Set default font size */
 }
 
+
 .filter-input::placeholder {
   color: #999 !important; /* Ensure placeholder text is lighter but visible */
 }
@@ -26,6 +27,7 @@
   padding: 20px;
   height: 100vh;
   box-sizing: border-box;
+  margin-left: 120px;
 }
 
 /* Interaction Section */

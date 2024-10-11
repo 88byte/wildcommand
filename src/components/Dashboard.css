@@ -6,6 +6,7 @@
   width: calc(100% - 270px); /* Adjust width to account for the sidebar (250px + padding) */
   box-sizing: border-box; /* Make padding included in width */
   overflow: hidden; /* Prevent overflow */
+
 }
 
 /* Heading */
