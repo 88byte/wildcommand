@@ -1,10 +1,10 @@
 /* Dashboard Main Container */
 .main-content {
   padding: 20px;
-  background-color: white;
+  background-color: white; /* Match dark theme */
   text-align: left !important; /* Ensure text inside sections is aligned left */
-  width: calc(100% - 270px); /* Adjust width to account for the sidebar */
-  box-sizing: border-box;
+  width: calc(100% - 270px); /* Adjust width to account for the sidebar (250px + padding) */
+  box-sizing: border-box; /* Make padding included in width */
   overflow: hidden; /* Prevent overflow */
 }
 
@@ -12,72 +12,83 @@
 .main-content h1 {
   font-family: 'Poppins', sans-serif;
   font-size: 2.5rem;
-  color: #d4af37;
+  color: #d4af37; /* Muted gold for the heading */
   margin-bottom: 30px;
 }
 
 /* Content Section */
 .content-section {
-  background-color: #1e1e1e;
+  background-color: #1e1e1e; /* Dark background for sections */
   padding: 20px;
   margin-bottom: 30px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Subtle shadow */
+  text-align: left !important; /* Ensure text inside sections is aligned left */
 }
 
 /* Hunt Card */
 .hunt-card {
-  background-color: #2b2b2b;
+  background-color: #2b2b2b; /* Slightly lighter dark background for cards */
   padding: 15px;
   border-radius: 10px;
   margin-bottom: 20px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  text-align: left !important; /* Ensure text inside cards is aligned left */
 }
 
 .hunt-card p {
-  color: #f1f1f1;
+  color: #f1f1f1; /* Light text color for card content */
   font-size: 1rem;
 }
 
 .hunt-card button {
-  background-color: #d4af37;
-  color: #0f0f0f;
+  background-color: #d4af37; /* Muted gold for buttons */
+  color: #0f0f0f; /* Dark text for contrast */
   padding: 10px 20px;
   border-radius: 50px;
   border: none;
   cursor: pointer;
   font-size: 1rem;
-  font-weight: bold;
   transition: all 0.3s ease;
+  font-weight: bold;
 }
 
 .hunt-card button:hover {
-  background-color: #bfa13b;
+  background-color: #bfa13b; /* Slightly darker gold on hover */
+  transform: translateY(-2px);
 }
 
 /* Calendar Section */
 .calendar-section {
   padding: 20px;
-  background-color: #1e1e1e;
+  background-color: #1e1e1e; /* Match the dark theme for consistency */
   border-radius: 12px;
   margin-bottom: 30px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: left !important; /* Ensure calendar text is aligned left */
+}
+
+.calendar-section h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.8rem;
+  color: #f1f1f1; /* Light text for headers */
+  margin-bottom: 20px;
 }
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .main-content {
-    width: calc(100% - 60px);
     padding: 15px;
-    margin-left: 60px; /* Adjust margin for collapsed sidebar */
+    margin-left: 0; /* Remove left margin for small screens */
+    width: 100%; /* Set width to 100% on small screens */
   }
 
   .main-content h1 {
-    font-size: 2rem;
+    font-size: 2rem; /* Smaller heading on smaller screens */
   }
 
   .content-section h2 {
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* Adjusted section title */
   }
 
   .hunt-card button {
@@ -93,20 +104,19 @@
 @media (max-width: 480px) {
   .main-content {
     padding: 10px;
-    margin-left: 0; /* No sidebar on small screens */
-    width: 100%;
+    width: 100%; /* Ensure it takes full width on small screens */
   }
 
   .main-content h1 {
-    font-size: 1.8rem;
+    font-size: 1.8rem; /* Even smaller for mobile */
   }
 
   .content-section h2 {
-    font-size: 1.3rem;
+    font-size: 1.3rem; /* Adjusted section titles for mobile */
   }
 
   .hunt-card button {
-    font-size: 0.8rem;
+    font-size: 0.8rem; /* Smaller button text */
   }
 
   .hunt-card {

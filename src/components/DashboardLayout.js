@@ -7,6 +7,7 @@ import './DashboardLayout.css';
 const DashboardLayout = () => {
   const navigate = useNavigate();
   const [userRole, setUserRole] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to toggle sidebar
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -68,7 +69,13 @@ const DashboardLayout = () => {
 
   return (
     <div className="dashboard-container">
-      <div className="sidebar">
+      {/* Toggle button for mobile sidebar */}
+      <button className="sidebar-toggle" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+        ☰
+      </button>
+
+      {/* Sidebar */}
+      <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="logo-container">
           <img src={wildLogo} alt="Wild Command Logo" className="sidebar-logo" />
         </div>
@@ -78,6 +85,7 @@ const DashboardLayout = () => {
         <button className="logout-btn" onClick={handleLogout}>Log Out</button>
       </div>
 
+      {/* Main Content */}
       <div className="main-content">
         <Outlet />
       </div>
@@ -86,4 +94,3 @@ const DashboardLayout = () => {
 };
 
 export default DashboardLayout;
-
