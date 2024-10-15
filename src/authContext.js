@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, getIdTokenResult, isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth';
 import { auth, db } from './firebase'; // Import Firestore
-import { query, collection, where, getDocs } from "firebase/firestore";
+import { query, collection, where, getDocs, getDoc, doc } from "firebase/firestore";
 
 const AuthContext = createContext();
 
@@ -32,34 +32,40 @@ export const AuthProvider = ({ children }) => {
         }
 
         try {
-          // Step 1: Check if the email exists in Firestore under any outfitter
           const q = query(collection(db, 'outfitters'), where('email', '==', email));
           const querySnapshot = await getDocs(q);
 
           if (querySnapshot.empty) {
-            // No matching hunter in Firestore, deny login
             throw new Error('No account found. Please contact your outfitter to create an account.');
           }
 
-          // Step 2: Email exists, proceed with signing in via magic link
           const result = await signInWithEmailLink(auth, email, url);
-          window.localStorage.removeItem('emailForSignIn'); // Remove from storage
+          window.localStorage.removeItem('emailForSignIn');
 
           const tokenResult = await getIdTokenResult(result.user);
+          const userClaims = tokenResult.claims;
+
+          // Check if the guide is active
+          if (userClaims.role === 'guide') {
+            const guideRef = doc(db, `outfitters/${userClaims.outfitterId}/guides/${result.user.uid}`);
+            const guideSnap = await getDoc(guideRef);
+
+            if (guideSnap.exists() && guideSnap.data().active === false) {
+              await auth.signOut(); // Log out the user if inactive
+              alert('Your account has been deactivated. Please contact your outfitter.');
+              setLoading(false);
+              return;
+            }
+          }
 
           setUser({
             ...result.user,
             ...tokenResult.claims,
           });
 
-          console.log('Signed in with email link:', {
-            ...result.user,
-            ...tokenResult.claims,
-          });
-
         } catch (error) {
           console.error('Error signing in with email link:', error);
-          alert(error.message); // Inform the user that their account wasn't found
+          alert(error.message);
         }
       }
     };
@@ -69,17 +75,22 @@ export const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         try {
-          // Fetch token and claims
           const tokenResult = await getIdTokenResult(currentUser);
           const claims = tokenResult.claims;
-          
-          // Set the user object with the role
-          setUser({
-            ...currentUser,
-            ...claims, // Merge the token claims with the user
-          });
 
-          console.log("Authenticated user in AuthContext:", {
+          if (claims.role === 'guide') {
+            const guideRef = doc(db, `outfitters/${claims.outfitterId}/guides/${currentUser.uid}`);
+            const guideSnap = await getDoc(guideRef);
+
+            if (guideSnap.exists() && guideSnap.data().active === false) {
+              await auth.signOut();
+              alert('Your account has been deactivated. Please contact your outfitter.');
+              setLoading(false);
+              return;
+            }
+          }
+
+          setUser({
             ...currentUser,
             ...claims,
           });
@@ -88,7 +99,6 @@ export const AuthProvider = ({ children }) => {
         }
       } else {
         setUser(null);
-        console.log("No authenticated user");
       }
       setLoading(false);
     });

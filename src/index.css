@@ -159,39 +159,39 @@ input[type="text"], input[type="email"], input[type="password"], textarea {
   width: 100%;
   padding: 12px;
   border-radius: 8px;
-  background-color: #2b2b2b; /* Dark background for input */
-  color: #fff; /* White text color */
+  background-color: #fff; 
   border: 2px solid #444; /* Border color */
   font-size: 1rem;
   transition: border-color 0.3s ease;
+  color: #333;
 }
 
 /* Remove focus glow and prevent background changes */
 input:focus, textarea:focus {
   border-color: #d4af37; /* Gold outline when focused */
-  background-color: #2b2b2b !important; /* Keep background color consistent */
+  background-color: #fff !important; /* Keep background color consistent */
   outline: none; /* Remove default browser outline */
   box-shadow: none !important; /* Remove any glowing effect */
 }
 
 /* Remove autofill background and keep it consistent */
 input:-webkit-autofill {
-  background-color: #2b2b2b !important; /* Prevent changing to white */
-  -webkit-box-shadow: 0 0 0 30px #2b2b2b inset !important;
-  -webkit-text-fill-color: #fff !important; /* Ensure text remains white */
+  background-color: #fff !important; /* Prevent changing to white */
+  -webkit-box-shadow: 0 0 0 30px #fff inset !important;
+  -webkit-text-fill-color: #333 !important; /* Ensure text remains white */
 }
 
 /* Ensure the background stays consistent on autofill */
 input:-webkit-autofill:hover, input:-webkit-autofill:focus {
-  background-color: #2b2b2b !important; /* Keep background consistent */
-  -webkit-box-shadow: 0 0 0 30px #2b2b2b inset !important;
-  -webkit-text-fill-color: #fff !important; /* Text remains white */
+  background-color: #fff !important; /* Keep background consistent */
+  -webkit-box-shadow: 0 0 0 30px #fff inset !important;
+  -webkit-text-fill-color: #333 !important; /* Text remains white */
 }
 
 /* Internal autofill handling */
 input:-internal-autofill-selected {
-  background-color: #2b2b2b !important; /* Keep background color */
-  color: #fff !important; /* Text color white */
+  background-color: #fff !important; /* Keep background color */
+  color: #333 !important; /* Text color white */
 }
 
 /* Disable the focus visible highlight */
@@ -203,8 +203,8 @@ input:focus-visible {
 
 /* Disable any default focus styles */
 input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, textarea:focus {
-  background-color: #2b2b2b !important; /* Ensure background doesn't change */
-  color: #fff !important; /* Ensure text color remains white */
+  background-color: #fff !important; /* Ensure background doesn't change */
+  color: #333 !important; /* Ensure text color remains white */
   outline: none; /* Remove any outline */
 }
 

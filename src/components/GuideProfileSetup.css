@@ -1,0 +1,151 @@
+/* Profile Setup Container */
+.profile-setup-container {
+  max-width: 600px !important;
+  margin: 50px auto !important;
+  padding: 20px !important;
+  background-color: #ffffff !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  font-family: 'Arial', sans-serif !important;
+}
+
+/* Title */
+.profile-setup-container h2 {
+  font-size: 1.8rem !important;
+  color: #212529 !important;
+  text-align: center !important;
+  margin-bottom: 20px !important;
+  font-weight: bold !important;
+}
+
+/* Error Message */
+.error-message {
+  color: #dc3545 !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  margin-bottom: 20px !important;
+}
+
+/* Form Group Styling */
+.form-group {
+  margin-bottom: 20px !important;
+}
+
+/* Label Styling */
+.form-group label {
+  display: block !important;
+  color: #333 !important;
+  font-weight: 600 !important;
+  margin-bottom: 5px !important;
+}
+
+/* Input Fields */
+.input-field {
+  width: 100% !important;
+  padding: 12px !important;
+  border-radius: 5px !important;
+  border: 1px solid #ccc !important;
+  font-size: 1rem !important;
+  background-color: #fff !important;  /* Force background to stay white */
+  color: #333 !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+  transition: border-color 0.3s ease !important;
+}
+
+/* Input field autofill handling */
+.input-field:-webkit-autofill {
+  background-color: #fff !important;
+  -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;  /* Ensures autofill background stays white */
+  -webkit-text-fill-color: #333 !important;
+}
+
+.input-field:-webkit-autofill:hover,
+.input-field:-webkit-autofill:focus,
+.input-field:-webkit-autofill:active {
+  background-color: #fff !important;
+  -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
+  -webkit-text-fill-color: #333 !important;
+}
+
+/* Placeholder styling */
+.input-field::placeholder {
+  color: #666 !important;
+}
+
+/* Input Fields Focus State */
+.input-field:focus {
+  border-color: #28a745 !important;
+  background-color: #fff !important; /* Ensures background stays white during typing */
+  outline: none !important;
+}
+
+/* Upload Button */
+.form-group input[type="file"] {
+  font-size: 0.9rem !important;
+  padding: 10px !important;
+  border: 1px solid #ccc !important;
+  border-radius: 5px !important;
+  background-color: #ffffff !important;
+  color: #333 !important;
+  cursor: pointer !important;
+}
+
+/* Submit Button */
+.submit-btn {
+  width: 100% !important;
+  padding: 12px !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 30px !important;
+  font-size: 1rem !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease !important;
+  margin-top: 10px !important;
+}
+
+
+
+/* Additional Styling for Profile Picture Preview */
+.profile-picture-preview {
+  display: block !important;
+  max-width: 100px !important;
+  max-height: 100px !important;
+  margin-bottom: 10px !important;
+  border-radius: 50% !important;
+}
+
+/* Styling for License Valid Date and License State Fields */
+.form-group #licenseValidDate,
+.form-group #licenseState {
+  width: 100% !important;
+  padding: 12px !important;
+  border-radius: 5px !important;
+  border: 1px solid #ccc !important;
+  font-size: 1rem !important;
+  background-color: #fff !important;
+  color: #333 !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+  transition: border-color 0.3s ease !important;
+}
+
+.form-group #licenseValidDate:focus,
+.form-group #licenseState:focus {
+  border-color: #28a745 !important;
+  background-color: #fff !important;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+  .profile-setup-container {
+    padding: 15px !important;
+  }
+
+  .form-group {
+    margin-bottom: 15px !important;
+  }
+
+  .submit-btn {
+    padding: 10px !important;
+  }
+}

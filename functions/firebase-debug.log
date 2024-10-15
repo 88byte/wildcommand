@@ -1,0 +1,534 @@
+[debug] [2024-10-14T23:06:02.871Z] ----------------------------------------------------------------------
+[debug] [2024-10-14T23:06:02.873Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\flavi\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2024-10-14T23:06:02.873Z] CLI Version:   13.20.2
+[debug] [2024-10-14T23:06:02.873Z] Platform:      win32
+[debug] [2024-10-14T23:06:02.873Z] Node Version:  v20.17.0
+[debug] [2024-10-14T23:06:02.873Z] Time:          Mon Oct 14 2024 16:06:02 GMT-0700 (Pacific Daylight Time)
+[debug] [2024-10-14T23:06:02.874Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-10-14T23:06:02.924Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-10-14T23:06:02.924Z] > authorizing via signed-in user (flaviod022@gmail.com)
+[debug] [2024-10-14T23:06:02.925Z] [iam] checking project wild-command for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2024-10-14T23:06:02.925Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:02.925Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:02.926Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/wild-command:testIamPermissions [none]
+[debug] [2024-10-14T23:06:02.926Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/wild-command:testIamPermissions x-goog-quota-user=projects/wild-command
+[debug] [2024-10-14T23:06:02.926Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/wild-command:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2024-10-14T23:06:03.299Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/wild-command:testIamPermissions 200
+[debug] [2024-10-14T23:06:03.299Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/wild-command:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2024-10-14T23:06:03.299Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:03.299Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:03.299Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/wild-command/serviceAccounts/wild-command@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2024-10-14T23:06:03.299Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/wild-command/serviceAccounts/wild-command@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2024-10-14T23:06:03.754Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/wild-command/serviceAccounts/wild-command@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2024-10-14T23:06:03.755Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/wild-command/serviceAccounts/wild-command@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'wild-command'...
+[info] 
+[info] i  deploying functions 
+[info] +  functions: Finished running predeploy script. 
+[debug] [2024-10-14T23:06:03.757Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:03.757Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:03.757Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/wild-command [none]
+[debug] [2024-10-14T23:06:04.147Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/wild-command 200
+[debug] [2024-10-14T23:06:04.147Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/wild-command {"projectId":"wild-command","projectNumber":"1029998806639","displayName":"Wild Command","name":"projects/wild-command","resources":{"hostingSite":"wild-command","storageBucket":"wild-command.appspot.com","locationId":"us-central"},"state":"ACTIVE","etag":"1_277385fb-4450-4449-8014-cdacc5d00cdb"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[debug] [2024-10-14T23:06:04.148Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:04.148Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:04.148Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:04.148Z] Checked if tokens are valid: true, expires at: 1728948942714
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[debug] [2024-10-14T23:06:04.148Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:04.148Z] Checked if tokens are valid: true, expires at: 1728948942714
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2024-10-14T23:06:04.149Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:04.149Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:04.149Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/cloudfunctions.googleapis.com [none]
+[debug] [2024-10-14T23:06:04.149Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/wild-command
+[debug] [2024-10-14T23:06:04.150Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/runtimeconfig.googleapis.com [none]
+[debug] [2024-10-14T23:06:04.150Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/wild-command
+[debug] [2024-10-14T23:06:04.150Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/cloudbuild.googleapis.com [none]
+[debug] [2024-10-14T23:06:04.150Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/cloudbuild.googleapis.com x-goog-quota-user=projects/wild-command
+[debug] [2024-10-14T23:06:04.151Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/artifactregistry.googleapis.com [none]
+[debug] [2024-10-14T23:06:04.151Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/artifactregistry.googleapis.com x-goog-quota-user=projects/wild-command
+[debug] [2024-10-14T23:06:04.713Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/cloudbuild.googleapis.com 200
+[debug] [2024-10-14T23:06:04.713Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/cloudbuild.googleapis.com [omitted]
+[info] +  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2024-10-14T23:06:04.714Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/runtimeconfig.googleapis.com 200
+[debug] [2024-10-14T23:06:04.714Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2024-10-14T23:06:04.717Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/artifactregistry.googleapis.com 200
+[debug] [2024-10-14T23:06:04.717Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/artifactregistry.googleapis.com [omitted]
+[info] +  artifactregistry: required API artifactregistry.googleapis.com is enabled 
+[debug] [2024-10-14T23:06:04.718Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/cloudfunctions.googleapis.com 200
+[debug] [2024-10-14T23:06:04.718Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/cloudfunctions.googleapis.com [omitted]
+[info] +  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2024-10-14T23:06:04.718Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:04.718Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:04.718Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/wild-command/adminSdkConfig [none]
+[debug] [2024-10-14T23:06:05.021Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/wild-command/adminSdkConfig 200
+[debug] [2024-10-14T23:06:05.021Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/wild-command/adminSdkConfig {"projectId":"wild-command","storageBucket":"wild-command.appspot.com","locationId":"us-central"}
+[debug] [2024-10-14T23:06:05.021Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.021Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.022Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs [none]
+[debug] [2024-10-14T23:06:05.336Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs 200
+[debug] [2024-10-14T23:06:05.336Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs {"configs":[{"name":"projects/wild-command/configs/app"},{"name":"projects/wild-command/configs/frontend"},{"name":"projects/wild-command/configs/gmail"},{"name":"projects/wild-command/configs/api"}]}
+[debug] [2024-10-14T23:06:05.336Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.336Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.336Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.336Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.336Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.336Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.336Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.336Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.336Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/app/variables [none]
+[debug] [2024-10-14T23:06:05.337Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/frontend/variables [none]
+[debug] [2024-10-14T23:06:05.338Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/gmail/variables [none]
+[debug] [2024-10-14T23:06:05.339Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/api/variables [none]
+[debug] [2024-10-14T23:06:05.522Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/app/variables 200
+[debug] [2024-10-14T23:06:05.522Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/app/variables {"variables":[{"name":"projects/wild-command/configs/app/variables/api_key","updateTime":"2024-10-07T23:28:37.371008274Z"}]}
+[debug] [2024-10-14T23:06:05.522Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.523Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.523Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/app/variables/api_key [none]
+[debug] [2024-10-14T23:06:05.549Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/api/variables 200
+[debug] [2024-10-14T23:06:05.550Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/api/variables {"variables":[{"name":"projects/wild-command/configs/api/variables/key","updateTime":"2024-10-07T23:47:23.232347220Z"}]}
+[debug] [2024-10-14T23:06:05.550Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.550Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.550Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/api/variables/key [none]
+[debug] [2024-10-14T23:06:05.565Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/gmail/variables 200
+[debug] [2024-10-14T23:06:05.565Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/gmail/variables {"variables":[{"name":"projects/wild-command/configs/gmail/variables/email","updateTime":"2024-10-04T05:32:00.900515067Z"},{"name":"projects/wild-command/configs/gmail/variables/password","updateTime":"2024-10-04T05:32:00.895098507Z"}]}
+[debug] [2024-10-14T23:06:05.565Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.566Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.566Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.566Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.566Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/gmail/variables/email [none]
+[debug] [2024-10-14T23:06:05.566Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/gmail/variables/password [none]
+[debug] [2024-10-14T23:06:05.671Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/app/variables/api_key 200
+[debug] [2024-10-14T23:06:05.671Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/app/variables/api_key {"name":"projects/wild-command/configs/app/variables/api_key","updateTime":"2024-10-07T23:28:37.371008274Z","text":"AIzaSyBJ9lppao0l8xyqeH6_eHPOqzFZ1o6l-7A"}
+[debug] [2024-10-14T23:06:05.701Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/frontend/variables 200
+[debug] [2024-10-14T23:06:05.701Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/frontend/variables {"variables":[{"name":"projects/wild-command/configs/frontend/variables/url","updateTime":"2024-10-04T18:50:42.241308188Z"}]}
+[debug] [2024-10-14T23:06:05.701Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.701Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:05.701Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/frontend/variables/url [none]
+[debug] [2024-10-14T23:06:05.705Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/api/variables/key 200
+[debug] [2024-10-14T23:06:05.705Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/api/variables/key {"name":"projects/wild-command/configs/api/variables/key","updateTime":"2024-10-07T23:47:23.232347220Z","text":"AIzaSyBJ9lppao0l8xyqeH6_eHPOqzFZ1o6l-7A"}
+[debug] [2024-10-14T23:06:05.709Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/gmail/variables/email 200
+[debug] [2024-10-14T23:06:05.709Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/gmail/variables/email {"name":"projects/wild-command/configs/gmail/variables/email","updateTime":"2024-10-04T05:32:00.900515067Z","text":"flaviod022@gmail.com"}
+[debug] [2024-10-14T23:06:05.773Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/gmail/variables/password 200
+[debug] [2024-10-14T23:06:05.773Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/gmail/variables/password {"name":"projects/wild-command/configs/gmail/variables/password","updateTime":"2024-10-04T05:32:00.895098507Z","text":"eeea tvxt nvlf pgjc"}
+[debug] [2024-10-14T23:06:05.905Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/frontend/variables/url 200
+[debug] [2024-10-14T23:06:05.905Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/wild-command/configs/frontend/variables/url {"name":"projects/wild-command/configs/frontend/variables/url","updateTime":"2024-10-04T18:50:42.241308188Z","text":"wildcommand.com"}
+[debug] [2024-10-14T23:06:05.907Z] Validating nodejs source
+[warn] !  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[warn] !  functions: Please note that there will be breaking changes when you upgrade. 
+[debug] [2024-10-14T23:06:06.675Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "lint": "eslint .",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "firebase-admin": "^12.1.0",
+    "firebase-functions": "^5.0.0",
+    "nodemailer": "^6.9.15"
+  },
+  "devDependencies": {
+    "eslint": "^8.15.0",
+    "eslint-config-google": "^0.14.0",
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true
+}
+[debug] [2024-10-14T23:06:06.675Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2024-10-14T23:06:06.676Z] Could not find functions.yaml. Must use http discovery
+[debug] [2024-10-14T23:06:06.682Z] Found firebase-functions binary at 'C:\Users\flavi\AppData\Roaming\wildcommand-app\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8919
+
+[debug] [2024-10-14T23:06:07.131Z] Got response from /__/functions.yaml {"endpoints":{"setUserRole":{"platform":"gcfv1","labels":{},"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"callableTrigger":{},"entryPoint":"setUserRole"},"addGuide":{"platform":"gcfv1","labels":{},"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"callableTrigger":{},"entryPoint":"addGuide"},"addHunter":{"platform":"gcfv1","labels":{},"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"callableTrigger":{},"entryPoint":"addHunter"},"sendHuntBookingEmails":{"platform":"gcfv1","labels":{},"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"callableTrigger":{},"entryPoint":"sendHuntBookingEmails"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[info] i  extensions: ensuring required API firebaseextensions.googleapis.com is enabled... 
+[debug] [2024-10-14T23:06:12.159Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:12.159Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:12.159Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/firebaseextensions.googleapis.com [none]
+[debug] [2024-10-14T23:06:12.159Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/firebaseextensions.googleapis.com x-goog-quota-user=projects/wild-command
+[debug] [2024-10-14T23:06:12.607Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/firebaseextensions.googleapis.com 200
+[debug] [2024-10-14T23:06:12.607Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/wild-command/services/firebaseextensions.googleapis.com [omitted]
+[info] +  extensions: required API firebaseextensions.googleapis.com is enabled 
+[debug] [2024-10-14T23:06:12.607Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-10-14T23:06:12.607Z] > authorizing via signed-in user (flaviod022@gmail.com)
+[debug] [2024-10-14T23:06:12.607Z] [iam] checking project wild-command for permissions ["firebase.projects.get","firebaseextensions.instances.list"]
+[debug] [2024-10-14T23:06:12.607Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:12.608Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:12.608Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/wild-command:testIamPermissions [none]
+[debug] [2024-10-14T23:06:12.608Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/wild-command:testIamPermissions x-goog-quota-user=projects/wild-command
+[debug] [2024-10-14T23:06:12.608Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/wild-command:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
+[debug] [2024-10-14T23:06:12.897Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/wild-command:testIamPermissions 200
+[debug] [2024-10-14T23:06:12.897Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/wild-command:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
+[debug] [2024-10-14T23:06:12.897Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:12.897Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:12.898Z] >>> [apiv2][query] GET https://firebaseextensions.googleapis.com/v1beta/projects/wild-command/instances pageSize=100&pageToken=
+[debug] [2024-10-14T23:06:13.472Z] <<< [apiv2][status] GET https://firebaseextensions.googleapis.com/v1beta/projects/wild-command/instances 200
+[debug] [2024-10-14T23:06:13.472Z] <<< [apiv2][body] GET https://firebaseextensions.googleapis.com/v1beta/projects/wild-command/instances {}
+[info] i  functions: preparing functions directory for uploading... 
+[info] i  functions: packaged C:\Users\flavi\AppData\Roaming\wildcommand-app\functions (75.03 KB) for uploading 
+[debug] [2024-10-14T23:06:13.499Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:13.499Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:13.499Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/-/functions [none]
+[debug] [2024-10-14T23:06:14.084Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/-/functions 200
+[debug] [2024-10-14T23:06:14.084Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/-/functions {"functions":[{"name":"projects/wild-command/locations/us-central1/functions/setUserRole","httpsTrigger":{"url":"https://us-central1-wild-command.cloudfunctions.net/setUserRole","securityLevel":"SECURE_ALWAYS"},"status":"ACTIVE","entryPoint":"setUserRole","timeout":"60s","availableMemoryMb":256,"serviceAccountEmail":"wild-command@appspot.gserviceaccount.com","updateTime":"2024-10-14T22:52:45.977Z","versionId":"39","labels":{"deployment-callable":"true","firebase-functions-hash":"8416760ad174ad65892473b2960da60eda7021d0","deployment-tool":"cli-firebase"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/aac8d26f-b7c9-4d35-aed5-8126277f7c62.zip","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/setUserRole"},"runtime":"nodejs18","ingressSettings":"ALLOW_ALL","buildId":"b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/1029998806639/locations/us-central1/builds/b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/wild-command/serviceAccounts/1029998806639-compute@developer.gserviceaccount.com"},{"name":"projects/wild-command/locations/us-central1/functions/sendHuntBookingEmails","httpsTrigger":{"url":"https://us-central1-wild-command.cloudfunctions.net/sendHuntBookingEmails","securityLevel":"SECURE_ALWAYS"},"status":"ACTIVE","entryPoint":"sendHuntBookingEmails","timeout":"60s","availableMemoryMb":256,"serviceAccountEmail":"wild-command@appspot.gserviceaccount.com","updateTime":"2024-10-14T22:52:56.746Z","versionId":"6","labels":{"deployment-callable":"true","firebase-functions-hash":"8416760ad174ad65892473b2960da60eda7021d0","deployment-tool":"cli-firebase"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/aac8d26f-b7c9-4d35-aed5-8126277f7c62.zip","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/sendHuntBookingEmails"},"runtime":"nodejs18","ingressSettings":"ALLOW_ALL","buildId":"b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/1029998806639/locations/us-central1/builds/b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/wild-command/serviceAccounts/1029998806639-compute@developer.gserviceaccount.com"},{"name":"projects/wild-command/locations/us-central1/functions/sendWelcomeEmail","eventTrigger":{"eventType":"providers/cloud.firestore/eventTypes/document.create","resource":"projects/wild-command/databases/(default)/documents/outfitters/{outfitterId}/hunters/{hunterId}","service":"firestore.googleapis.com","failurePolicy":{}},"status":"ACTIVE","entryPoint":"sendWelcomeEmail","timeout":"60s","availableMemoryMb":256,"serviceAccountEmail":"wild-command@appspot.gserviceaccount.com","updateTime":"2024-10-11T00:14:53.285Z","versionId":"28","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"f496c362f49c41fb83e511ea2bb831a161500636"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/fd093496-7206-48ed-8ffc-3a7c3f22f854.zip","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/sendWelcomeEmail"},"runtime":"nodejs18","maxInstances":3000,"ingressSettings":"ALLOW_ALL","buildId":"bf7329b1-1a92-4f30-9206-0eedb252390e","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/1029998806639/locations/us-central1/builds/bf7329b1-1a92-4f30-9206-0eedb252390e","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/wild-command/serviceAccounts/1029998806639-compute@developer.gserviceaccount.com"},{"name":"projects/wild-command/locations/us-central1/functions/addHunter","httpsTrigger":{"url":"https://us-central1-wild-command.cloudfunctions.net/addHunter","securityLevel":"SECURE_ALWAYS"},"status":"ACTIVE","entryPoint":"addHunter","timeout":"60s","availableMemoryMb":256,"serviceAccountEmail":"wild-command@appspot.gserviceaccount.com","updateTime":"2024-10-14T22:52:52.960Z","versionId":"9","labels":{"deployment-tool":"cli-firebase","deployment-callable":"true","firebase-functions-hash":"8416760ad174ad65892473b2960da60eda7021d0"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/aac8d26f-b7c9-4d35-aed5-8126277f7c62.zip","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/addHunter"},"runtime":"nodejs18","ingressSettings":"ALLOW_ALL","buildId":"b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/1029998806639/locations/us-central1/builds/b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/wild-command/serviceAccounts/1029998806639-compute@developer.gserviceaccount.com"},{"name":"projects/wild-command/locations/us-central1/functions/addGuide","httpsTrigger":{"url":"https://us-central1-wild-command.cloudfunctions.net/addGuide","securityLevel":"SECURE_ALWAYS"},"status":"ACTIVE","entryPoint":"addGuide","timeout":"60s","availableMemoryMb":256,"serviceAccountEmail":"wild-command@appspot.gserviceaccount.com","updateTime":"2024-10-14T22:52:56.822Z","versionId":"7","labels":{"deployment-tool":"cli-firebase","deployment-callable":"true","firebase-functions-hash":"8416760ad174ad65892473b2960da60eda7021d0"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/aac8d26f-b7c9-4d35-aed5-8126277f7c62.zip","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/addGuide"},"runtime":"nodejs18","ingressSettings":"ALLOW_ALL","buildId":"b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/1029998806639/locations/us-central1/builds/b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/wild-command/serviceAccounts/1029998806639-compute@developer.gserviceaccount.com"}]}
+[debug] [2024-10-14T23:06:14.085Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:14.085Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:14.085Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/wild-command/locations/-/functions filter=environment%3D%22GEN_2%22
+[debug] [2024-10-14T23:06:14.705Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/wild-command/locations/-/functions 200
+[debug] [2024-10-14T23:06:14.705Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/wild-command/locations/-/functions {}
+[debug] [2024-10-14T23:06:14.707Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:14.707Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:14.707Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/wild-command [none]
+[debug] [2024-10-14T23:06:15.024Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/wild-command 200
+[debug] [2024-10-14T23:06:15.024Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/wild-command {"projectId":"wild-command","projectNumber":"1029998806639","displayName":"Wild Command","name":"projects/wild-command","resources":{"hostingSite":"wild-command","storageBucket":"wild-command.appspot.com","locationId":"us-central"},"state":"ACTIVE","etag":"1_277385fb-4450-4449-8014-cdacc5d00cdb"}
+[debug] [2024-10-14T23:06:15.025Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:15.025Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:15.025Z] >>> [apiv2][query] GET https://cloudbilling.googleapis.com/v1/projects/wild-command/billingInfo [none]
+[debug] [2024-10-14T23:06:15.446Z] <<< [apiv2][status] GET https://cloudbilling.googleapis.com/v1/projects/wild-command/billingInfo 200
+[debug] [2024-10-14T23:06:15.446Z] <<< [apiv2][body] GET https://cloudbilling.googleapis.com/v1/projects/wild-command/billingInfo {"name":"projects/wild-command/billingInfo","projectId":"wild-command","billingAccountName":"billingAccounts/01A156-FBBA83-A3C457","billingEnabled":true}
+[debug] [2024-10-14T23:06:15.447Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:15.447Z] Checked if tokens are valid: true, expires at: 1728948942714
+[debug] [2024-10-14T23:06:15.447Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions:generateUploadUrl [none]
+[debug] [2024-10-14T23:06:15.447Z] >>> [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions:generateUploadUrl {}
+[debug] [2024-10-14T23:06:15.947Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions:generateUploadUrl 200
+[debug] [2024-10-14T23:06:15.948Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions:generateUploadUrl {"uploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip?GoogleAccessId=service-1029998806639@gcf-admin-robot.iam.gserviceaccount.com&Expires=1728948975&Signature=rP%2F08IZpUN8Vy9U2OLTHS9CUvsuEAX0j7TwR90Jd0mRV6KYlaPbho4AR6NXSZ6JkQenOpTRtOqqDw9QBm2%2Blp%2BfxKNwuaI6TVrfUMvg800ezEdNY5hrAKeFRhJxCoA5XqR%2FEZ8ahClwZ5oDJYUeyx10JB89ZkZ2S6z%2F3RWo%2BeKYrwWkUxVqr3qMsH0GJOy70UcSDKv0KNbEj4bg8rSMoSH34B0xK6YRnJXYX1dP1Gz7jphrglAWwBYq1oLW6AfuM1yMjJ7BTyVpGtOuvOXA9f9yL2LZ9wCTFzHN8lV4bPFmSjAx%2FbFLjCl5Y%2FISTJF7CcSbVQfYcpQ4CyNhQubtqsg%3D%3D"}
+[debug] [2024-10-14T23:06:15.948Z] >>> [apiv2][query] PUT https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip GoogleAccessId=service-1029998806639%40gcf-admin-robot.iam.gserviceaccount.com&Expires=1728948975&Signature=rP%2F08IZpUN8Vy9U2OLTHS9CUvsuEAX0j7TwR90Jd0mRV6KYlaPbho4AR6NXSZ6JkQenOpTRtOqqDw9QBm2%2Blp%2BfxKNwuaI6TVrfUMvg800ezEdNY5hrAKeFRhJxCoA5XqR%2FEZ8ahClwZ5oDJYUeyx10JB89ZkZ2S6z%2F3RWo%2BeKYrwWkUxVqr3qMsH0GJOy70UcSDKv0KNbEj4bg8rSMoSH34B0xK6YRnJXYX1dP1Gz7jphrglAWwBYq1oLW6AfuM1yMjJ7BTyVpGtOuvOXA9f9yL2LZ9wCTFzHN8lV4bPFmSjAx%2FbFLjCl5Y%2FISTJF7CcSbVQfYcpQ4CyNhQubtqsg%3D%3D
+[debug] [2024-10-14T23:06:15.948Z] >>> [apiv2][body] PUT https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip [stream]
+[debug] [2024-10-14T23:06:16.353Z] <<< [apiv2][status] PUT https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip 200
+[debug] [2024-10-14T23:06:16.353Z] <<< [apiv2][body] PUT https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip [omitted]
+[info] +  functions: functions folder uploaded successfully 
+[info] 
+The following functions are found in your project but do not exist in your local source code:
+	sendWelcomeEmail(us-central1)
+
+If you are renaming a function or changing its region, it is recommended that you create the new function first before deleting the old one to prevent event loss. For more info, visit https://firebase.google.com/docs/functions/manage-functions#modify
+
+[info] i  functions: updating Node.js 18 (1st Gen) function setUserRole(us-central1)... 
+[info] i  functions: updating Node.js 18 (1st Gen) function addGuide(us-central1)... 
+[info] i  functions: updating Node.js 18 (1st Gen) function addHunter(us-central1)... 
+[info] i  functions: updating Node.js 18 (1st Gen) function sendHuntBookingEmails(us-central1)... 
+[debug] [2024-10-15T01:05:23.786Z] Checked if tokens are valid: false, expires at: 1728948942714
+[debug] [2024-10-15T01:05:23.786Z] Checked if tokens are valid: false, expires at: 1728948942714
+[debug] [2024-10-15T01:05:23.786Z] > refreshing access token with scopes: []
+[debug] [2024-10-15T01:05:23.788Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2024-10-15T01:05:23.788Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2024-10-15T01:05:23.986Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2024-10-15T01:05:23.986Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2024-10-15T01:05:24.005Z] >>> [apiv2][query] PATCH https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions/setUserRole updateMask=name%2CsourceUploadUrl%2CentryPoint%2Cruntime%2CdockerRegistry%2Clabels%2ChttpsTrigger.securityLevel%2CminInstances%2CmaxInstances%2CingressSettings%2CenvironmentVariables%2CserviceAccountEmail%2CavailableMemoryMb%2Ctimeout%2CvpcConnector%2CvpcConnectorEgressSettings%2CsourceToken%2CbuildEnvironmentVariables
+[debug] [2024-10-15T01:05:24.005Z] >>> [apiv2][body] PATCH https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions/setUserRole {"name":"projects/wild-command/locations/us-central1/functions/setUserRole","sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip?GoogleAccessId=service-1029998806639@gcf-admin-robot.iam.gserviceaccount.com&Expires=1728948975&Signature=rP%2F08IZpUN8Vy9U2OLTHS9CUvsuEAX0j7TwR90Jd0mRV6KYlaPbho4AR6NXSZ6JkQenOpTRtOqqDw9QBm2%2Blp%2BfxKNwuaI6TVrfUMvg800ezEdNY5hrAKeFRhJxCoA5XqR%2FEZ8ahClwZ5oDJYUeyx10JB89ZkZ2S6z%2F3RWo%2BeKYrwWkUxVqr3qMsH0GJOy70UcSDKv0KNbEj4bg8rSMoSH34B0xK6YRnJXYX1dP1Gz7jphrglAWwBYq1oLW6AfuM1yMjJ7BTyVpGtOuvOXA9f9yL2LZ9wCTFzHN8lV4bPFmSjAx%2FbFLjCl5Y%2FISTJF7CcSbVQfYcpQ4CyNhQubtqsg%3D%3D","entryPoint":"setUserRole","runtime":"nodejs18","dockerRegistry":"ARTIFACT_REGISTRY","labels":{"deployment-tool":"cli-firebase","deployment-callable":"true","firebase-functions-hash":"5a00b2f08aaecffe697dcb31301edcc88286e61f"},"httpsTrigger":{"securityLevel":"SECURE_ALWAYS"},"minInstances":null,"maxInstances":null,"ingressSettings":null,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/setUserRole"},"serviceAccountEmail":null,"availableMemoryMb":null,"timeout":null,"vpcConnector":null,"vpcConnectorEgressSettings":null,"buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""}}
+[debug] [2024-10-15T01:05:24.667Z] <<< [apiv2][status] PATCH https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions/setUserRole 200
+[debug] [2024-10-15T01:05:24.667Z] <<< [apiv2][body] PATCH https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions/setUserRole {"name":"operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL3NldFVzZXJSb2xlL0N6bUdyMk9yd1E4","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/wild-command/locations/us-central1/functions/setUserRole","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/wild-command/locations/us-central1/functions/setUserRole","httpsTrigger":{"url":"https://us-central1-wild-command.cloudfunctions.net/setUserRole","securityLevel":"SECURE_ALWAYS"},"status":"ACTIVE","entryPoint":"setUserRole","updateTime":"2024-10-14T22:52:45.977Z","versionId":"39","labels":{"deployment-tool":"cli-firebase","deployment-callable":"true","firebase-functions-hash":"5a00b2f08aaecffe697dcb31301edcc88286e61f"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip?GoogleAccessId=service-1029998806639@gcf-admin-robot.iam.gserviceaccount.com&Expires=1728948975&Signature=rP%2F08IZpUN8Vy9U2OLTHS9CUvsuEAX0j7TwR90Jd0mRV6KYlaPbho4AR6NXSZ6JkQenOpTRtOqqDw9QBm2%2Blp%2BfxKNwuaI6TVrfUMvg800ezEdNY5hrAKeFRhJxCoA5XqR%2FEZ8ahClwZ5oDJYUeyx10JB89ZkZ2S6z%2F3RWo%2BeKYrwWkUxVqr3qMsH0GJOy70UcSDKv0KNbEj4bg8rSMoSH34B0xK6YRnJXYX1dP1Gz7jphrglAWwBYq1oLW6AfuM1yMjJ7BTyVpGtOuvOXA9f9yL2LZ9wCTFzHN8lV4bPFmSjAx%2FbFLjCl5Y%2FISTJF7CcSbVQfYcpQ4CyNhQubtqsg%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/setUserRole"},"runtime":"nodejs18","buildId":"b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/1029998806639/locations/us-central1/builds/b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/wild-command/serviceAccounts/1029998806639-compute@developer.gserviceaccount.com"},"versionId":"40","updateTime":"2024-10-15T01:05:24Z"}}
+[debug] [2024-10-15T01:05:24.668Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:24.668Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:24.668Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL3NldFVzZXJSb2xlL0N6bUdyMk9yd1E4 [none]
+[debug] [2024-10-15T01:05:24.862Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL3NldFVzZXJSb2xlL0N6bUdyMk9yd1E4 200
+[debug] [2024-10-15T01:05:24.863Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL3NldFVzZXJSb2xlL0N6bUdyMk9yd1E4 {"name":"operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL3NldFVzZXJSb2xlL0N6bUdyMk9yd1E4","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/wild-command/locations/us-central1/functions/setUserRole","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/wild-command/locations/us-central1/functions/setUserRole","httpsTrigger":{"url":"https://us-central1-wild-command.cloudfunctions.net/setUserRole","securityLevel":"SECURE_ALWAYS"},"status":"ACTIVE","entryPoint":"setUserRole","updateTime":"2024-10-14T22:52:45.977Z","versionId":"39","labels":{"deployment-tool":"cli-firebase","deployment-callable":"true","firebase-functions-hash":"5a00b2f08aaecffe697dcb31301edcc88286e61f"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip?GoogleAccessId=service-1029998806639@gcf-admin-robot.iam.gserviceaccount.com&Expires=1728948975&Signature=rP%2F08IZpUN8Vy9U2OLTHS9CUvsuEAX0j7TwR90Jd0mRV6KYlaPbho4AR6NXSZ6JkQenOpTRtOqqDw9QBm2%2Blp%2BfxKNwuaI6TVrfUMvg800ezEdNY5hrAKeFRhJxCoA5XqR%2FEZ8ahClwZ5oDJYUeyx10JB89ZkZ2S6z%2F3RWo%2BeKYrwWkUxVqr3qMsH0GJOy70UcSDKv0KNbEj4bg8rSMoSH34B0xK6YRnJXYX1dP1Gz7jphrglAWwBYq1oLW6AfuM1yMjJ7BTyVpGtOuvOXA9f9yL2LZ9wCTFzHN8lV4bPFmSjAx%2FbFLjCl5Y%2FISTJF7CcSbVQfYcpQ4CyNhQubtqsg%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/setUserRole"},"runtime":"nodejs18","buildId":"b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/1029998806639/locations/us-central1/builds/b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/wild-command/serviceAccounts/1029998806639-compute@developer.gserviceaccount.com"},"versionId":"40","updateTime":"2024-10-15T01:05:24Z"}}
+[debug] [2024-10-15T01:05:25.368Z] [update-default-us-central1-setUserRole] Retrying task index 0
+[debug] [2024-10-15T01:05:25.368Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:25.368Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:25.368Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL3NldFVzZXJSb2xlL0N6bUdyMk9yd1E4 [none]
+[debug] [2024-10-15T01:05:25.490Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL3NldFVzZXJSb2xlL0N6bUdyMk9yd1E4 200
+[debug] [2024-10-15T01:05:25.490Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL3NldFVzZXJSb2xlL0N6bUdyMk9yd1E4 {"name":"operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL3NldFVzZXJSb2xlL0N6bUdyMk9yd1E4","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/wild-command/locations/us-central1/functions/setUserRole","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/wild-command/locations/us-central1/functions/setUserRole","httpsTrigger":{"url":"https://us-central1-wild-command.cloudfunctions.net/setUserRole","securityLevel":"SECURE_ALWAYS"},"status":"ACTIVE","entryPoint":"setUserRole","updateTime":"2024-10-14T22:52:45.977Z","versionId":"39","labels":{"deployment-tool":"cli-firebase","deployment-callable":"true","firebase-functions-hash":"5a00b2f08aaecffe697dcb31301edcc88286e61f"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip?GoogleAccessId=service-1029998806639@gcf-admin-robot.iam.gserviceaccount.com&Expires=1728948975&Signature=rP%2F08IZpUN8Vy9U2OLTHS9CUvsuEAX0j7TwR90Jd0mRV6KYlaPbho4AR6NXSZ6JkQenOpTRtOqqDw9QBm2%2Blp%2BfxKNwuaI6TVrfUMvg800ezEdNY5hrAKeFRhJxCoA5XqR%2FEZ8ahClwZ5oDJYUeyx10JB89ZkZ2S6z%2F3RWo%2BeKYrwWkUxVqr3qMsH0GJOy70UcSDKv0KNbEj4bg8rSMoSH34B0xK6YRnJXYX1dP1Gz7jphrglAWwBYq1oLW6AfuM1yMjJ7BTyVpGtOuvOXA9f9yL2LZ9wCTFzHN8lV4bPFmSjAx%2FbFLjCl5Y%2FISTJF7CcSbVQfYcpQ4CyNhQubtqsg%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/setUserRole"},"runtime":"nodejs18","buildId":"b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/1029998806639/locations/us-central1/builds/b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/wild-command/serviceAccounts/1029998806639-compute@developer.gserviceaccount.com"},"versionId":"40","updateTime":"2024-10-15T01:05:24Z"},"done":true,"error":{"code":3,"message":"Failed to verify the provided Cloud Storage Signed URL"}}
+[debug] [2024-10-15T01:05:25.490Z] Got source token undefined for region us-central1
+[debug] [2024-10-15T01:05:25.490Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:25.490Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:25.490Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:25.490Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:25.490Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:25.490Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:25.491Z] >>> [apiv2][query] PATCH https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions/addGuide updateMask=name%2CsourceUploadUrl%2CentryPoint%2Cruntime%2CdockerRegistry%2Clabels%2ChttpsTrigger.securityLevel%2CminInstances%2CmaxInstances%2CingressSettings%2CenvironmentVariables%2CserviceAccountEmail%2CavailableMemoryMb%2Ctimeout%2CvpcConnector%2CvpcConnectorEgressSettings%2CsourceToken%2CbuildEnvironmentVariables
+[debug] [2024-10-15T01:05:25.491Z] >>> [apiv2][body] PATCH https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions/addGuide {"name":"projects/wild-command/locations/us-central1/functions/addGuide","sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip?GoogleAccessId=service-1029998806639@gcf-admin-robot.iam.gserviceaccount.com&Expires=1728948975&Signature=rP%2F08IZpUN8Vy9U2OLTHS9CUvsuEAX0j7TwR90Jd0mRV6KYlaPbho4AR6NXSZ6JkQenOpTRtOqqDw9QBm2%2Blp%2BfxKNwuaI6TVrfUMvg800ezEdNY5hrAKeFRhJxCoA5XqR%2FEZ8ahClwZ5oDJYUeyx10JB89ZkZ2S6z%2F3RWo%2BeKYrwWkUxVqr3qMsH0GJOy70UcSDKv0KNbEj4bg8rSMoSH34B0xK6YRnJXYX1dP1Gz7jphrglAWwBYq1oLW6AfuM1yMjJ7BTyVpGtOuvOXA9f9yL2LZ9wCTFzHN8lV4bPFmSjAx%2FbFLjCl5Y%2FISTJF7CcSbVQfYcpQ4CyNhQubtqsg%3D%3D","entryPoint":"addGuide","runtime":"nodejs18","dockerRegistry":"ARTIFACT_REGISTRY","labels":{"deployment-tool":"cli-firebase","deployment-callable":"true","firebase-functions-hash":"5a00b2f08aaecffe697dcb31301edcc88286e61f"},"httpsTrigger":{"securityLevel":"SECURE_ALWAYS"},"minInstances":null,"maxInstances":null,"ingressSettings":null,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/addGuide"},"serviceAccountEmail":null,"availableMemoryMb":null,"timeout":null,"vpcConnector":null,"vpcConnectorEgressSettings":null,"buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""}}
+[debug] [2024-10-15T01:05:25.491Z] >>> [apiv2][query] PATCH https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions/addHunter updateMask=name%2CsourceUploadUrl%2CentryPoint%2Cruntime%2CdockerRegistry%2Clabels%2ChttpsTrigger.securityLevel%2CminInstances%2CmaxInstances%2CingressSettings%2CenvironmentVariables%2CserviceAccountEmail%2CavailableMemoryMb%2Ctimeout%2CvpcConnector%2CvpcConnectorEgressSettings%2CsourceToken%2CbuildEnvironmentVariables
+[debug] [2024-10-15T01:05:25.491Z] >>> [apiv2][body] PATCH https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions/addHunter {"name":"projects/wild-command/locations/us-central1/functions/addHunter","sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip?GoogleAccessId=service-1029998806639@gcf-admin-robot.iam.gserviceaccount.com&Expires=1728948975&Signature=rP%2F08IZpUN8Vy9U2OLTHS9CUvsuEAX0j7TwR90Jd0mRV6KYlaPbho4AR6NXSZ6JkQenOpTRtOqqDw9QBm2%2Blp%2BfxKNwuaI6TVrfUMvg800ezEdNY5hrAKeFRhJxCoA5XqR%2FEZ8ahClwZ5oDJYUeyx10JB89ZkZ2S6z%2F3RWo%2BeKYrwWkUxVqr3qMsH0GJOy70UcSDKv0KNbEj4bg8rSMoSH34B0xK6YRnJXYX1dP1Gz7jphrglAWwBYq1oLW6AfuM1yMjJ7BTyVpGtOuvOXA9f9yL2LZ9wCTFzHN8lV4bPFmSjAx%2FbFLjCl5Y%2FISTJF7CcSbVQfYcpQ4CyNhQubtqsg%3D%3D","entryPoint":"addHunter","runtime":"nodejs18","dockerRegistry":"ARTIFACT_REGISTRY","labels":{"deployment-tool":"cli-firebase","deployment-callable":"true","firebase-functions-hash":"5a00b2f08aaecffe697dcb31301edcc88286e61f"},"httpsTrigger":{"securityLevel":"SECURE_ALWAYS"},"minInstances":null,"maxInstances":null,"ingressSettings":null,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/addHunter"},"serviceAccountEmail":null,"availableMemoryMb":null,"timeout":null,"vpcConnector":null,"vpcConnectorEgressSettings":null,"buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""}}
+[debug] [2024-10-15T01:05:25.492Z] >>> [apiv2][query] PATCH https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions/sendHuntBookingEmails updateMask=name%2CsourceUploadUrl%2CentryPoint%2Cruntime%2CdockerRegistry%2Clabels%2ChttpsTrigger.securityLevel%2CminInstances%2CmaxInstances%2CingressSettings%2CenvironmentVariables%2CserviceAccountEmail%2CavailableMemoryMb%2Ctimeout%2CvpcConnector%2CvpcConnectorEgressSettings%2CsourceToken%2CbuildEnvironmentVariables
+[debug] [2024-10-15T01:05:25.492Z] >>> [apiv2][body] PATCH https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions/sendHuntBookingEmails {"name":"projects/wild-command/locations/us-central1/functions/sendHuntBookingEmails","sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip?GoogleAccessId=service-1029998806639@gcf-admin-robot.iam.gserviceaccount.com&Expires=1728948975&Signature=rP%2F08IZpUN8Vy9U2OLTHS9CUvsuEAX0j7TwR90Jd0mRV6KYlaPbho4AR6NXSZ6JkQenOpTRtOqqDw9QBm2%2Blp%2BfxKNwuaI6TVrfUMvg800ezEdNY5hrAKeFRhJxCoA5XqR%2FEZ8ahClwZ5oDJYUeyx10JB89ZkZ2S6z%2F3RWo%2BeKYrwWkUxVqr3qMsH0GJOy70UcSDKv0KNbEj4bg8rSMoSH34B0xK6YRnJXYX1dP1Gz7jphrglAWwBYq1oLW6AfuM1yMjJ7BTyVpGtOuvOXA9f9yL2LZ9wCTFzHN8lV4bPFmSjAx%2FbFLjCl5Y%2FISTJF7CcSbVQfYcpQ4CyNhQubtqsg%3D%3D","entryPoint":"sendHuntBookingEmails","runtime":"nodejs18","dockerRegistry":"ARTIFACT_REGISTRY","labels":{"deployment-tool":"cli-firebase","deployment-callable":"true","firebase-functions-hash":"5a00b2f08aaecffe697dcb31301edcc88286e61f"},"httpsTrigger":{"securityLevel":"SECURE_ALWAYS"},"minInstances":null,"maxInstances":null,"ingressSettings":null,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/sendHuntBookingEmails"},"serviceAccountEmail":null,"availableMemoryMb":null,"timeout":null,"vpcConnector":null,"vpcConnectorEgressSettings":null,"buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""}}
+[error] Failed to verify the provided Cloud Storage Signed URL
+[debug] [2024-10-15T01:05:25.935Z] <<< [apiv2][status] PATCH https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions/addGuide 200
+[debug] [2024-10-15T01:05:25.935Z] <<< [apiv2][body] PATCH https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions/addGuide {"name":"operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL2FkZEd1aWRlL2VQSWNtbndMNEdr","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/wild-command/locations/us-central1/functions/addGuide","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/wild-command/locations/us-central1/functions/addGuide","httpsTrigger":{"url":"https://us-central1-wild-command.cloudfunctions.net/addGuide","securityLevel":"SECURE_ALWAYS"},"status":"ACTIVE","entryPoint":"addGuide","updateTime":"2024-10-14T22:52:56.822Z","versionId":"7","labels":{"deployment-tool":"cli-firebase","deployment-callable":"true","firebase-functions-hash":"5a00b2f08aaecffe697dcb31301edcc88286e61f"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip?GoogleAccessId=service-1029998806639@gcf-admin-robot.iam.gserviceaccount.com&Expires=1728948975&Signature=rP%2F08IZpUN8Vy9U2OLTHS9CUvsuEAX0j7TwR90Jd0mRV6KYlaPbho4AR6NXSZ6JkQenOpTRtOqqDw9QBm2%2Blp%2BfxKNwuaI6TVrfUMvg800ezEdNY5hrAKeFRhJxCoA5XqR%2FEZ8ahClwZ5oDJYUeyx10JB89ZkZ2S6z%2F3RWo%2BeKYrwWkUxVqr3qMsH0GJOy70UcSDKv0KNbEj4bg8rSMoSH34B0xK6YRnJXYX1dP1Gz7jphrglAWwBYq1oLW6AfuM1yMjJ7BTyVpGtOuvOXA9f9yL2LZ9wCTFzHN8lV4bPFmSjAx%2FbFLjCl5Y%2FISTJF7CcSbVQfYcpQ4CyNhQubtqsg%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/addGuide"},"runtime":"nodejs18","buildId":"b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/1029998806639/locations/us-central1/builds/b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/wild-command/serviceAccounts/1029998806639-compute@developer.gserviceaccount.com"},"versionId":"8","updateTime":"2024-10-15T01:05:25Z"}}
+[debug] [2024-10-15T01:05:25.935Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:25.935Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:25.935Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL2FkZEd1aWRlL2VQSWNtbndMNEdr [none]
+[debug] [2024-10-15T01:05:25.988Z] <<< [apiv2][status] PATCH https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions/addHunter 200
+[debug] [2024-10-15T01:05:25.988Z] <<< [apiv2][body] PATCH https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions/addHunter {"name":"operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL2FkZEh1bnRlci9GTGppR0JFS0R4VQ","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/wild-command/locations/us-central1/functions/addHunter","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/wild-command/locations/us-central1/functions/addHunter","httpsTrigger":{"url":"https://us-central1-wild-command.cloudfunctions.net/addHunter","securityLevel":"SECURE_ALWAYS"},"status":"ACTIVE","entryPoint":"addHunter","updateTime":"2024-10-14T22:52:52.960Z","versionId":"9","labels":{"deployment-tool":"cli-firebase","deployment-callable":"true","firebase-functions-hash":"5a00b2f08aaecffe697dcb31301edcc88286e61f"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip?GoogleAccessId=service-1029998806639@gcf-admin-robot.iam.gserviceaccount.com&Expires=1728948975&Signature=rP%2F08IZpUN8Vy9U2OLTHS9CUvsuEAX0j7TwR90Jd0mRV6KYlaPbho4AR6NXSZ6JkQenOpTRtOqqDw9QBm2%2Blp%2BfxKNwuaI6TVrfUMvg800ezEdNY5hrAKeFRhJxCoA5XqR%2FEZ8ahClwZ5oDJYUeyx10JB89ZkZ2S6z%2F3RWo%2BeKYrwWkUxVqr3qMsH0GJOy70UcSDKv0KNbEj4bg8rSMoSH34B0xK6YRnJXYX1dP1Gz7jphrglAWwBYq1oLW6AfuM1yMjJ7BTyVpGtOuvOXA9f9yL2LZ9wCTFzHN8lV4bPFmSjAx%2FbFLjCl5Y%2FISTJF7CcSbVQfYcpQ4CyNhQubtqsg%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/addHunter"},"runtime":"nodejs18","buildId":"b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/1029998806639/locations/us-central1/builds/b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/wild-command/serviceAccounts/1029998806639-compute@developer.gserviceaccount.com"},"versionId":"10","updateTime":"2024-10-15T01:05:25Z"}}
+[debug] [2024-10-15T01:05:25.993Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:25.993Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:25.993Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL2FkZEh1bnRlci9GTGppR0JFS0R4VQ [none]
+[debug] [2024-10-15T01:05:26.009Z] <<< [apiv2][status] PATCH https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions/sendHuntBookingEmails 200
+[debug] [2024-10-15T01:05:26.009Z] <<< [apiv2][body] PATCH https://cloudfunctions.googleapis.com/v1/projects/wild-command/locations/us-central1/functions/sendHuntBookingEmails {"name":"operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL3NlbmRIdW50Qm9va2luZ0VtYWlscy8zdjA3QU4xcU1Cbw","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/wild-command/locations/us-central1/functions/sendHuntBookingEmails","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/wild-command/locations/us-central1/functions/sendHuntBookingEmails","httpsTrigger":{"url":"https://us-central1-wild-command.cloudfunctions.net/sendHuntBookingEmails","securityLevel":"SECURE_ALWAYS"},"status":"ACTIVE","entryPoint":"sendHuntBookingEmails","updateTime":"2024-10-14T22:52:56.746Z","versionId":"6","labels":{"deployment-tool":"cli-firebase","deployment-callable":"true","firebase-functions-hash":"5a00b2f08aaecffe697dcb31301edcc88286e61f"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip?GoogleAccessId=service-1029998806639@gcf-admin-robot.iam.gserviceaccount.com&Expires=1728948975&Signature=rP%2F08IZpUN8Vy9U2OLTHS9CUvsuEAX0j7TwR90Jd0mRV6KYlaPbho4AR6NXSZ6JkQenOpTRtOqqDw9QBm2%2Blp%2BfxKNwuaI6TVrfUMvg800ezEdNY5hrAKeFRhJxCoA5XqR%2FEZ8ahClwZ5oDJYUeyx10JB89ZkZ2S6z%2F3RWo%2BeKYrwWkUxVqr3qMsH0GJOy70UcSDKv0KNbEj4bg8rSMoSH34B0xK6YRnJXYX1dP1Gz7jphrglAWwBYq1oLW6AfuM1yMjJ7BTyVpGtOuvOXA9f9yL2LZ9wCTFzHN8lV4bPFmSjAx%2FbFLjCl5Y%2FISTJF7CcSbVQfYcpQ4CyNhQubtqsg%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/sendHuntBookingEmails"},"runtime":"nodejs18","buildId":"b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/1029998806639/locations/us-central1/builds/b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/wild-command/serviceAccounts/1029998806639-compute@developer.gserviceaccount.com"},"versionId":"7","updateTime":"2024-10-15T01:05:25Z"}}
+[debug] [2024-10-15T01:05:26.009Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:26.009Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:26.009Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL3NlbmRIdW50Qm9va2luZ0VtYWlscy8zdjA3QU4xcU1Cbw [none]
+[debug] [2024-10-15T01:05:26.058Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL2FkZEd1aWRlL2VQSWNtbndMNEdr 200
+[debug] [2024-10-15T01:05:26.058Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL2FkZEd1aWRlL2VQSWNtbndMNEdr {"name":"operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL2FkZEd1aWRlL2VQSWNtbndMNEdr","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/wild-command/locations/us-central1/functions/addGuide","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/wild-command/locations/us-central1/functions/addGuide","httpsTrigger":{"url":"https://us-central1-wild-command.cloudfunctions.net/addGuide","securityLevel":"SECURE_ALWAYS"},"status":"ACTIVE","entryPoint":"addGuide","updateTime":"2024-10-14T22:52:56.822Z","versionId":"7","labels":{"deployment-tool":"cli-firebase","deployment-callable":"true","firebase-functions-hash":"5a00b2f08aaecffe697dcb31301edcc88286e61f"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip?GoogleAccessId=service-1029998806639@gcf-admin-robot.iam.gserviceaccount.com&Expires=1728948975&Signature=rP%2F08IZpUN8Vy9U2OLTHS9CUvsuEAX0j7TwR90Jd0mRV6KYlaPbho4AR6NXSZ6JkQenOpTRtOqqDw9QBm2%2Blp%2BfxKNwuaI6TVrfUMvg800ezEdNY5hrAKeFRhJxCoA5XqR%2FEZ8ahClwZ5oDJYUeyx10JB89ZkZ2S6z%2F3RWo%2BeKYrwWkUxVqr3qMsH0GJOy70UcSDKv0KNbEj4bg8rSMoSH34B0xK6YRnJXYX1dP1Gz7jphrglAWwBYq1oLW6AfuM1yMjJ7BTyVpGtOuvOXA9f9yL2LZ9wCTFzHN8lV4bPFmSjAx%2FbFLjCl5Y%2FISTJF7CcSbVQfYcpQ4CyNhQubtqsg%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/addGuide"},"runtime":"nodejs18","buildId":"b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/1029998806639/locations/us-central1/builds/b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/wild-command/serviceAccounts/1029998806639-compute@developer.gserviceaccount.com"},"versionId":"8","updateTime":"2024-10-15T01:05:25Z"}}
+[debug] [2024-10-15T01:05:26.127Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL2FkZEh1bnRlci9GTGppR0JFS0R4VQ 200
+[debug] [2024-10-15T01:05:26.127Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL2FkZEh1bnRlci9GTGppR0JFS0R4VQ {"name":"operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL2FkZEh1bnRlci9GTGppR0JFS0R4VQ","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/wild-command/locations/us-central1/functions/addHunter","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/wild-command/locations/us-central1/functions/addHunter","httpsTrigger":{"url":"https://us-central1-wild-command.cloudfunctions.net/addHunter","securityLevel":"SECURE_ALWAYS"},"status":"ACTIVE","entryPoint":"addHunter","updateTime":"2024-10-14T22:52:52.960Z","versionId":"9","labels":{"deployment-tool":"cli-firebase","deployment-callable":"true","firebase-functions-hash":"5a00b2f08aaecffe697dcb31301edcc88286e61f"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip?GoogleAccessId=service-1029998806639@gcf-admin-robot.iam.gserviceaccount.com&Expires=1728948975&Signature=rP%2F08IZpUN8Vy9U2OLTHS9CUvsuEAX0j7TwR90Jd0mRV6KYlaPbho4AR6NXSZ6JkQenOpTRtOqqDw9QBm2%2Blp%2BfxKNwuaI6TVrfUMvg800ezEdNY5hrAKeFRhJxCoA5XqR%2FEZ8ahClwZ5oDJYUeyx10JB89ZkZ2S6z%2F3RWo%2BeKYrwWkUxVqr3qMsH0GJOy70UcSDKv0KNbEj4bg8rSMoSH34B0xK6YRnJXYX1dP1Gz7jphrglAWwBYq1oLW6AfuM1yMjJ7BTyVpGtOuvOXA9f9yL2LZ9wCTFzHN8lV4bPFmSjAx%2FbFLjCl5Y%2FISTJF7CcSbVQfYcpQ4CyNhQubtqsg%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/addHunter"},"runtime":"nodejs18","buildId":"b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/1029998806639/locations/us-central1/builds/b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/wild-command/serviceAccounts/1029998806639-compute@developer.gserviceaccount.com"},"versionId":"10","updateTime":"2024-10-15T01:05:26Z"}}
+[debug] [2024-10-15T01:05:26.128Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL3NlbmRIdW50Qm9va2luZ0VtYWlscy8zdjA3QU4xcU1Cbw 200
+[debug] [2024-10-15T01:05:26.128Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL3NlbmRIdW50Qm9va2luZ0VtYWlscy8zdjA3QU4xcU1Cbw {"name":"operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL3NlbmRIdW50Qm9va2luZ0VtYWlscy8zdjA3QU4xcU1Cbw","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/wild-command/locations/us-central1/functions/sendHuntBookingEmails","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/wild-command/locations/us-central1/functions/sendHuntBookingEmails","httpsTrigger":{"url":"https://us-central1-wild-command.cloudfunctions.net/sendHuntBookingEmails","securityLevel":"SECURE_ALWAYS"},"status":"ACTIVE","entryPoint":"sendHuntBookingEmails","updateTime":"2024-10-14T22:52:56.746Z","versionId":"6","labels":{"deployment-tool":"cli-firebase","deployment-callable":"true","firebase-functions-hash":"5a00b2f08aaecffe697dcb31301edcc88286e61f"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip?GoogleAccessId=service-1029998806639@gcf-admin-robot.iam.gserviceaccount.com&Expires=1728948975&Signature=rP%2F08IZpUN8Vy9U2OLTHS9CUvsuEAX0j7TwR90Jd0mRV6KYlaPbho4AR6NXSZ6JkQenOpTRtOqqDw9QBm2%2Blp%2BfxKNwuaI6TVrfUMvg800ezEdNY5hrAKeFRhJxCoA5XqR%2FEZ8ahClwZ5oDJYUeyx10JB89ZkZ2S6z%2F3RWo%2BeKYrwWkUxVqr3qMsH0GJOy70UcSDKv0KNbEj4bg8rSMoSH34B0xK6YRnJXYX1dP1Gz7jphrglAWwBYq1oLW6AfuM1yMjJ7BTyVpGtOuvOXA9f9yL2LZ9wCTFzHN8lV4bPFmSjAx%2FbFLjCl5Y%2FISTJF7CcSbVQfYcpQ4CyNhQubtqsg%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/sendHuntBookingEmails"},"runtime":"nodejs18","buildId":"b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/1029998806639/locations/us-central1/builds/b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/wild-command/serviceAccounts/1029998806639-compute@developer.gserviceaccount.com"},"versionId":"7","updateTime":"2024-10-15T01:05:25Z"}}
+[debug] [2024-10-15T01:05:26.564Z] [update-default-us-central1-addGuide] Retrying task index 0
+[debug] [2024-10-15T01:05:26.564Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:26.564Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:26.564Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL2FkZEd1aWRlL2VQSWNtbndMNEdr [none]
+[debug] [2024-10-15T01:05:26.641Z] [update-default-us-central1-addHunter] Retrying task index 0
+[debug] [2024-10-15T01:05:26.641Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:26.642Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:26.642Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL2FkZEh1bnRlci9GTGppR0JFS0R4VQ [none]
+[debug] [2024-10-15T01:05:26.642Z] [update-default-us-central1-sendHuntBookingEmails] Retrying task index 0
+[debug] [2024-10-15T01:05:26.642Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:26.642Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:26.642Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL3NlbmRIdW50Qm9va2luZ0VtYWlscy8zdjA3QU4xcU1Cbw [none]
+[debug] [2024-10-15T01:05:26.722Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL2FkZEd1aWRlL2VQSWNtbndMNEdr 200
+[debug] [2024-10-15T01:05:26.722Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL2FkZEd1aWRlL2VQSWNtbndMNEdr {"name":"operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL2FkZEd1aWRlL2VQSWNtbndMNEdr","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/wild-command/locations/us-central1/functions/addGuide","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/wild-command/locations/us-central1/functions/addGuide","httpsTrigger":{"url":"https://us-central1-wild-command.cloudfunctions.net/addGuide","securityLevel":"SECURE_ALWAYS"},"status":"ACTIVE","entryPoint":"addGuide","updateTime":"2024-10-14T22:52:56.822Z","versionId":"7","labels":{"deployment-tool":"cli-firebase","deployment-callable":"true","firebase-functions-hash":"5a00b2f08aaecffe697dcb31301edcc88286e61f"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip?GoogleAccessId=service-1029998806639@gcf-admin-robot.iam.gserviceaccount.com&Expires=1728948975&Signature=rP%2F08IZpUN8Vy9U2OLTHS9CUvsuEAX0j7TwR90Jd0mRV6KYlaPbho4AR6NXSZ6JkQenOpTRtOqqDw9QBm2%2Blp%2BfxKNwuaI6TVrfUMvg800ezEdNY5hrAKeFRhJxCoA5XqR%2FEZ8ahClwZ5oDJYUeyx10JB89ZkZ2S6z%2F3RWo%2BeKYrwWkUxVqr3qMsH0GJOy70UcSDKv0KNbEj4bg8rSMoSH34B0xK6YRnJXYX1dP1Gz7jphrglAWwBYq1oLW6AfuM1yMjJ7BTyVpGtOuvOXA9f9yL2LZ9wCTFzHN8lV4bPFmSjAx%2FbFLjCl5Y%2FISTJF7CcSbVQfYcpQ4CyNhQubtqsg%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/addGuide"},"runtime":"nodejs18","buildId":"b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/1029998806639/locations/us-central1/builds/b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/wild-command/serviceAccounts/1029998806639-compute@developer.gserviceaccount.com"},"versionId":"8","updateTime":"2024-10-15T01:05:26Z"},"done":true,"error":{"code":3,"message":"Failed to verify the provided Cloud Storage Signed URL"}}
+[debug] [2024-10-15T01:05:26.722Z] Got source token undefined for region us-central1
+[error] Failed to verify the provided Cloud Storage Signed URL
+[debug] [2024-10-15T01:05:26.770Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL3NlbmRIdW50Qm9va2luZ0VtYWlscy8zdjA3QU4xcU1Cbw 200
+[debug] [2024-10-15T01:05:26.770Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL3NlbmRIdW50Qm9va2luZ0VtYWlscy8zdjA3QU4xcU1Cbw {"name":"operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL3NlbmRIdW50Qm9va2luZ0VtYWlscy8zdjA3QU4xcU1Cbw","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/wild-command/locations/us-central1/functions/sendHuntBookingEmails","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/wild-command/locations/us-central1/functions/sendHuntBookingEmails","httpsTrigger":{"url":"https://us-central1-wild-command.cloudfunctions.net/sendHuntBookingEmails","securityLevel":"SECURE_ALWAYS"},"status":"ACTIVE","entryPoint":"sendHuntBookingEmails","updateTime":"2024-10-14T22:52:56.746Z","versionId":"6","labels":{"deployment-tool":"cli-firebase","deployment-callable":"true","firebase-functions-hash":"5a00b2f08aaecffe697dcb31301edcc88286e61f"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip?GoogleAccessId=service-1029998806639@gcf-admin-robot.iam.gserviceaccount.com&Expires=1728948975&Signature=rP%2F08IZpUN8Vy9U2OLTHS9CUvsuEAX0j7TwR90Jd0mRV6KYlaPbho4AR6NXSZ6JkQenOpTRtOqqDw9QBm2%2Blp%2BfxKNwuaI6TVrfUMvg800ezEdNY5hrAKeFRhJxCoA5XqR%2FEZ8ahClwZ5oDJYUeyx10JB89ZkZ2S6z%2F3RWo%2BeKYrwWkUxVqr3qMsH0GJOy70UcSDKv0KNbEj4bg8rSMoSH34B0xK6YRnJXYX1dP1Gz7jphrglAWwBYq1oLW6AfuM1yMjJ7BTyVpGtOuvOXA9f9yL2LZ9wCTFzHN8lV4bPFmSjAx%2FbFLjCl5Y%2FISTJF7CcSbVQfYcpQ4CyNhQubtqsg%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/sendHuntBookingEmails"},"runtime":"nodejs18","buildId":"b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/1029998806639/locations/us-central1/builds/b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/wild-command/serviceAccounts/1029998806639-compute@developer.gserviceaccount.com"},"versionId":"7","updateTime":"2024-10-15T01:05:26Z"},"done":true,"error":{"code":3,"message":"Failed to verify the provided Cloud Storage Signed URL"}}
+[debug] [2024-10-15T01:05:26.770Z] Got source token undefined for region us-central1
+[error] Failed to verify the provided Cloud Storage Signed URL
+[debug] [2024-10-15T01:05:26.825Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL2FkZEh1bnRlci9GTGppR0JFS0R4VQ 200
+[debug] [2024-10-15T01:05:26.825Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL2FkZEh1bnRlci9GTGppR0JFS0R4VQ {"name":"operations/d2lsZC1jb21tYW5kL3VzLWNlbnRyYWwxL2FkZEh1bnRlci9GTGppR0JFS0R4VQ","metadata":{"@type":"type.googleapis.com/google.cloud.functions.v1.OperationMetadataV1","target":"projects/wild-command/locations/us-central1/functions/addHunter","type":"UPDATE_FUNCTION","request":{"@type":"type.googleapis.com/google.cloud.functions.v1.CloudFunction","name":"projects/wild-command/locations/us-central1/functions/addHunter","httpsTrigger":{"url":"https://us-central1-wild-command.cloudfunctions.net/addHunter","securityLevel":"SECURE_ALWAYS"},"status":"ACTIVE","entryPoint":"addHunter","updateTime":"2024-10-14T22:52:52.960Z","versionId":"9","labels":{"deployment-tool":"cli-firebase","deployment-callable":"true","firebase-functions-hash":"5a00b2f08aaecffe697dcb31301edcc88286e61f"},"sourceUploadUrl":"https://storage.googleapis.com/uploads-250510932425.us-central1.cloudfunctions.appspot.com/405cfa4e-e41f-4de1-896b-a615ec867889.zip?GoogleAccessId=service-1029998806639@gcf-admin-robot.iam.gserviceaccount.com&Expires=1728948975&Signature=rP%2F08IZpUN8Vy9U2OLTHS9CUvsuEAX0j7TwR90Jd0mRV6KYlaPbho4AR6NXSZ6JkQenOpTRtOqqDw9QBm2%2Blp%2BfxKNwuaI6TVrfUMvg800ezEdNY5hrAKeFRhJxCoA5XqR%2FEZ8ahClwZ5oDJYUeyx10JB89ZkZ2S6z%2F3RWo%2BeKYrwWkUxVqr3qMsH0GJOy70UcSDKv0KNbEj4bg8rSMoSH34B0xK6YRnJXYX1dP1Gz7jphrglAWwBYq1oLW6AfuM1yMjJ7BTyVpGtOuvOXA9f9yL2LZ9wCTFzHN8lV4bPFmSjAx%2FbFLjCl5Y%2FISTJF7CcSbVQfYcpQ4CyNhQubtqsg%3D%3D","environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}","GCLOUD_PROJECT":"wild-command","EVENTARC_CLOUD_EVENT_SOURCE":"projects/wild-command/locations/us-central1/functions/addHunter"},"runtime":"nodejs18","buildId":"b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","buildEnvironmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"buildName":"projects/1029998806639/locations/us-central1/builds/b59e1bdd-cc3a-4f5b-9790-97aa86e8a505","dockerRegistry":"ARTIFACT_REGISTRY","automaticUpdatePolicy":{},"buildServiceAccount":"projects/wild-command/serviceAccounts/1029998806639-compute@developer.gserviceaccount.com"},"versionId":"10","updateTime":"2024-10-15T01:05:26Z"},"done":true,"error":{"code":3,"message":"Failed to verify the provided Cloud Storage Signed URL"}}
+[debug] [2024-10-15T01:05:26.825Z] Got source token undefined for region us-central1
+[error] Failed to verify the provided Cloud Storage Signed URL
+[debug] [2024-10-15T01:05:26.830Z] Total Function Deployment time: 3047
+[debug] [2024-10-15T01:05:26.830Z] 4 Functions Deployed
+[debug] [2024-10-15T01:05:26.830Z] 4 Functions Errored
+[debug] [2024-10-15T01:05:26.830Z] 0 Function Deployments Aborted
+[debug] [2024-10-15T01:05:26.830Z] Average Function Deployment time: 2669.25
+[info] 
+[info] Functions deploy had errors with the following functions:
+	addGuide(us-central1)
+	addHunter(us-central1)
+	sendHuntBookingEmails(us-central1)
+	setUserRole(us-central1)
+[info] i  functions: cleaning up build files... 
+[debug] [2024-10-15T01:05:27.171Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:27.171Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:27.171Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:27.171Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:27.171Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:27.171Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:27.171Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:27.171Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:27.171Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:27.171Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:27.171Z] >>> [apiv2][query] DELETE https://artifactregistry.googleapis.com/v1beta2/projects/wild-command/locations/us-central1/repositories/gcf-artifacts/packages/set_user_role [none]
+[debug] [2024-10-15T01:05:27.172Z] >>> [apiv2][query] DELETE https://artifactregistry.googleapis.com/v1beta2/projects/wild-command/locations/us-central1/repositories/gcf-artifacts/packages/add_guide [none]
+[debug] [2024-10-15T01:05:27.173Z] >>> [apiv2][query] DELETE https://artifactregistry.googleapis.com/v1beta2/projects/wild-command/locations/us-central1/repositories/gcf-artifacts/packages/add_hunter [none]
+[debug] [2024-10-15T01:05:27.173Z] >>> [apiv2][query] DELETE https://artifactregistry.googleapis.com/v1beta2/projects/wild-command/locations/us-central1/repositories/gcf-artifacts/packages/send_hunt_booking_emails [none]
+[debug] [2024-10-15T01:05:27.173Z] >>> [apiv2][query] GET https://us.gcr.io/v2/wild-command/gcf/us-central1/tags/list [none]
+[debug] [2024-10-15T01:05:27.448Z] <<< [apiv2][status] DELETE https://artifactregistry.googleapis.com/v1beta2/projects/wild-command/locations/us-central1/repositories/gcf-artifacts/packages/send_hunt_booking_emails 404
+[debug] [2024-10-15T01:05:27.448Z] <<< [apiv2][body] DELETE https://artifactregistry.googleapis.com/v1beta2/projects/wild-command/locations/us-central1/repositories/gcf-artifacts/packages/send_hunt_booking_emails {"error":{"code":404,"message":"Package \"projects/wild-command/locations/us-central1/repositories/gcf-artifacts/packages/send_hunt_booking_emails\" was not found.","status":"NOT_FOUND"}}
+[debug] [2024-10-15T01:05:27.648Z] <<< [apiv2][status] DELETE https://artifactregistry.googleapis.com/v1beta2/projects/wild-command/locations/us-central1/repositories/gcf-artifacts/packages/add_guide 404
+[debug] [2024-10-15T01:05:27.648Z] <<< [apiv2][body] DELETE https://artifactregistry.googleapis.com/v1beta2/projects/wild-command/locations/us-central1/repositories/gcf-artifacts/packages/add_guide {"error":{"code":404,"message":"Package \"projects/wild-command/locations/us-central1/repositories/gcf-artifacts/packages/add_guide\" was not found.","status":"NOT_FOUND"}}
+[debug] [2024-10-15T01:05:27.649Z] <<< [apiv2][status] DELETE https://artifactregistry.googleapis.com/v1beta2/projects/wild-command/locations/us-central1/repositories/gcf-artifacts/packages/set_user_role 404
+[debug] [2024-10-15T01:05:27.649Z] <<< [apiv2][body] DELETE https://artifactregistry.googleapis.com/v1beta2/projects/wild-command/locations/us-central1/repositories/gcf-artifacts/packages/set_user_role {"error":{"code":404,"message":"Package \"projects/wild-command/locations/us-central1/repositories/gcf-artifacts/packages/set_user_role\" was not found.","status":"NOT_FOUND"}}
+[debug] [2024-10-15T01:05:27.652Z] <<< [apiv2][status] DELETE https://artifactregistry.googleapis.com/v1beta2/projects/wild-command/locations/us-central1/repositories/gcf-artifacts/packages/add_hunter 404
+[debug] [2024-10-15T01:05:27.652Z] <<< [apiv2][body] DELETE https://artifactregistry.googleapis.com/v1beta2/projects/wild-command/locations/us-central1/repositories/gcf-artifacts/packages/add_hunter {"error":{"code":404,"message":"Package \"projects/wild-command/locations/us-central1/repositories/gcf-artifacts/packages/add_hunter\" was not found.","status":"NOT_FOUND"}}
+[debug] [2024-10-15T01:05:27.746Z] <<< [apiv2][status] GET https://us.gcr.io/v2/wild-command/gcf/us-central1/tags/list 404
+[debug] [2024-10-15T01:05:27.746Z] <<< [apiv2][body] GET https://us.gcr.io/v2/wild-command/gcf/us-central1/tags/list {"errors":[{"code":"NAME_UNKNOWN","message":"Repository \"us.gcr.io\" not found"}]}
+[debug] [2024-10-15T01:05:27.747Z] Failed docker command with error  HTTP Error: 404, Not Found {"name":"FirebaseError","children":[],"context":{"body":{"errors":[{"code":"NAME_UNKNOWN","message":"Repository \"us.gcr.io\" not found"}],"error":{"message":"Not Found"}},"response":{"statusCode":404}},"exit":1,"message":"HTTP Error: 404, Not Found","status":404}
+[debug] [2024-10-15T01:05:27.751Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:27.751Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:27.751Z] >>> [apiv2][query] GET https://us.gcr.io/v2/wild-command/gcf/us-central1/tags/list [none]
+[debug] [2024-10-15T01:05:27.913Z] <<< [apiv2][status] GET https://us.gcr.io/v2/wild-command/gcf/us-central1/tags/list 404
+[debug] [2024-10-15T01:05:27.913Z] <<< [apiv2][body] GET https://us.gcr.io/v2/wild-command/gcf/us-central1/tags/list {"errors":[{"code":"NAME_UNKNOWN","message":"Repository \"us.gcr.io\" not found"}]}
+[debug] [2024-10-15T01:05:27.913Z] Failed docker command with error  HTTP Error: 404, Not Found {"name":"FirebaseError","children":[],"context":{"body":{"errors":[{"code":"NAME_UNKNOWN","message":"Repository \"us.gcr.io\" not found"}],"error":{"message":"Not Found"}},"response":{"statusCode":404}},"exit":1,"message":"HTTP Error: 404, Not Found","status":404}
+[debug] [2024-10-15T01:05:28.014Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:28.014Z] Checked if tokens are valid: true, expires at: 1728957922987
+[debug] [2024-10-15T01:05:28.014Z] >>> [apiv2][query] GET https://us.gcr.io/v2/wild-command/gcf/us-central1/tags/list [none]
+[debug] [2024-10-15T01:05:28.192Z] <<< [apiv2][status] GET https://us.gcr.io/v2/wild-command/gcf/us-central1/tags/list 404
+[debug] [2024-10-15T01:05:28.192Z] <<< [apiv2][body] GET https://us.gcr.io/v2/wild-command/gcf/us-central1/tags/list {"errors":[{"code":"NAME_UNKNOWN","message":"Repository \"us.gcr.io\" not found"}]}
+[debug] [2024-10-15T01:05:28.193Z] Failed docker command with error  HTTP Error: 404, Not Found {"name":"FirebaseError","children":[],"context":{"body":{"errors":[{"code":"NAME_UNKNOWN","message":"Repository \"us.gcr.io\" not found"}],"error":{"message":"Not Found"}},"response":{"statusCode":404}},"exit":1,"message":"HTTP Error: 404, Not Found","status":404}
+[warn] !  functions: Unhandled error cleaning up build images. This could result in a small monthly bill if not corrected. You can attempt to delete these images by redeploying or you can delete them manually at https://console.cloud.google.com/gcr/images/wild-command/us/gcf 
+[debug] [2024-10-15T01:05:28.193Z] Functions deploy failed.
+[debug] [2024-10-15T01:05:28.193Z] {
+  "endpoint": {
+    "id": "setUserRole",
+    "project": "wild-command",
+    "region": "us-central1",
+    "entryPoint": "setUserRole",
+    "platform": "gcfv1",
+    "runtime": "nodejs18",
+    "callableTrigger": {},
+    "labels": {
+      "deployment-tool": "cli-firebase"
+    },
+    "ingressSettings": null,
+    "availableMemoryMb": null,
+    "serviceAccount": null,
+    "timeoutSeconds": null,
+    "maxInstances": null,
+    "minInstances": null,
+    "vpc": null,
+    "environmentVariables": {
+      "FIREBASE_CONFIG": "{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}",
+      "GCLOUD_PROJECT": "wild-command",
+      "EVENTARC_CLOUD_EVENT_SOURCE": "projects/wild-command/locations/us-central1/functions/setUserRole"
+    },
+    "codebase": "default",
+    "securityLevel": "SECURE_ALWAYS",
+    "targetedByOnly": false,
+    "hash": "5a00b2f08aaecffe697dcb31301edcc88286e61f"
+  },
+  "op": "update",
+  "original": {
+    "name": "FirebaseError",
+    "children": [],
+    "exit": 1,
+    "message": "Failed to verify the provided Cloud Storage Signed URL",
+    "original": {
+      "code": 3,
+      "message": "Failed to verify the provided Cloud Storage Signed URL"
+    },
+    "status": 3,
+    "code": 3
+  }
+}
+[debug] [2024-10-15T01:05:28.193Z] {
+  "endpoint": {
+    "id": "addGuide",
+    "project": "wild-command",
+    "region": "us-central1",
+    "entryPoint": "addGuide",
+    "platform": "gcfv1",
+    "runtime": "nodejs18",
+    "callableTrigger": {},
+    "labels": {
+      "deployment-tool": "cli-firebase"
+    },
+    "ingressSettings": null,
+    "availableMemoryMb": null,
+    "serviceAccount": null,
+    "timeoutSeconds": null,
+    "maxInstances": null,
+    "minInstances": null,
+    "vpc": null,
+    "environmentVariables": {
+      "FIREBASE_CONFIG": "{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}",
+      "GCLOUD_PROJECT": "wild-command",
+      "EVENTARC_CLOUD_EVENT_SOURCE": "projects/wild-command/locations/us-central1/functions/addGuide"
+    },
+    "codebase": "default",
+    "securityLevel": "SECURE_ALWAYS",
+    "targetedByOnly": false,
+    "hash": "5a00b2f08aaecffe697dcb31301edcc88286e61f"
+  },
+  "op": "update",
+  "original": {
+    "name": "FirebaseError",
+    "children": [],
+    "exit": 1,
+    "message": "Failed to verify the provided Cloud Storage Signed URL",
+    "original": {
+      "code": 3,
+      "message": "Failed to verify the provided Cloud Storage Signed URL"
+    },
+    "status": 3,
+    "code": 3
+  }
+}
+[debug] [2024-10-15T01:05:28.193Z] {
+  "endpoint": {
+    "id": "sendHuntBookingEmails",
+    "project": "wild-command",
+    "region": "us-central1",
+    "entryPoint": "sendHuntBookingEmails",
+    "platform": "gcfv1",
+    "runtime": "nodejs18",
+    "callableTrigger": {},
+    "labels": {
+      "deployment-tool": "cli-firebase"
+    },
+    "ingressSettings": null,
+    "availableMemoryMb": null,
+    "serviceAccount": null,
+    "timeoutSeconds": null,
+    "maxInstances": null,
+    "minInstances": null,
+    "vpc": null,
+    "environmentVariables": {
+      "FIREBASE_CONFIG": "{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}",
+      "GCLOUD_PROJECT": "wild-command",
+      "EVENTARC_CLOUD_EVENT_SOURCE": "projects/wild-command/locations/us-central1/functions/sendHuntBookingEmails"
+    },
+    "codebase": "default",
+    "securityLevel": "SECURE_ALWAYS",
+    "targetedByOnly": false,
+    "hash": "5a00b2f08aaecffe697dcb31301edcc88286e61f"
+  },
+  "op": "update",
+  "original": {
+    "name": "FirebaseError",
+    "children": [],
+    "exit": 1,
+    "message": "Failed to verify the provided Cloud Storage Signed URL",
+    "original": {
+      "code": 3,
+      "message": "Failed to verify the provided Cloud Storage Signed URL"
+    },
+    "status": 3,
+    "code": 3
+  }
+}
+[debug] [2024-10-15T01:05:28.193Z] {
+  "endpoint": {
+    "id": "addHunter",
+    "project": "wild-command",
+    "region": "us-central1",
+    "entryPoint": "addHunter",
+    "platform": "gcfv1",
+    "runtime": "nodejs18",
+    "callableTrigger": {},
+    "labels": {
+      "deployment-tool": "cli-firebase"
+    },
+    "ingressSettings": null,
+    "availableMemoryMb": null,
+    "serviceAccount": null,
+    "timeoutSeconds": null,
+    "maxInstances": null,
+    "minInstances": null,
+    "vpc": null,
+    "environmentVariables": {
+      "FIREBASE_CONFIG": "{\"projectId\":\"wild-command\",\"storageBucket\":\"wild-command.appspot.com\",\"locationId\":\"us-central\"}",
+      "GCLOUD_PROJECT": "wild-command",
+      "EVENTARC_CLOUD_EVENT_SOURCE": "projects/wild-command/locations/us-central1/functions/addHunter"
+    },
+    "codebase": "default",
+    "securityLevel": "SECURE_ALWAYS",
+    "targetedByOnly": false,
+    "hash": "5a00b2f08aaecffe697dcb31301edcc88286e61f"
+  },
+  "op": "update",
+  "original": {
+    "name": "FirebaseError",
+    "children": [],
+    "exit": 1,
+    "message": "Failed to verify the provided Cloud Storage Signed URL",
+    "original": {
+      "code": 3,
+      "message": "Failed to verify the provided Cloud Storage Signed URL"
+    },
+    "status": 3,
+    "code": 3
+  }
+}
+[error] Error: There was an error deploying functions:
+[error] - Error Failed to update function setUserRole in region us-central1
+[error] - Error Failed to update function addGuide in region us-central1
+[error] - Error Failed to update function sendHuntBookingEmails in region us-central1
+[error] - Error Failed to update function addHunter in region us-central1

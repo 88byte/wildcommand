@@ -39,38 +39,38 @@ const DashboardLayout = () => {
       case 'outfitter':
         return (
           <>
-            <li onClick={() => handleNavigationClick('/dashboard')}>Dashboard</li>
-            <li onClick={() => handleNavigationClick('/hunters')}>Hunters</li>
-            <li>Guides</li>
-            <li>Book Hunt</li>
-            <li>Log Hunt</li>
-            <li onClick={() => handleNavigationClick('/profile')}>Profile</li>
-            <li onClick={() => handleNavigationClick('/support')}>Support</li>
+            <li onClick={() => navigate('/dashboard')}>Dashboard</li>
+            <li onClick={() => navigate('/hunters')}>Hunters</li>
+            <li onClick={() => navigate('/guides')}>Guides</li> {/* Add Guides navigation */}
+            <li onClick={() => navigate('/book-hunt')}>Book Hunt</li>
+            <li onClick={() => navigate('/profile')}>Profile</li>
+            <li onClick={() => navigate('/support')}>Support</li>
           </>
         );
       case 'hunter':
         return (
           <>
-            <li onClick={() => handleNavigationClick('/dashboard')}>Dashboard</li>
-            <li onClick={() => handleNavigationClick('/profile')}>Profile</li>
-            <li onClick={() => handleNavigationClick('/support')}>Support</li>
+            <li onClick={() => navigate('/dashboard')}>Dashboard</li>
+            <li onClick={() => navigate('/book-hunt')}>Book Hunt</li> {/* Book Hunt Link */}
+            <li onClick={() => navigate('/profile')}>Profile</li>
+            <li onClick={() => navigate('/support')}>Support</li>
           </>
         );
       case 'guide':
         return (
           <>
-            <li onClick={() => handleNavigationClick('/dashboard')}>Dashboard</li>
+            <li onClick={() => navigate('/dashboard')}>Dashboard</li>
+            <li onClick={() => navigate('/book-hunt')}>Book Hunt</li> {/* Book Hunt Link */}
             <li>Calendar</li>
-            <li>Book Hunt</li>
-            <li>Log Hunt</li>
-            <li onClick={() => handleNavigationClick('/profile')}>Profile</li>
-            <li onClick={() => handleNavigationClick('/support')}>Support</li>
+            <li onClick={() => navigate('/profile')}>Profile</li>
+            <li onClick={() => navigate('/support')}>Support</li>
           </>
         );
       default:
         return null;
     }
   };
+
 
   return (
     <div className="dashboard-container">
