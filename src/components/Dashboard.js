@@ -11,7 +11,6 @@ const Dashboard = () => {
   const [hunts, setHunts] = useState([]); // State to store hunts
 
 
-  // Fetch hunts from Firestore
   const fetchHunts = async () => {
     try {
       const currentUser = auth.currentUser || user;
@@ -20,61 +19,86 @@ const Dashboard = () => {
         const token = await currentUser.getIdTokenResult();
         const outfitterId = token.claims.outfitterId || token.claims.uid;
 
+        console.log("Outfitter ID:", outfitterId); // Check if outfitterId is being fetched correctly
+
         const huntsCollectionRef = collection(db, `outfitters/${outfitterId}/bookings`);
         const huntsSnapshot = await getDocs(huntsCollectionRef);
 
+        if (huntsSnapshot.empty) {
+          console.log("No hunts found for this outfitter.");
+          return;
+        }
+
         const huntData = huntsSnapshot.docs.map((doc) => {
           const data = doc.data();
-          const date = data.date; // Should be in YYYY-MM-DD format
-          const startTime = data.startTime; // Should be a valid time string
+          console.log("Fetched hunt data:", data); // Log fetched hunt data
+
+          const date = data.date || '';
+          const startTime = data.startTime || '';
+          const guides = data.guides || [];
+          const hunters = data.hunters || [];
 
           if (date && startTime) {
-            const dateTimeString = `${date}T${startTime}`;
-            const startDateTime = new Date(dateTimeString);
+            const startDateTimeString = `${date}T${startTime}:00`;
+            const startDateTime = new Date(startDateTimeString);
 
-            if (!isNaN(startDateTime.getTime())) {
-              const endDateTime = new Date(startDateTime.getTime() + 4 * 60 * 60 * 1000);
+            const endDateTimeString = data.endTime ? `${date}T${data.endTime}:00` : '';
+            const endDateTime = endDateTimeString ? new Date(endDateTimeString) : new Date(startDateTime.getTime() + 4 * 60 * 60 * 1000);
 
+            if (!isNaN(startDateTime.getTime()) && !isNaN(endDateTime.getTime())) {
               return {
                 id: doc.id,
                 name: data.huntType,
-                start: startDateTime.toISOString(),
-                end: endDateTime.toISOString(),
+                start: startDateTime, // Pass Date object
+                end: endDateTime, // Pass Date object
                 location: data.location,
                 notes: data.notes || '',
+                guides,
+                hunters,
                 outfitterId,
-                startTime: startTime, // Keep it simple if you need to display it
-                endTime: endDateTime.toISOString(), // Save this if needed
+                date,
+                startTime,
+                endTime: endDateTime, // Store as Date object
               };
             } else {
-              console.error(`Invalid Date object created for booking with ID: ${doc.id}`);
+              console.error(`Invalid Date object for booking with ID: ${doc.id}`);
             }
           } else {
-            console.error(`Missing or invalid date/startTime for booking with ID: ${doc.id}`, { date, startTime });
+            console.error(`Missing or invalid date/startTime for booking with ID: ${doc.id}`);
           }
-
           return null;
         });
 
         const validHuntData = huntData.filter((hunt) => hunt !== null);
-        setHunts(validHuntData); // Store only valid hunts
+        console.log("Valid hunts:", validHuntData); // Log the valid hunts fetched
+
+        setHunts(validHuntData);
       }
     } catch (error) {
       console.error('Error fetching hunts:', error);
     }
   };
 
+
+
+
+
+
   // Call fetchHunts inside useEffect when the component loads
   useEffect(() => {
+  if (user) {
     fetchHunts();
-  }, [user]);
+  }
+}, [user]); // Fetch hunts once the user is loaded
+
 
 
 
 
 
   useEffect(() => {
-    if (user) {
+    console.log("User role:", user?.role); // Check the user's role
+    if (user && hunts.length > 0) {
       switch (user.role) {
         case 'outfitter':
           setDashboardContent(
@@ -89,7 +113,7 @@ const Dashboard = () => {
                     hunts.map((hunt, index) => (
                       <div key={index} className="hunt-card-item">
                         <p><strong>{hunt.name}</strong></p>
-                        <p>{new Date(hunt.startTime).toLocaleString()}</p>
+                        <p>{hunt.start.toLocaleString()}</p> {/* Use `hunt.start` as a Date object */}
                       </div>
                     ))
                   )}
@@ -99,22 +123,22 @@ const Dashboard = () => {
               {/* Calendar Section */}
               <div className="content-section calendar-section">
                 <h2>Calendar</h2>
-                <HuntCalendar hunts={hunts} /> {/* Pass hunts to the calendar */}
+                <HuntCalendar 
+                  hunts={hunts}
+                  fetchHunts={fetchHunts}
+                   /> {/* Pass hunts to the calendar */}
               </div>
             </div>
           );
           break;
 
+        // Handle other roles
         case 'guide':
           setDashboardContent(
             <div className="dashboard-content">
               <div className="content-section">
                 <h2>Your Schedule</h2>
                 <button onClick={() => alert('View Schedule')}>View Schedule</button>
-              </div>
-              <div className="content-section">
-                <h2>Log a Hunt</h2>
-                <button onClick={() => alert('Log Hunt')}>Log Hunt</button>
               </div>
             </div>
           );
@@ -136,7 +160,8 @@ const Dashboard = () => {
           break;
       }
     }
-  }, [user, hunts]);
+  }, [user, hunts]); // Ensure that `hunts` is included in the dependency array
+
 
   // Save hunt logic
   const handleSaveHunt = async (updatedHunt) => {
@@ -164,6 +189,31 @@ const Dashboard = () => {
     }
   };
 
+  const fetchGuides = async () => {
+  try {
+    const currentUser = auth.currentUser || user;
+
+    if (currentUser) {
+      const token = await currentUser.getIdTokenResult();
+      const outfitterId = token.claims.outfitterId || token.claims.uid;
+
+      const guidesCollectionRef = collection(db, `outfitters/${outfitterId}/guides`);
+      const guidesSnapshot = await getDocs(guidesCollectionRef);
+
+      const guidesData = guidesSnapshot.docs.map((doc) => ({
+        label: `${doc.data().name} (${doc.data().email})`,
+        value: doc.id,
+      }));
+
+      return guidesData;
+    }
+  } catch (error) {
+    console.error('Error fetching guides:', error);
+    return [];
+  }
+};
+
+
 
 
 
@@ -178,12 +228,9 @@ const Dashboard = () => {
   return (
     <div className="main-content">
       <h1>Dashboard</h1>
-      <HuntCalendar
-        hunts={hunts}
-        onHuntSave={handleSaveHunt} // Pass the save function as a prop
-        onHuntDelete={handleDeleteHunt} // Pass the delete function as a prop
-        fetchHunts={fetchHunts} // Pass fetchHunts as a prop
-      />
+      {dashboardContent ? dashboardContent : <p>Loading dashboard...</p>}
+      
+  
     </div>
   );
 };

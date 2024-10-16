@@ -9,48 +9,87 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding: 10px; /* Add padding to ensure modal doesn't touch edges on small screens */
 }
 
 .hunt-modal {
   background-color: white;
-  padding: 20px;
+  padding: 15px;
   border-radius: 8px;
   max-width: 600px;
   width: 100%;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; /* Allow scrolling if content exceeds screen height */
+  max-height: 90vh; /* Ensure modal doesn't exceed viewport height */
 }
 
 .hunt-modal h2 {
-  margin-bottom: 20px;
-  font-size: 24px;
+  margin-bottom: 10px;
+  font-size: 22px;
+  text-align: center;
+  color: black;
 }
 
 .hunt-modal label {
   display: block;
-  margin: 10px 0 5px;
+  margin: 8px 0 3px;
+  font-weight: bold;
+  color: black;
 }
 
 .hunt-modal input,
 .hunt-modal textarea {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
+  padding: 8px;
+  margin-bottom: 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 14px;
 }
 
+.hunters-list {
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f9f9;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+.hunters-list p {
+  margin: 0;
+  padding: 4px 0;
+  font-size: 14px;
+}
+
+.hunt-modal .select-container {
+  margin-bottom: 12px;
+}
+
+.hunt-modal .select-container .react-select__control {
+  border: 1px solid #ddd !important;
+  border-radius: 4px !important;
+  padding: 5px !important;
+  font-size: 14px !important;
+}
+
+/* Button container */
 .modal-actions {
   display: flex;
   justify-content: space-between;
+  gap: 10px; /* Add space between buttons */
+  margin-top: 15px;
 }
 
 .modal-actions button {
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: 10px 15px; /* Adjust padding */
+  font-size: 14px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: calc(33% - 10px); /* Make each button take equal space with gap between */
 }
 
 .modal-actions .delete-btn {
@@ -58,12 +97,78 @@
   color: white;
 }
 
+.modal-actions .delete-btn:hover {
+  background-color: #d43f3f;
+}
+
 .modal-actions .close-btn {
   background-color: #ddd;
   color: black;
 }
 
+.modal-actions .close-btn:hover {
+  background-color: #bbb;
+}
+
 .modal-actions .save-btn {
   background-color: #4CAF50;
   color: white;
+}
+
+.modal-actions .save-btn:hover {
+  background-color: #45a049;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .hunt-modal {
+    padding: 10px;
+    max-width: 90%;
+    font-size: 13px; /* Reduce font size for better fit on small screens */
+  }
+
+  .hunt-modal h2 {
+    font-size: 18px; /* Decrease heading size */
+  }
+
+  .hunt-modal input,
+  .hunt-modal textarea {
+    font-size: 13px; /* Reduce input and textarea font size */
+    padding: 6px; /* Decrease padding for inputs */
+  }
+
+  .modal-actions button {
+    font-size: 13px;
+    padding: 8px;
+    width: calc(50% - 5px); /* Two buttons per row on medium screens */
+  }
+}
+
+/* Responsive design for very small screens */
+@media (max-width: 480px) {
+  .hunt-modal {
+    padding: 8px;
+    max-width: 95%;
+    font-size: 12px;
+  }
+
+  .hunt-modal h2 {
+    font-size: 16px; /* Smaller heading for very small screens */
+  }
+
+  .hunt-modal input,
+  .hunt-modal textarea {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .modal-actions button {
+    width: 100%; /* Make buttons full width on small screens */
+    margin-bottom: 8px;
+  }
 }

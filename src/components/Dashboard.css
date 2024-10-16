@@ -1,50 +1,58 @@
+body, html {
+  background-color: #f5f5f5; /* Ensure the entire page has a white background */
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
 /* Dashboard Main Container */
 .main-content {
   padding: 20px;
-  background-color: white; /* Match dark theme */
-  text-align: left !important; /* Ensure text inside sections is aligned left */
-  width: calc(100% - 270px); /* Adjust width to account for the sidebar (250px + padding) */
-  box-sizing: border-box; /* Make padding included in width */
-  overflow: hidden; /* Prevent overflow */
-
+  text-align: left !important;
+  width: calc(100% - 170px); /* Adjust width to account for the sidebar */
+  box-sizing: border-box;
+  overflow: hidden;
+  max-width: 1200px; /* Set a maximum width for the content */
+  margin: 0 auto; /* Center the content */
 }
-
 /* Heading */
 .main-content h1 {
   font-family: 'Poppins', sans-serif;
   font-size: 2.5rem;
-  color: #d4af37; /* Muted gold for the heading */
+  color: #d4af37;
   margin-bottom: 30px;
+  text-align: left;
 }
 
 /* Content Section */
 .content-section {
-  background-color: #1e1e1e; /* Dark background for sections */
+  background-color: #1e1e1e;
   padding: 20px;
   margin-bottom: 30px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Subtle shadow */
-  text-align: left !important; /* Ensure text inside sections is aligned left */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-align: left !important;
 }
 
 /* Hunt Card */
 .hunt-card {
-  background-color: #2b2b2b; /* Slightly lighter dark background for cards */
+  background-color: #f5f5f5;
   padding: 15px;
   border-radius: 10px;
   margin-bottom: 20px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  text-align: left !important; /* Ensure text inside cards is aligned left */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  text-align: left !important;
 }
 
 .hunt-card p {
-  color: #f1f1f1; /* Light text color for card content */
+  color: black;
   font-size: 1rem;
 }
 
 .hunt-card button {
-  background-color: #d4af37; /* Muted gold for buttons */
-  color: #0f0f0f; /* Dark text for contrast */
+  background-color: #d4af37;
+  color: #0f0f0f;
   padding: 10px 20px;
   border-radius: 50px;
   border: none;
@@ -55,41 +63,41 @@
 }
 
 .hunt-card button:hover {
-  background-color: #bfa13b; /* Slightly darker gold on hover */
+  background-color: #bfa13b;
   transform: translateY(-2px);
 }
 
 /* Calendar Section */
 .calendar-section {
   padding: 20px;
-  background-color: #1e1e1e; /* Match the dark theme for consistency */
+  background-color: #1e1e1e;
   border-radius: 12px;
   margin-bottom: 30px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  text-align: left !important; /* Ensure calendar text is aligned left */
+  text-align: left !important;
 }
 
 .calendar-section h2 {
   font-family: 'Poppins', sans-serif;
   font-size: 1.8rem;
-  color: #f1f1f1; /* Light text for headers */
+  color: #f1f1f1;
   margin-bottom: 20px;
 }
 
 /* Responsive Adjustments */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .main-content {
     padding: 15px;
-    margin-left: 0; /* Remove left margin for small screens */
-    width: 100%; /* Set width to 100% on small screens */
+    margin-left: 0;
+    width: 100%;
   }
 
   .main-content h1 {
-    font-size: 2rem; /* Smaller heading on smaller screens */
+    font-size: 2rem;
   }
 
   .content-section h2 {
-    font-size: 1.5rem; /* Adjusted section title */
+    font-size: 1.5rem;
   }
 
   .hunt-card button {
@@ -102,22 +110,22 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   .main-content {
     padding: 10px;
-    width: 100%; /* Ensure it takes full width on small screens */
+    width: 100%;
   }
 
   .main-content h1 {
-    font-size: 1.8rem; /* Even smaller for mobile */
+    font-size: 1.8rem;
   }
 
   .content-section h2 {
-    font-size: 1.3rem; /* Adjusted section titles for mobile */
+    font-size: 1.3rem;
   }
 
   .hunt-card button {
-    font-size: 0.8rem; /* Smaller button text */
+    font-size: 0.8rem;
   }
 
   .hunt-card {

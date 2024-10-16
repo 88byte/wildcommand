@@ -116,6 +116,11 @@ h1 {
   justify-content: center !important;
   align-items: center !important;
   cursor: pointer !important;
+  margin-left: ;
+}
+
+.add-btn {
+  margin-left: 10px;
 }
 
 

@@ -8,12 +8,14 @@ import { sendHuntBookingEmails } from './emailService'; // Utility for sending e
 
 const BookHunt = () => {
   const [formData, setFormData] = useState({
-    huntType: '',
-    location: '',
-    date: '',
-    startTime: '', // New field for start time
-    notes: '', // New field for notes
-  });
+  huntType: '',
+  location: '',
+  date: '',
+  startTime: '',
+  endTime: '', // New field for end time
+  notes: '',
+});
+
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false); // Change to a boolean for modal
   const [guides, setGuides] = useState([]);
@@ -106,8 +108,9 @@ const BookHunt = () => {
       // Ensure date and startTime are stored in the correct format
       const huntDetails = {
         ...formData,
-        date: formData.date, // Store date as a simple string (YYYY-MM-DD)
-        startTime: formData.startTime, // Store startTime as a simple time string
+        date: formData.date,
+        startTime: formData.startTime,
+        endTime: formData.endTime, // Include endTime in the booking details
         guides: selectedGuides.map((g) => g.guide?.label).filter(Boolean),
         hunters: selectedHunters.map((h) => h.hunter?.label).filter(Boolean),
         outfitterId,
@@ -210,7 +213,6 @@ const BookHunt = () => {
       {error && <p className="error-message">{error}</p>}
 
       <form className="book-hunt-form" onSubmit={handleSubmit}>
-        {/* Date */}
         <div className="form-section">
           <label htmlFor="date">Date</label>
           <input
@@ -230,7 +232,18 @@ const BookHunt = () => {
             value={formData.startTime}
             onChange={handleChange}
           />
-        </div>
+
+
+        {/* New End Time Input */}
+        <label htmlFor="endTime">End Time</label>
+        <input
+          type="time"
+          id="endTime"
+          name="endTime"
+          value={formData.endTime}
+          onChange={handleChange}
+        />
+      </div>
 
         <div className="form-section">
           {/* Hunt/Fishing Type */}
@@ -264,7 +277,7 @@ const BookHunt = () => {
         <div className="form-section">
           {/* Guides */}
           <div className="label-btn-container">
-            <label htmlFor="guides"></label>
+            <label htmlFor="guides">GUIDE</label>
             <button type="button" className="add-btn" onClick={handleAddGuide}>+</button>
           </div>
           {selectedGuides.map((guideObj, index) => (
@@ -286,7 +299,7 @@ const BookHunt = () => {
 
           {/* Hunters */}
           <div className="label-btn-container">
-            <label htmlFor="hunters"></label>
+            <label htmlFor="hunters">HUNTER</label>
             <button type="button" className="add-btn" onClick={handleAddHunter}>+</button>
           </div>
           {selectedHunters.map((hunterObj, index) => (

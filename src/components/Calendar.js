@@ -4,6 +4,8 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './Calendar.css'; // For custom styling
 import HuntModal from './HuntModal'; // Modal component for editing hunt details
+import { doc, deleteDoc } from 'firebase/firestore'; // Import Firebase functions
+import { db, auth} from '../firebase'; // Import the Firestore instance (db)
 
 const localizer = momentLocalizer(moment);
 
@@ -17,19 +19,49 @@ const HuntCalendar = ({ hunts, onHuntSave, onHuntUpdate, onHuntDelete, fetchHunt
 
   useEffect(() => {
     if (hunts && hunts.length > 0) {
-      const formattedEvents = hunts.map((hunt) => ({
-        id: hunt.id, // Include the hunt's ID for editing and deleting
-        title: hunt.name || 'Hunt',
-        start: new Date(hunt.startTime),
-        end: new Date(hunt.endTime),
-        allDay: false,
-        ...hunt, // Include all the hunt details for use in the modal
-      }));
+      const formattedEvents = hunts.map((hunt) => {
+        console.log("Hunt Data:", hunt);
+
+        if (!hunt.date || hunt.date.trim() === '' || !hunt.startTime || hunt.startTime.trim() === '') {
+          console.warn(`Missing or invalid date/startTime for hunt: ${hunt.name}`);
+          return null;
+        }
+
+        // Combine `date` and `startTime` to create a Date object
+        const startTime = new Date(`${hunt.date}T${hunt.startTime}:00`);
+        const endTime = hunt.endTime ? new Date(hunt.endTime) : new Date(startTime.getTime() + 4 * 60 * 60 * 1000); // Default to 4 hours later if endTime not provided
+
+        // Validate that both startTime and endTime are Date objects
+        if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
+          console.error(`Invalid startTime/endTime for hunt: ${hunt.name}`);
+          return null;
+        }
+
+        return {
+          id: hunt.id,
+          title: hunt.name || 'Hunt',
+          start: startTime, // Ensure this is a Date object
+          end: endTime, // Ensure this is a Date object
+          allDay: false,
+          ...hunt, // Include all other hunt details
+        };
+      }).filter((event) => event !== null);
+
       setEvents(formattedEvents);
     }
   }, [hunts]);
 
-  // Toggle dropdown on mobile
+
+
+
+
+
+
+
+
+
+
+   // Toggle dropdown on mobile
   const toggleDropdown = () => {
     setDropdownOpen((prevState) => !prevState);
   };
@@ -55,10 +87,28 @@ const HuntCalendar = ({ hunts, onHuntSave, onHuntUpdate, onHuntDelete, fetchHunt
     setSelectedHunt(null); // Close the modal after saving
   };
 
-  const handleDeleteHunt = (huntId) => {
-    onHuntDelete(huntId); // Call the parent function to delete the hunt
-    setSelectedHunt(null); // Close the modal after deleting
+  const handleDeleteHunt = async (huntId) => {
+    try {
+      const currentUser = auth.currentUser; // Assuming `auth` is imported from Firebase auth
+      const token = await currentUser.getIdTokenResult();
+      const outfitterId = token.claims.outfitterId || token.claims.uid; // Retrieve the outfitterId from token claims
+
+      const huntRef = doc(db, 'outfitters', outfitterId, 'bookings', huntId);
+      await deleteDoc(huntRef);
+      fetchHunts(); // Refresh hunts after deletion
+    } catch (error) {
+      console.error('Error deleting hunt:', error);
+    }
   };
+
+
+    <HuntModal
+      hunt={selectedHunt}
+      onClose={handleCloseModal}
+      onSave={handleSaveHunt}
+      onDelete={handleDeleteHunt} // Pass the delete function
+      fetchHunts={fetchHunts}
+    />
 
   return (
     <div className="calendar-container">

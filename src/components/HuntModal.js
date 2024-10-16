@@ -2,19 +2,21 @@ import React, { useState } from 'react';
 import './HuntModal.css'; // Add custom styles
 import { doc, updateDoc } from 'firebase/firestore'; // Firebase Firestore functions
 import { db } from '../firebase'; // Import your Firebase instance
+import Select from 'react-select'; // For the dropdown
 
-
-const HuntModal = ({ hunt, onClose, onSave, onDelete, fetchHunts }) => {
-
-	const startDate = typeof hunt.start === 'string' ? new Date(hunt.start) : hunt.start;
+const HuntModal = ({ hunt, onClose, fetchHunts, outfitterId, onDelete, onSave, availableGuides }) => {
+  const startDate = typeof hunt.start === 'string' ? new Date(hunt.start) : hunt.start;
+  const endDate = typeof hunt.end === 'string' ? new Date(hunt.end) : hunt.end;
 
   // Initialize formData with hunt details
   const [formData, setFormData] = useState({
-    name: hunt.name,
-    location: hunt.location,
+    name: hunt.name || '',
+    location: hunt.location || '',
     date: startDate ? startDate.toISOString().substring(0, 10) : '', // Format date for input field
-    startTime: startDate ? startDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : '', // Handle time format
+    startTime: startDate ? startDate.toTimeString().substring(0, 5) : '', // Format start time (HH:MM)
+    endTime: endDate ? endDate.toTimeString().substring(0, 5) : '', // Format end time (HH:MM)
     notes: hunt.notes || '',
+    selectedGuide: hunt.guides ? { label: hunt.guides[0], value: hunt.guides[0] } : null,
   });
 
   // Update form data on field change
@@ -25,73 +27,68 @@ const HuntModal = ({ hunt, onClose, onSave, onDelete, fetchHunts }) => {
     });
   };
 
-  // Handle save operation
+  // Handle guide change
+  const handleGuideChange = (selectedOption) => {
+    setFormData({
+      ...formData,
+      selectedGuide: selectedOption,
+    });
+  };
+
   const handleSave = async () => {
-    if (!formData.date || !formData.startTime) {
-      alert('Please provide a valid date and start time.');
+    if (!formData.date || !formData.startTime || !formData.endTime) {
+      alert('Please provide valid date, start time, and end time.');
       return;
     }
 
-    // Construct a new start date-time using the date and startTime
-    const updatedStartTime = new Date(`${formData.date}T${formData.startTime}`).toISOString();
-
-    // Calculate an end time 4 hours after the start time (you can adjust the duration)
-    const updatedEndTime = new Date(new Date(updatedStartTime).getTime() + 4 * 60 * 60 * 1000).toISOString();
-
+    // Don't convert startTime and endTime to ISO format, keep them as 'HH:MM'
     const updatedHunt = {
       ...hunt,
       name: formData.name,
       location: formData.location,
-      date: formData.date, // Explicitly include the updated date
-      start: updatedStartTime, // Full date-time for start
-      end: updatedEndTime, // Full date-time for end
-      startTime: formData.startTime, // Store simple start time (optional)
-      endTime: updatedEndTime, // Store simple end time (optional)
+      date: formData.date, // Store date as 'YYYY-MM-DD'
+      startTime: formData.startTime, // Store time as 'HH:MM'
+      endTime: formData.endTime, // Store time as 'HH:MM'
       notes: formData.notes,
+      guides: [formData.selectedGuide?.label], // Store the guide's name
     };
 
-    await onSave(updatedHunt); // Save the updated hunt
-    fetchHunts(); // Refresh hunts after saving
-    onClose(); // Close the modal
-  };
+	  console.log('Updated Hunt:', updatedHunt);
 
+	  if (!updatedHunt.outfitterId || !updatedHunt.id) {
+	    console.error('Missing outfitterId or huntId');
+	    return;
+	  }
 
-	const handleSaveHunt = async (updatedHunt) => {
-	  if (updatedHunt.id) {
-	    try {
-	      // Update the booking document in Firestore
-	      const huntRef = doc(db, 'outfitters', updatedHunt.outfitterId, 'bookings', updatedHunt.id);
+	  try {
+	    const huntRef = doc(db, 'outfitters', updatedHunt.outfitterId, 'bookings', updatedHunt.id);
 	      await updateDoc(huntRef, {
-	        huntType: updatedHunt.name, // Ensure you're updating the correct fields
+	        huntType: updatedHunt.name,
 	        location: updatedHunt.location,
-	        date: updatedHunt.date, // Explicitly include the date field here
+	        date: updatedHunt.date,
 	        startTime: updatedHunt.startTime,
 	        endTime: updatedHunt.endTime,
 	        notes: updatedHunt.notes,
+	        guides: updatedHunt.guides,
 	      });
-	      console.log('Hunt successfully updated:', updatedHunt);
-	      
-	      // Refresh the hunts after saving
-	      fetchHunts(); // Fetch updated hunts data
+
+	    console.log('Calling fetchHunts after save');
+	    if (fetchHunts) {
+	        fetchHunts(); // Call the fetchHunts prop after saving
+	      }
+	      onClose(); // Close the modal after saving
 	    } catch (error) {
 	      console.error('Error updating hunt in Firestore:', error);
 	    }
-	  } else {
-	    console.error('Hunt ID is missing, unable to update');
-	  }
-	};
+	  };
 
 
 
-
-
-
-
-
-
-  // Handle delete operation
+  // Ensure `onDelete` is passed and used
   const handleDelete = () => {
-    onDelete(hunt.id); // Call onDelete function from props to delete the hunt
+    if (onDelete && hunt.id) {
+      onDelete(hunt.id); // Call onDelete passed as a prop
+    }
     onClose(); // Close the modal after deletion
   };
 
@@ -100,53 +97,40 @@ const HuntModal = ({ hunt, onClose, onSave, onDelete, fetchHunts }) => {
       <div className="hunt-modal">
         <h2>Edit Hunt</h2>
 
-        {/* Input for hunt name */}
         <label>Name</label>
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-        />
+        <input type="text" name="name" value={formData.name} onChange={handleChange} />
 
-        {/* Input for hunt location */}
         <label>Location</label>
-        <input
-          type="text"
-          name="location"
-          value={formData.location}
-          onChange={handleChange}
-        />
+        <input type="text" name="location" value={formData.location} onChange={handleChange} />
 
-        {/* Input for hunt date */}
         <label>Date</label>
-        <input
-          type="date"
-          name="date"
-          value={formData.date}
-          onChange={handleChange}
-        />
+        <input type="date" name="date" value={formData.date} onChange={handleChange} />
 
-        {/* Input for start time */}
         <label>Start Time</label>
-        <input
-          type="time"
-          name="startTime"
-          value={formData.startTime}
-          onChange={handleChange}
+        <input type="time" name="startTime" value={formData.startTime} onChange={handleChange} />
+
+        <label>End Time</label>
+        <input type="time" name="endTime" value={formData.endTime} onChange={handleChange} />
+
+        <label>Hunters</label>
+        <div className="hunters-list">
+          {hunt.hunters && hunt.hunters.length > 0 ? hunt.hunters.map((hunter, index) => (
+            <p key={index}>{hunter}</p>
+          )) : <p>No hunters assigned</p>}
+        </div>
+
+        <label>Guide</label>
+        <Select
+          value={formData.selectedGuide}
+          onChange={handleGuideChange}
+          options={availableGuides}
+          className="select-container"
+          placeholder="Select Guide"
         />
 
-
-
-        {/* Textarea for notes */}
         <label>Notes</label>
-        <textarea
-          name="notes"
-          value={formData.notes}
-          onChange={handleChange}
-        />
+        <textarea name="notes" value={formData.notes} onChange={handleChange} />
 
-        {/* Modal action buttons */}
         <div className="modal-actions">
           <button onClick={handleSave} className="save-btn">Save</button>
           <button onClick={handleDelete} className="delete-btn">Delete</button>
@@ -158,3 +142,6 @@ const HuntModal = ({ hunt, onClose, onSave, onDelete, fetchHunts }) => {
 };
 
 export default HuntModal;
+
+
+
